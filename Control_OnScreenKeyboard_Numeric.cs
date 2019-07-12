@@ -20,10 +20,10 @@ namespace CSTransporteKiosk
 
         private void KeyMouseUp(object sender, MouseEventArgs e)
         {
-            KeyClicked(sender as Button);
+            ConvertButtonClickedToKeyOrder(sender as Button);
         }
 
-        private void KeyClicked(Button buttonKey)
+        private void ConvertButtonClickedToKeyOrder(Button buttonKey)
         {
             const string keyNamePrefix = "buttonKey";
             const string keyNameSufixDelete = "Backspace";
@@ -36,23 +36,59 @@ namespace CSTransporteKiosk
             switch (keyNameSuffix)
             {
                 case keyNameSufixDelete:
-                    SendKeyPress(CardonerSistemas.ConstantsKeys.BACKSPACE);
+                    SendKeyOrder(CardonerSistemas.ConstantsKeys.BACKSPACE);
                     break;
+
                 case keyNameSufixClear:
+                    SendKeyOrder(CardonerSistemas.ConstantsKeys.ESC);
                     break;
+
                 default:
                     keyCharValue = Convert.ToChar(keyNameSuffix);
-                    SendKeyPress(Convert.ToString(keyCharValue));
+                    SendKeyOrder(Convert.ToString(keyCharValue));
                     break;
             }
         }
 
-        private void SendKeyPress(string keysValue)
+        private void SendKeyOrder(string keysValue)
         {
             if(mDestinationTextBox != null)
             {
-                mDestinationTextBox.Focus();
-                SendKeys.Send(keysValue);
+                if (mDestinationTextBox.Enabled && !mDestinationTextBox.ReadOnly)
+                {
+                    // Textbox is enabled for typing
+
+                    // ensure that the textbox control has the focus
+                    mDestinationTextBox.Focus();
+                    // ensure that the insertion point is at the end
+                    mDestinationTextBox.SelectionStart = mDestinationTextBox.TextLength;
+                    // send the key pressed
+                    SendKeys.Send(keysValue);
+                }
+                else
+                {
+                    // textbox is disabled or in read-only mode
+                    switch (keysValue)
+                    {
+                        case CardonerSistemas.ConstantsKeys.BACKSPACE:
+                            if (mDestinationTextBox.TextLength > 0)
+                            {
+                                mDestinationTextBox.Text = mDestinationTextBox.Text.Remove(mDestinationTextBox.TextLength - 1);
+                            }
+                            break;
+
+                        case CardonerSistemas.ConstantsKeys.ESC:
+                            mDestinationTextBox.Text = "";
+                            break;
+
+                        default:
+                            if (mDestinationTextBox.TextLength < mDestinationTextBox.MaxLength)
+                            {
+                                mDestinationTextBox.Text += keysValue;
+                            }
+                            break;
+                    }
+                }
             }
         }
     }
