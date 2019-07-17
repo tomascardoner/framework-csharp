@@ -21,6 +21,15 @@ namespace CSTransporteKiosk
         private void KeyMouseUp(object sender, MouseEventArgs e)
         {
             ConvertButtonClickedToKeyOrder(sender as Button);
+
+            if (mDestinationTextBox != null && mDestinationTextBox.Enabled && !mDestinationTextBox.ReadOnly)
+            {
+                mDestinationTextBox.Focus();
+            }
+            else
+            {
+                this.Parent.Focus();
+            }
         }
 
         private void ConvertButtonClickedToKeyOrder(Button buttonKey)
