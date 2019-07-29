@@ -30,6 +30,7 @@ namespace CSTransporteKiosk
             {
                 this.Parent.Focus();
             }
+            this.OnClick(e);
         }
 
         private void ConvertButtonClickedToKeyOrder(Button buttonKey)

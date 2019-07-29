@@ -56,9 +56,14 @@ namespace CardonerSistemas
             }
             catch (Exception ex)
             {
-                CardonerSistemas.Error.ProcessError(ref ex, "Error al conectarse a la Base de Datos.");
+                CardonerSistemas.Error.ProcessError(ex, "Error al conectarse a la Base de Datos.");
                 return false;
             }
+        }
+
+        public bool IsConnected()
+        {
+            return !(connection == null || connection.State == ConnectionState.Closed || connection.State == ConnectionState.Broken);
         }
 
         public bool Disconnect()
@@ -67,17 +72,14 @@ namespace CardonerSistemas
             {
                 if (connection != null)
                 {
-                    if (connection.State == System.Data.ConnectionState.Open)
-                    {
-                        connection.Close();
-                    }
+                    connection.Close();
                     connection = null;
                 }
                 return true;
             }
             catch (Exception ex)
             {
-                CardonerSistemas.Error.ProcessError(ref ex, "Error al cerrar la conexión a la Base de Datos.");
+                CardonerSistemas.Error.ProcessError(ex, "Error al cerrar la conexión a la Base de Datos.");
                 return false;
             }
         }
@@ -99,7 +101,7 @@ namespace CardonerSistemas
             }
             catch (Exception ex)
             {
-                CardonerSistemas.Error.ProcessError(ref ex, errorMessage);
+                CardonerSistemas.Error.ProcessError(ex, errorMessage);
                 return false;
             }
         }
@@ -118,7 +120,7 @@ namespace CardonerSistemas
             }
             catch (Exception ex)
             {
-                CardonerSistemas.Error.ProcessError(ref ex, errorMessage);
+                CardonerSistemas.Error.ProcessError(ex, errorMessage);
                 return false;
             }
         }
@@ -143,7 +145,7 @@ namespace CardonerSistemas
             }
             catch (Exception ex)
             {
-                CardonerSistemas.Error.ProcessError(ref ex, errorMessage);
+                CardonerSistemas.Error.ProcessError(ex, errorMessage);
                 return false;
             }
         }
@@ -161,7 +163,7 @@ namespace CardonerSistemas
             }
             catch (Exception ex)
             {
-                CardonerSistemas.Error.ProcessError(ref ex, errorMessage);
+                CardonerSistemas.Error.ProcessError(ex, errorMessage);
                 return false;
             }
         }
