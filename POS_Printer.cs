@@ -5,14 +5,52 @@ using System.Windows.Forms;
 
 namespace CardonerSistemas
 {
-    class Printer_POS
+    class POS_Printer
     {
+        #region Formatting text
+
+        private const char ESC_Char = '\x1B';
+        static private string ESC = ESC_Char + "|";
+        public const string CrLf = "\r\n";
+
+        public string TextStyleBold = ESC + "bC";
+        public string TextStyleUnderline = ESC + "uC";
+        public string TextStyleItalic = ESC + "iC";
+        public string TextStyleSubScript = ESC + "tbC";
+        public string TextStyleSuperScript = ESC + "tpC";
+        public string TextStyleStrikeThrough = ESC + "stC";
+        public string TextStyleRestoreNormal = ESC + "N";
+
+        public string TextSizeSingleHighAndWide = ESC + "1C";
+        public string TextSizeDoubleWide = ESC + "2C";
+        public string TextSizeDoubleHigh = ESC + "3C";
+        public string TextSizeDoubleHighAndWide = ESC + "4C";
+
+        private string _ScaleHorizontally = ESC + "#hC";
+        private string _ScaleVertically = ESC + "#vC";
+
+        public string AlignCentre = ESC + "cA";
+        public string AlignRight = ESC + "rA";
+        public string AlignLeft = ESC + "lA";
+
+        public string TextSizeScaleHorizontally(byte times)
+        {
+            return _ScaleHorizontally.Replace("#", times.ToString());
+        }
+        public string TextSizeScaleVertically(byte times)
+        {
+            return _ScaleVertically.Replace("#", times.ToString());
+        }
+
+        // Sample = "This is a test" + CrLf + SetBold + SetSize(3) + SetCentre + "it works" + SetSize(1) + " pretty well" + CrLf + "OK";
+
+        #endregion
+
         PosExplorer explorer;
         DeviceInfo deviceInfo;
-        PosDevice device;
         PosPrinter printer;
 
-        public Printer_POS()
+        public POS_Printer()
         {
             try
             {
@@ -24,11 +62,10 @@ namespace CardonerSistemas
             }
         }
 
-        ~Printer_POS()
+        ~POS_Printer()
         {
             explorer = null;
             deviceInfo = null;
-            device = null;
             printer = null;
         }
 
@@ -37,11 +74,8 @@ namespace CardonerSistemas
             try
             {
                 deviceInfo = explorer.GetDevice(DeviceType.PosPrinter, deviceName);
-                device = explorer.CreateInstance(deviceInfo);
-                //printer =
-
-                //return (printer != null && printer.Capabilities.Receipt.IsPrinterPresent)
-                return true;
+                printer = (PosPrinter)explorer.CreateInstance(deviceInfo);
+                return (printer != null);
             }
             catch (Exception ex)
             {
@@ -84,12 +118,28 @@ namespace CardonerSistemas
             }
         }
 
+        public bool Enable()
+        {
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                printer.DeviceEnabled = true;
+                Cursor.Current = Cursors.Default;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Cursor.Current = Cursors.Default;
+                CardonerSistemas.Error.ProcessError(ex, "Error al habilitar la impresora.");
+                return false;
+            }
+        }
+
         public bool PrintLine(string textToPrint)
         {
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                textToPrint = textToPrint.Replace("ESC", ((char)27).ToString()) + "\x1B|1lF";
                 printer.PrintNormal(PrinterStation.Receipt, textToPrint);
                 Cursor.Current = Cursors.Default;
                 return true;
