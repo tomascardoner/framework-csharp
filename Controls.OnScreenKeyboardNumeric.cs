@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace CSTransporteKiosk
+namespace CardonerSistemas
 {
-    public partial class CS_Control_OnScreenKeyboard_Numeric : UserControl
+    public partial class ControlsOnScreenKeyboardNumeric : UserControl
     {
         TextBox mDestinationTextBox;
 
-        public CS_Control_OnScreenKeyboard_Numeric()
+        public ControlsOnScreenKeyboardNumeric()
         {
             InitializeComponent();
         }

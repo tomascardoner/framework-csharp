@@ -1,6 +1,6 @@
-﻿namespace CSTransporteKiosk
+﻿namespace CardonerSistemas
 {
-    partial class CS_Control_OnScreenKeyboard_Numeric
+    partial class ControlsOnScreenKeyboardNumeric
     {
         /// <summary> 
         /// Required designer variable.
