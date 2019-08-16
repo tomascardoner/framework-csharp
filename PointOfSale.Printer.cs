@@ -479,7 +479,7 @@ namespace CardonerSistemas.PointOfSale
             }
         }
 
-        public bool ReleaseAndClose()
+        public bool ReleaseAndClose(int timeout)
         {
             if (printer != null)
             {
@@ -498,7 +498,7 @@ namespace CardonerSistemas.PointOfSale
                         printer.Close();
                         break;
                     case ControlState.Busy:
-                        for (int i = 0; i < 10; i++)
+                        for (int i = 0; i < timeout; i++)
                         {
                             System.Threading.Thread.Sleep(1000);
                             if (printer.State == ControlState.Idle)
