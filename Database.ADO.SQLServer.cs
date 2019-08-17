@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.IO;
 
 namespace CardonerSistemas.Database.ADO
@@ -472,9 +473,44 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public static Stream DataReaderGetStream(SqlDataReader dataReader, string columnName)
+        #endregion
+
+        #region Data reader - Get varbinary
+
+        public static Stream DataReaderGetStream(SqlDataReader dataReader, string columnName, string errorMessage = "")
         {
-            return dataReader.GetStream(dataReader.GetOrdinal(columnName));
+            try
+            {
+                return dataReader.GetStream(dataReader.GetOrdinal(columnName));
+            }
+            catch (Exception ex)
+            {
+                if (errorMessage != "")
+                {
+                    CardonerSistemas.Error.ProcessError(ex, errorMessage);
+                }
+                return null;
+            }
+        }
+
+        public static Image DataReaderGetStreamAsImage(SqlDataReader dataReader, string columnName)
+        {
+            Stream stream = DataReaderGetStream(dataReader, columnName);
+            if (stream == null)
+            {
+                return null;
+            }
+            else
+            {
+                try
+                {
+                    return Bitmap.FromStream(stream);
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
         }
 
         #endregion
