@@ -64,7 +64,10 @@ namespace CardonerSistemas.PointOfSale
 
         private PosPrinter _printer = null;
 
+        private bool _IsReady = false;
+
         public PosPrinter PosPrinter { get => _printer; }
+        public bool IsReady {get => _IsReady; }
 
         public Printer()
         {
@@ -161,6 +164,7 @@ namespace CardonerSistemas.PointOfSale
                 Cursor.Current = Cursors.WaitCursor;
                 _printer.DeviceEnabled = true;
                 Cursor.Current = Cursors.Default;
+                _IsReady = true;
                 return true;
             }
             catch (Exception ex)
