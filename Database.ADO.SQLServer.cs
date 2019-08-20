@@ -6,7 +6,7 @@ using System.IO;
 
 namespace CardonerSistemas.Database.ADO
 {
-    class SQLServer
+    public class SQLServer
     {
         #region Properties
 

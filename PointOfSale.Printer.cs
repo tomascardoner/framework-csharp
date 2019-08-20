@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace CardonerSistemas.PointOfSale
 {
-    class Printer
+    public class Printer
     {
         #region Printer commands
 
@@ -39,6 +39,12 @@ namespace CardonerSistemas.PointOfSale
         public string AlignRight = ESC + "rA";
         public string AlignLeft = ESC + "lA";
 
+        public readonly int PrinterBitmapAsIs = -11;
+
+        public readonly int PrinterBitmapLeft = -1;
+        public readonly int PrinterBitmapCenter = -2;
+        public readonly int PrinterBitmapRight = -3;
+
         public string LineFeedAndPaperCut = ESC + "fP";
 
         public string TextSizeScaleHorizontally(byte times)
@@ -56,7 +62,9 @@ namespace CardonerSistemas.PointOfSale
 
         #region Declaration
 
-        PosPrinter printer = null;
+        private PosPrinter _printer = null;
+
+        public PosPrinter PosPrinter { get => _printer; }
 
         public Printer()
         {
@@ -64,18 +72,18 @@ namespace CardonerSistemas.PointOfSale
 
         ~Printer()
         {
-            if (printer != null)
+            if (_printer != null)
             {
                 try
                 {
                     // Cancel the device
-                    printer.DeviceEnabled = false;
+                    _printer.DeviceEnabled = false;
 
                     // Release the device exclusive control right.
-                    printer.Release();
+                    _printer.Release();
 
                     // Finish using the device.
-                    printer.Close();
+                    _printer.Close();
 
                 }
                 catch (PosControlException)
@@ -98,12 +106,12 @@ namespace CardonerSistemas.PointOfSale
                 explorer = new PosExplorer();
 
                 deviceInfo = explorer.GetDevice(DeviceType.PosPrinter, deviceName);
-                printer = (PosPrinter)explorer.CreateInstance(deviceInfo);
+                _printer = (PosPrinter)explorer.CreateInstance(deviceInfo);
 
                 explorer = null;
                 deviceInfo = null;
 
-                return (printer != null);
+                return (_printer != null);
             }
             catch (Exception ex)
             {
@@ -117,7 +125,7 @@ namespace CardonerSistemas.PointOfSale
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                printer.Open();
+                _printer.Open();
                 Cursor.Current = Cursors.Default;
                 return true;
             }
@@ -134,7 +142,7 @@ namespace CardonerSistemas.PointOfSale
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                printer.Claim(timeout);
+                _printer.Claim(timeout);
                 Cursor.Current = Cursors.Default;
                 return true;
             }
@@ -151,7 +159,7 @@ namespace CardonerSistemas.PointOfSale
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                printer.DeviceEnabled = true;
+                _printer.DeviceEnabled = true;
                 Cursor.Current = Cursors.Default;
                 return true;
             }
@@ -189,7 +197,7 @@ namespace CardonerSistemas.PointOfSale
         {
             try
             {
-                printer.TransactionPrint(PrinterStation.Receipt, PrinterTransactionControl.Transaction);
+                _printer.TransactionPrint(PrinterStation.Receipt, PrinterTransactionControl.Transaction);
                 return true;
             }
             catch (Exception ex)
@@ -203,7 +211,7 @@ namespace CardonerSistemas.PointOfSale
         {
             try
             {
-                printer.TransactionPrint(PrinterStation.Receipt, PrinterTransactionControl.Normal);
+                _printer.TransactionPrint(PrinterStation.Receipt, PrinterTransactionControl.Normal);
                 return true;
             }
             catch (Exception ex)
@@ -219,14 +227,14 @@ namespace CardonerSistemas.PointOfSale
             {
                 Cursor.Current = Cursors.WaitCursor;
                 textToPrint = ReplaceFormatTextStyle(textToPrint);
-                printer.PrintNormal(PrinterStation.Receipt, string.Format(textToPrint, args));
+                _printer.PrintNormal(PrinterStation.Receipt, string.Format(textToPrint, args));
                 Cursor.Current = Cursors.Default;
                 return true;
             }
             catch (Exception ex)
             {
                 Cursor.Current = Cursors.Default;
-                CardonerSistemas.Error.ProcessError(ex, "Error al abrir la conexión a la impresora.");
+                CardonerSistemas.Error.ProcessError(ex, "Error al imprimir el texto en la impresora.");
                 return false;
             }
         }
@@ -237,15 +245,15 @@ namespace CardonerSistemas.PointOfSale
             {
                 Cursor.Current = Cursors.WaitCursor;
                 textToPrint = ReplaceFormatTextStyle(textToPrint);
-                printer.PrintNormal(PrinterStation.Receipt, string.Format(textToPrint, args));
-                printer.PrintNormal(PrinterStation.Receipt, CrLf);
+                _printer.PrintNormal(PrinterStation.Receipt, string.Format(textToPrint, args));
+                _printer.PrintNormal(PrinterStation.Receipt, CrLf);
                 Cursor.Current = Cursors.Default;
                 return true;
             }
             catch (Exception ex)
             {
                 Cursor.Current = Cursors.Default;
-                CardonerSistemas.Error.ProcessError(ex, "Error al abrir la conexión a la impresora.");
+                CardonerSistemas.Error.ProcessError(ex, "Error al imprimir el texto en la impresora.");
                 return false;
             }
         }
@@ -255,14 +263,14 @@ namespace CardonerSistemas.PointOfSale
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                printer.SetLogo(location, data);
+                _printer.SetLogo(location, data);
                 Cursor.Current = Cursors.Default;
                 return true;
             }
             catch (Exception ex)
             {
                 Cursor.Current = Cursors.Default;
-                CardonerSistemas.Error.ProcessError(ex, "Error al cerrar la conexión a la impresora.");
+                CardonerSistemas.Error.ProcessError(ex, "Error al establecer el logo en la impresora.");
                 return false;
             }
         }
@@ -271,7 +279,7 @@ namespace CardonerSistemas.PointOfSale
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            if (printer.CapRecBitmap == true)
+            if (_printer.CapRecBitmap == true)
             {
                 bool bSetBitmapSuccess = false;
                 for (int iRetryCount = 0; iRetryCount < 5; iRetryCount++)
@@ -279,7 +287,7 @@ namespace CardonerSistemas.PointOfSale
                     try
                     {
                         //Register a bitmap
-                        printer.SetBitmap(bitmapNumber, PrinterStation.Receipt, fileName, width, alignment);
+                        _printer.SetBitmap(bitmapNumber, PrinterStation.Receipt, fileName, width, alignment);
                         bSetBitmapSuccess = true;
                         break;
                     }
@@ -293,7 +301,7 @@ namespace CardonerSistemas.PointOfSale
                 }
                 if (!bSetBitmapSuccess)
                 {
-                    MessageBox.Show("Error al setear la imagen en la impresora.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Error al establecer la imagen en la impresora.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     Cursor.Current = Cursors.Default;
                     return false;
                 }
@@ -307,10 +315,10 @@ namespace CardonerSistemas.PointOfSale
         {
             try
             {
-                if (printer.CapRecBarCode == true)
+                if (_printer.CapRecBarCode == true)
                 {
                     Cursor.Current = Cursors.WaitCursor;
-                    printer.PrintBarCode(PrinterStation.Receipt, data, symbology, height, width, alignment, textPosition);
+                    _printer.PrintBarCode(PrinterStation.Receipt, data, symbology, height, width, alignment, textPosition);
                     Cursor.Current = Cursors.Default;
                     return true;
                 }
@@ -328,7 +336,7 @@ namespace CardonerSistemas.PointOfSale
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                printer.PrintBitmap(PrinterStation.Receipt, fileName, width, alignment);
+                _printer.PrintBitmap(PrinterStation.Receipt, fileName, width, alignment);
                 Cursor.Current = Cursors.Default;
                 return true;
             }
@@ -345,7 +353,7 @@ namespace CardonerSistemas.PointOfSale
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                printer.PrintMemoryBitmap(PrinterStation.Receipt, bitmap, width, alignment);
+                _printer.PrintMemoryBitmap(PrinterStation.Receipt, bitmap, width, alignment);
                 Cursor.Current = Cursors.Default;
                 return true;
             }
@@ -379,7 +387,7 @@ namespace CardonerSistemas.PointOfSale
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                printer.DrawRuledLine(PrinterStation.Receipt, "0,500", LineDirection.Horizontal, 1, LineStyle.BrokenLine, 1);
+                _printer.DrawRuledLine(PrinterStation.Receipt, "0,500", LineDirection.Horizontal, 1, LineStyle.BrokenLine, 1);
                 Cursor.Current = Cursors.Default;
                 return true;
             }
@@ -400,7 +408,7 @@ namespace CardonerSistemas.PointOfSale
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                printer.CutPaper(percentage);
+                _printer.CutPaper(percentage);
                 Cursor.Current = Cursors.Default;
                 return true;
             }
@@ -450,7 +458,7 @@ namespace CardonerSistemas.PointOfSale
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                printer.Release();
+                _printer.Release();
                 Cursor.Current = Cursors.Default;
                 return true;
             }
@@ -467,7 +475,7 @@ namespace CardonerSistemas.PointOfSale
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                printer.Close();
+                _printer.Close();
                 Cursor.Current = Cursors.Default;
                 return true;
             }
@@ -481,27 +489,27 @@ namespace CardonerSistemas.PointOfSale
 
         public bool ReleaseAndClose(int timeout)
         {
-            if (printer != null)
+            if (_printer != null)
             {
-                if (printer.Claimed)
+                if (_printer.Claimed)
                 {
                     if (!Release())
                     {
                         return false;
                     }
                 }
-                switch (printer.State)
+                switch (_printer.State)
                 {
                     case ControlState.Closed:
                         break;
                     case ControlState.Idle:
-                        printer.Close();
+                        _printer.Close();
                         break;
                     case ControlState.Busy:
                         for (int i = 0; i < timeout; i++)
                         {
                             System.Threading.Thread.Sleep(1000);
-                            if (printer.State == ControlState.Idle)
+                            if (_printer.State == ControlState.Idle)
                             {
                                 break;
                             }

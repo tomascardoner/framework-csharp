@@ -9,7 +9,7 @@ namespace CardonerSistemas.Database.Framework
         private const string EntityFemaleArticle = "la";
         private const string EntityMaleArticle = "el";
 
-        private static string GetEntityGenderArticle(bool EntityDisplayNameIsFemale)
+        public static string GetEntityGenderArticle(bool EntityDisplayNameIsFemale)
         {
             return (EntityDisplayNameIsFemale ? EntityFemaleArticle : EntityMaleArticle);
         }
