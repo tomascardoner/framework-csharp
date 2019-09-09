@@ -44,5 +44,8 @@ namespace CardonerSistemas
         public const string SUBTRACT = "{SUBTRACT}";
         public const string MULTIPLY = "{MULTIPLY}";
         public const string DIVIDE = "{DIVIDE}";
+
+        public const string UserDefinedCLEAR = "{CLEAR}";
+        public const string UserDefinedSPACE = "{SPACE}";
     }
 }
