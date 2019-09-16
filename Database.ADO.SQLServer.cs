@@ -8,6 +8,7 @@ namespace CardonerSistemas.Database.ADO
 {
     public class SQLServer
     {
+
         #region Properties
 
         public string ApplicationName { get; set; }
@@ -614,5 +615,6 @@ namespace CardonerSistemas.Database.ADO
         }
 
         #endregion
+
     }
 }
