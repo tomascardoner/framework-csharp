@@ -29,10 +29,11 @@ namespace CardonerSistemas.Database.ADO
 
         public void CreateConnectionString()
         {
-            SqlConnectionStringBuilder scsb = new SqlConnectionStringBuilder();
-
-            scsb.ApplicationName = ApplicationName;
-            scsb.DataSource = Datasource;
+            SqlConnectionStringBuilder scsb = new SqlConnectionStringBuilder
+            {
+                ApplicationName = ApplicationName,
+                DataSource = Datasource
+            };
             if (AttachDBFilename != null && AttachDBFilename.Trim().Length > 0)
             {
                 scsb.AttachDBFilename = AttachDBFilename;
@@ -105,14 +106,16 @@ namespace CardonerSistemas.Database.ADO
         {
             try
             {
-                SqlCommand Command = new SqlCommand();
-                Command.Connection = Connection;
-                Command.CommandText = commandText;
-                Command.CommandType = commandType;
+                SqlCommand Command = new SqlCommand
+                {
+                    Connection = Connection,
+                    CommandText = commandText,
+                    CommandType = commandType
+                };
 
                 dataReader = Command.ExecuteReader(commandBehavior);
 
-                Command = null;
+                Command.Dispose();
 
                 return true;
             }
@@ -132,6 +135,7 @@ namespace CardonerSistemas.Database.ADO
                 SqlCommandBuilder commandBuilder = new SqlCommandBuilder(dataAdapter);
                 dataAdapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
                 dataAdapter.Fill(dataSet, sourceTable);
+                commandBuilder.Dispose();
 
                 return true;
             }
@@ -171,11 +175,14 @@ namespace CardonerSistemas.Database.ADO
         {
             try
             {
-                SqlCommand command = new SqlCommand();
-                command.Connection = Connection;
-                command.CommandText = commandText;
-                command.CommandType = commandType;
+                SqlCommand command = new SqlCommand
+                {
+                    Connection = Connection,
+                    CommandText = commandText,
+                    CommandType = commandType
+                };
                 command.ExecuteNonQuery();
+                command.Dispose();
                 return true;
             }
             catch (Exception ex)
@@ -189,15 +196,18 @@ namespace CardonerSistemas.Database.ADO
         {
             try
             {
-                SqlCommand command = new SqlCommand();
-                command.Connection = Connection;
-                command.CommandText = commandText;
-                command.CommandType = commandType;
+                SqlCommand command = new SqlCommand
+                {
+                    Connection = Connection,
+                    CommandText = commandText,
+                    CommandType = commandType
+                };
                 foreach (SqlParameter parameter in sqlParameterCollection)
                 {
                     command.Parameters.Add(parameter);
                 }
                 command.ExecuteNonQuery();
+                command.Dispose();
                 return true;
             }
             catch (Exception ex)
