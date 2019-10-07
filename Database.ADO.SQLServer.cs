@@ -231,7 +231,7 @@ namespace CardonerSistemas.Database.ADO
             string result = DataReaderGetStringSafeAsNull(dataReader, columnName);
             if (result == null)
             {
-                return String.Empty;
+                return System.String.Empty;
             }
             else
             {

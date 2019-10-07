@@ -1,5 +1,3 @@
-using System;
-
 namespace CardonerSistemas.Database.Framework
 {
     static partial class Lite
@@ -44,17 +42,17 @@ namespace CardonerSistemas.Database.Framework
 
         public static string GetEntityLoadErrorMessage(string entityDisplayName, bool isFemale)
         {
-            return String.Format(EntityLoadErrorMessage, GetEntityGenderArticle(isFemale), entityDisplayName);
+            return System.String.Format(EntityLoadErrorMessage, GetEntityGenderArticle(isFemale), entityDisplayName);
         }
 
         public static string GetEntityLoadPropertiesErrorMessage(string entityDisplayName, bool isFemale)
         {
-            return String.Format(EntityLoadPropertiesErrorMessage, GetEntityGenderArticle(isFemale), entityDisplayName);
+            return System.String.Format(EntityLoadPropertiesErrorMessage, GetEntityGenderArticle(isFemale), entityDisplayName);
         }
 
         public static string GetEntityRelatedLoadErrorMessage(string entityDisplayName, bool isFemale, string entityRelatedDisplayName, bool relatedIsFemale, bool relatedIsPlural)
         {
-            return String.Format(EntityRelatedLoadErrorMessage, GetEntityGenderArticle(isFemale), entityDisplayName, GetEntityGenderArticle(relatedIsFemale, relatedIsPlural), entityRelatedDisplayName);
+            return System.String.Format(EntityRelatedLoadErrorMessage, GetEntityGenderArticle(isFemale), entityDisplayName, GetEntityGenderArticle(relatedIsFemale, relatedIsPlural), entityRelatedDisplayName);
         }
 
         #endregion
