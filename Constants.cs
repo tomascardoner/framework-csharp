@@ -4,11 +4,19 @@ namespace CardonerSistemas
 {
     static class Constants
     {
-        public const string PublicEncryptionPassword = "CmcaTlMdmA,aTmP,am2CyalhdEb";
+        internal const string PublicEncryptionPassword = "CmcaTlMdmA,aTmP,am2CyalhdEb";
 
-        public const byte COMBOBOX_ALLYESNO_ALL_LISTINDEX = 0;
-        public const byte COMBOBOX_ALLYESNO_YES_LISTINDEX = 1;
-        public const byte COMBOBOX_ALLYESNO_NO_LISTINDEX = 2;
+        // ComboBoxes
+        internal const byte ComboBoxAllYesNoListIndexForAll = 0;
+        internal const byte ComboBoxAllYesNoListIndexForYes = 1;
+        internal const byte ComboBoxAllYesNoListIndexForNo = 2;
+
+        // To String formats
+        internal const string FormatStringToNumber = "N";
+        internal const string FormatStringToNumberInteger = "G";
+        internal const string FormatStringToCurrency = "C";
+        internal const string FormatStringToPercent = "P";
+        internal const string FormatStringToHexadecimal = "X";
 
         //////////////////////
         //    FIELD VALUES

@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace CardonerSistemas
@@ -114,7 +115,7 @@ namespace CardonerSistemas
             return GetInstance(Application.OpenForms, formName);
         }
 
-        static public void CloseAll(FormCollection forms, params string[] exceptForms)
+        static public void CloseAll(Form[] forms, params string[] exceptForms)
         {
             foreach (Form form in forms)
             {
@@ -139,7 +140,7 @@ namespace CardonerSistemas
 
         static public void CloseAll(params string[] exceptForms)
         {
-            CloseAll(Application.OpenForms, exceptForms);
+            CloseAll(Application.OpenForms.Cast<Form>().ToArray(), exceptForms);
         }
 
         #endregion
@@ -219,8 +220,7 @@ namespace CardonerSistemas
 
         static public void MdiChildCloseAll(Form MdiForm, params string[] exceptForms)
         {
-            FormCollection forms = (FormCollection)MdiForm.MdiChildren.GetEnumerator();
-            CloseAll(forms, exceptForms);
+            CloseAll(MdiForm.MdiChildren, exceptForms);
         }
 
         #endregion
