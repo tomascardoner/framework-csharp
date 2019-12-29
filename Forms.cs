@@ -47,7 +47,7 @@ namespace CardonerSistemas
 
         #region Instances
 
-        static public bool IsLoaded(FormCollection forms, string formName)
+        static public bool IsLoaded(Form[] forms, string formName)
         {
             foreach (Form form in forms)
             {
@@ -61,10 +61,10 @@ namespace CardonerSistemas
 
         static public bool IsLoaded(string formName)
         {
-            return IsLoaded(Application.OpenForms, formName);
+            return IsLoaded(Application.OpenForms.Cast<Form>().ToArray(), formName);
         }
 
-        static public bool IsLoaded(FormCollection forms, string formName, string formText)
+        static public bool IsLoaded(Form[] forms, string formName, string formText)
         {
             foreach (Form form in forms)
             {
@@ -78,10 +78,10 @@ namespace CardonerSistemas
 
         static public bool IsLoaded(string formName, string formText)
         {
-            return IsLoaded(Application.OpenForms, formName, formText);
+            return IsLoaded(Application.OpenForms.Cast<Form>().ToArray(), formName, formText);
         }
 
-        static public Form GetInstance(FormCollection forms, string formName)
+        static public Form GetInstance(Form[] forms, string formName)
         {
             foreach (Form form in forms)
             {
@@ -95,10 +95,10 @@ namespace CardonerSistemas
 
         static public Form GetInstance(string formName)
         {
-            return GetInstance(Application.OpenForms, formName);
+            return GetInstance(Application.OpenForms.Cast<Form>().ToArray(), formName);
         }
 
-        static public Form GetInstance(FormCollection forms, string formName, string formText)
+        static public Form GetInstance(Form[] forms, string formName, string formText)
         {
             foreach (Form form in forms)
             {
@@ -112,7 +112,7 @@ namespace CardonerSistemas
 
         static public Form GetInstance(string formName, string formText)
         {
-            return GetInstance(Application.OpenForms, formName);
+            return GetInstance(Application.OpenForms.Cast<Form>().ToArray(), formName);
         }
 
         static public void CloseAll(Form[] forms, params string[] exceptForms)
@@ -196,26 +196,22 @@ namespace CardonerSistemas
 
         static public bool MdiChildIsLoaded(Form MdiForm, string formName)
         {
-            FormCollection forms = (FormCollection)MdiForm.MdiChildren.GetEnumerator();
-            return IsLoaded(forms, formName);
+            return IsLoaded(MdiForm.MdiChildren, formName);
         }
 
         static public bool MdiChildIsLoaded(Form MdiForm, string formName, string formText)
         {
-            FormCollection forms = (FormCollection)MdiForm.MdiChildren.GetEnumerator();
-            return IsLoaded(forms, formName, formText);
+            return IsLoaded(MdiForm.MdiChildren, formName, formText);
         }
 
         static public Form MdiChildGetInstance(Form MdiForm, string formName)
         {
-            FormCollection forms = (FormCollection)MdiForm.MdiChildren.GetEnumerator();
-            return GetInstance(forms, formName);
+            return GetInstance(MdiForm.MdiChildren, formName);
         }
 
         static public Form MdiChildGetInstance(Form MdiForm, string formName, string formText)
         {
-            FormCollection forms = (FormCollection)MdiForm.MdiChildren.GetEnumerator();
-            return GetInstance(forms, formName, formText);
+            return GetInstance(MdiForm.MdiChildren, formName, formText);
         }
 
         static public void MdiChildCloseAll(Form MdiForm, params string[] exceptForms)

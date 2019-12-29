@@ -1,15 +1,13 @@
-﻿using System.Text;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace CardonerSistemas
 {
-    static class ValueTranslation
+    static class ControlValueTranslation
     {
 
         #region Objectos a Controles - TextBox
 
-        static internal string ObjectStringToTextBox(string value)
+        static internal string StringToTextBox(string value)
         {
             if (string.IsNullOrEmpty(value))
             {
@@ -21,7 +19,7 @@ namespace CardonerSistemas
             }
         }
 
-        static internal string ObjectMoneyToTextBox(decimal? value)
+        static internal string MoneyToTextBox(decimal? value)
         {
             if (value.HasValue)
             {
@@ -34,7 +32,7 @@ namespace CardonerSistemas
             }
         }
 
-        static internal string ObjectDecimalToTextBox(decimal? value)
+        static internal string DecimalToTextBox(decimal? value)
         {
             if (value.HasValue)
             {
@@ -46,7 +44,7 @@ namespace CardonerSistemas
             }
         }
 
-        static internal string ObjectIntegerToTextBox(int? value)
+        static internal string IntegerToTextBox(int? value)
         {
             if (value.HasValue)
             {
@@ -58,7 +56,7 @@ namespace CardonerSistemas
             }
         }
 
-        static internal string ObjectShortToTextBox(short? value)
+        static internal string ShortToTextBox(short? value)
         {
             if (value.HasValue)
             {
@@ -70,7 +68,7 @@ namespace CardonerSistemas
             }
         }
 
-        static internal string ObjectByteToTextBox(byte? value)
+        static internal string ByteToTextBox(byte? value)
         {
             if (value.HasValue)
             {
@@ -86,7 +84,7 @@ namespace CardonerSistemas
 
         #region Objectos a Controles - Otros
 
-        static internal decimal FromObjectIntegerToUpDown(int? value)
+        static internal decimal IntegerToUpDown(int? value)
         {
             if (value.HasValue)
             {
@@ -98,7 +96,7 @@ namespace CardonerSistemas
             }
         }
 
-        static internal decimal FromObjectShortToUpDown(short? value)
+        static internal decimal ShortToUpDown(short? value)
         {
             if (value.HasValue)
             {
@@ -110,7 +108,7 @@ namespace CardonerSistemas
             }
         }
 
-        static internal decimal ObjectByteToUpDown(byte? value)
+        static internal decimal ByteToUpDown(byte? value)
         {
             if (value.HasValue)
             {
@@ -122,7 +120,7 @@ namespace CardonerSistemas
             }
         }
 
-        static internal CheckState ObjectBooleanToCheckBox(bool? value)
+        static internal CheckState BooleanToCheckBox(bool? value)
         {
             if (value.HasValue)
             {
@@ -139,6 +137,45 @@ namespace CardonerSistemas
             else
             {
                 return CheckState.Indeterminate;
+            }
+        }
+
+        #endregion
+
+        #region De Controles a Objectos - TextBox
+
+        static internal string TextBoxToString(string value, bool trimText = true)
+        {
+            if (trimText)
+            {
+                value = value.Trim();
+            }
+            if (value.Length == 0)
+            {
+                return null;
+            }
+            else
+            {
+                return value;
+            }
+        }
+
+        #endregion
+
+        #region De Controles a Objectos - Otros
+
+        static internal bool? CheckBoxToBoolean(CheckState state)
+        {
+            switch (state)
+            {
+                case CheckState.Unchecked:
+                    return false;
+                case CheckState.Checked:
+                    return true;
+                case CheckState.Indeterminate:
+                    return null;
+                default:
+                    return null;
             }
         }
 
