@@ -1,9 +1,22 @@
 ﻿using System.Windows.Forms;
+using System.Globalization;
 
 namespace CardonerSistemas
 {
     static class ControlValueTranslation
     {
+
+        #region Declarations
+
+        internal enum ChangeCase
+        { 
+            None = 0,
+            Lower = 1,
+            Upper = 2,
+            TitleCase = 3
+        }
+
+        #endregion
 
         #region Objectos a Controles - TextBox
 
@@ -144,7 +157,7 @@ namespace CardonerSistemas
 
         #region De Controles a Objectos - TextBox
 
-        static internal string TextBoxToString(string value, bool trimText = true)
+        static internal string TextBoxToString(string value, bool trimText = true, ChangeCase changeCase = ChangeCase.None)
         {
             if (trimText)
             {
@@ -156,7 +169,20 @@ namespace CardonerSistemas
             }
             else
             {
-                return value;
+                switch (changeCase)
+                {
+                    case ChangeCase.None:
+                        return value;
+                    case ChangeCase.Lower:
+                        return value.ToLower();
+                    case ChangeCase.Upper:
+                        return value.ToUpper();
+                    case ChangeCase.TitleCase:
+                        TextInfo textInfo = new CultureInfo(Application.CurrentCulture.Name, false).TextInfo;
+                        return textInfo.ToTitleCase(value);
+                    default:
+                        return value;
+                }
             }
         }
 
