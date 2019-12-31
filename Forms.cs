@@ -39,7 +39,7 @@ namespace CardonerSistemas
 
         static public void CenterToParent(Form parentForm, Form childForm)
         {
-            childForm.Top = parentForm.Top + (int)((parentForm.Height - childForm.Height) / 2);
+            childForm.Top = parentForm.Top  + (int)((parentForm.Height - childForm.Height) / 2);
             childForm.Left = parentForm.Left + (int)((parentForm.Width - childForm.Width) / 2);
         }
 
