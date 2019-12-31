@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using System.Globalization;
+using System;
 
 namespace CardonerSistemas
 {
@@ -10,10 +11,10 @@ namespace CardonerSistemas
 
         internal enum ChangeCase
         { 
-            None = 0,
-            Lower = 1,
-            Upper = 2,
-            TitleCase = 3
+            None,
+            Lower,
+            Upper,
+            TitleCase
         }
 
         #endregion
@@ -189,6 +190,54 @@ namespace CardonerSistemas
         #endregion
 
         #region De Controles a Objectos - Otros
+
+        static internal byte? ComboBoxToByte(object selectedValue, byte valueForNull = CardonerSistemas.Constants.ByteFieldValueNotSpecified)
+        {
+            if (selectedValue == null)
+            {
+                return null;
+            }
+            else if (Convert.ToByte(selectedValue) == valueForNull)
+            {
+                return null;
+            }
+            else
+            {
+                return Convert.ToByte(selectedValue);
+            }
+        }
+
+        static internal short? ComboBoxToShort(object selectedValue, short valueForNull = CardonerSistemas.Constants.ShortFieldValueNotSpecified)
+        {
+            if (selectedValue == null)
+            {
+                return null;
+            }
+            else if (Convert.ToInt16(selectedValue) == valueForNull)
+            {
+                return null;
+            }
+            else
+            {
+                return Convert.ToInt16(selectedValue);
+            }
+        }
+
+        static internal int? ComboBoxToInteger(object selectedValue, int valueForNull = CardonerSistemas.Constants.IntegerFieldValueNotSpecified)
+        {
+            if (selectedValue == null)
+            {
+                return null;
+            }
+            else if (Convert.ToInt32(selectedValue) == valueForNull)
+            {
+                return null;
+            }
+            else
+            {
+                return Convert.ToInt32(selectedValue);
+            }
+        }
 
         static internal bool? CheckBoxToBoolean(CheckState state)
         {
