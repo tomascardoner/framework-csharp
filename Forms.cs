@@ -39,8 +39,34 @@ namespace CardonerSistemas
 
         static public void CenterToParent(Form parentForm, Form childForm)
         {
-            childForm.Top = parentForm.Top  + (int)((parentForm.Height - childForm.Height) / 2);
-            childForm.Left = parentForm.Left + (int)((parentForm.Width - childForm.Width) / 2);
+            int parentFormTop;
+            int parentFormLeft;
+
+            if (parentForm.MdiParent == null | childForm.MdiParent != null)
+            {
+                parentFormTop = parentForm.Top;
+                parentFormLeft = parentForm.Left;
+            }
+            else
+            {
+
+                //TODO Need to take account of the scaling when different to 1
+
+                // Gets the scaling factor of the screen
+                System.Drawing.Graphics g = parentForm.CreateGraphics();
+                float scalingFactor = (int)g.DpiX / 96;
+
+                // Parent form title bar height and border size calculation
+                int borderSize = (parentForm.Width - parentForm.ClientSize.Width) / 2;
+                int titleSize = (parentForm.Height - parentForm.ClientSize.Height) - (borderSize * 2);
+
+                // Gets parent form's absolute position
+                Point point = parentForm.PointToScreen(new Point(0, 0));
+                parentFormTop = point.Y - borderSize - titleSize;
+                parentFormLeft = point.X - borderSize;
+            }
+            childForm.Top = parentFormTop  + (int)((parentForm.Height - childForm.Height) / 2);
+            childForm.Left = parentFormLeft + (int)((parentForm.Width - childForm.Width) / 2);
         }
 
         #endregion
@@ -112,7 +138,7 @@ namespace CardonerSistemas
 
         static public Form GetInstance(string formName, string formText)
         {
-            return GetInstance(Application.OpenForms.Cast<Form>().ToArray(), formName);
+            return GetInstance(Application.OpenForms.Cast<Form>().ToArray(), formName, formText);
         }
 
         static public void CloseAll(Form[] forms, params string[] exceptForms)
