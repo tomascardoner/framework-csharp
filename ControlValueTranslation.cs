@@ -10,7 +10,7 @@ namespace CardonerSistemas
         #region Declarations
 
         internal enum ChangeCase
-        { 
+        {
             None,
             Lower,
             Upper,
@@ -183,6 +183,29 @@ namespace CardonerSistemas
                         return textInfo.ToTitleCase(value);
                     default:
                         return value;
+                }
+            }
+        }
+
+        static internal short? TextBoxToShort(string value)
+        {
+            value = value.Trim();
+
+            if (value.Length == 0)
+            {
+                return null;
+            }
+            else
+            {
+                short returnValue;
+
+                if (short.TryParse(value, out returnValue))
+                {
+                    return returnValue;
+                }
+                else
+                {
+                    return null;
                 }
             }
         }
