@@ -106,7 +106,7 @@ namespace CardonerSistemas
                         }
                         else
                         {
-                            comboBox.SelectedValue = selectedValue;
+                            comboBox.SelectedValue = valueToSelect;
                             if (comboBox.SelectedValue == null)
                             {
                                 comboBox.SelectedIndex = 0;

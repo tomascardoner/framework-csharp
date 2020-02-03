@@ -55,7 +55,14 @@ namespace CardonerSistemas
             byte digitoVerificador;
             digitoVerificador = (byte)(10 - Convert.ToByte(total.ToString().Last().ToString()));
 
-            return digitoVerificador;
+            if (digitoVerificador == 10)
+            {
+                return 0;
+            }
+            else
+            {
+                return digitoVerificador;
+            }
         }
 
         static internal byte? ObtenerDigitoVerificadorCbuBloque2(string cbuBloque2)
@@ -100,7 +107,14 @@ namespace CardonerSistemas
             byte digitoVerificador;
             digitoVerificador = (byte)(10 - Convert.ToByte(total.ToString().Last().ToString()));
 
-            return digitoVerificador;
+            if (digitoVerificador == 10)
+            {
+                return 0;
+            }
+            else
+            {
+                return digitoVerificador;
+            }
         }
 
         // Esta función verifica una CBU y devuelve:
