@@ -555,5 +555,6 @@ namespace CardonerSistemas.PointOfSale
         }
 
         #endregion
+
     }
 }
