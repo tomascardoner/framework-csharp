@@ -3,31 +3,106 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace CardonerSistemas.Database.ADO
 {
-    public class SQLServer
+    internal class SQLServer
     {
 
         #region Properties
 
-        public string ApplicationName { get; set; }
-        public string AttachDBFilename { get; set; }
-        public string Datasource { get; set; }
-        public string InitialCatalog { get; set; }
-        public string UserID { get; set; }
-        public string Password { get; set; }
-        public bool MultipleActiveResultsets { get; set; }
-        public string WorkstationID { get; set; }
-        public string ConnectionString { get; set; }
+        internal string ApplicationName { get; set; }
+        internal string AttachDBFilename { get; set; }
+        internal string Datasource { get; set; }
+        internal string InitialCatalog { get; set; }
+        internal string UserId { get; set; }
+        internal string PasswordEncrypted { get; set; }
+        internal string Password { get; set; }
+        internal bool MultipleActiveResultsets { get; set; }
+        internal string WorkstationID { get; set; }
+        internal string ConnectionString { get; set; }
 
-        public SqlConnection Connection { get; set; }
+        internal SqlConnection Connection { get; set; }
+
+        internal bool PasswordUnencrypt()
+        {
+            CardonerSistemas.Encrypt.TripleDES passwordDecrypter = new CardonerSistemas.Encrypt.TripleDES(CardonerSistemas.Constants.PublicEncryptionPassword);
+            string unencryptedPassword = "";
+            if (!passwordDecrypter.Decrypt(PasswordEncrypted, ref unencryptedPassword))
+            {
+                unencryptedPassword = null;
+                passwordDecrypter = null;
+                return false;
+            }
+            Password = unencryptedPassword;
+            unencryptedPassword = null;
+            passwordDecrypter = null;
+
+            return true;
+        }
 
         #endregion
 
         #region Connection
 
-        public void CreateConnectionString()
+        internal bool SetProperties(string datasource, string initialCatalog, string userId, string passwordEncrypted)
+        {
+            int selectedDatasourceIndex;
+
+            if (datasource.Contains(CardonerSistemas.Constants.StringListSeparator))
+            {
+                // Muestro la ventana de selecciónde Datasource
+                CardonerSistemas.Database.SelectDatasource selectDatasource = new SelectDatasource();
+                selectDatasource.comboboxDataSource.Items.AddRange(datasource.Split(Convert.ToChar(CardonerSistemas.Constants.StringListSeparator)));
+                if (selectDatasource.ShowDialog() != DialogResult.OK)
+                {
+                    return false;
+                }
+                selectedDatasourceIndex = selectDatasource.comboboxDataSource.SelectedIndex;
+                selectDatasource.Close();
+                selectDatasource = null;
+
+                // Asigno las propiedades
+                Datasource = SelectProperty(datasource, selectedDatasourceIndex);
+                InitialCatalog = SelectProperty(initialCatalog, selectedDatasourceIndex);
+                UserId = SelectProperty(userId, selectedDatasourceIndex);
+                PasswordEncrypted = SelectProperty(passwordEncrypted, selectedDatasourceIndex);
+            }
+            else
+            {
+                Datasource = datasource;
+                InitialCatalog = initialCatalog;
+                UserId = userId;
+                PasswordEncrypted = passwordEncrypted;
+            }
+
+            return true;
+        }
+
+        private string SelectProperty(string value, int selectedIndex)
+        {
+            if (value.Contains(CardonerSistemas.Constants.StringListSeparator))
+            {
+                string[] values;
+                values = value.Split(Convert.ToChar(CardonerSistemas.Constants.StringListSeparator));
+                if (values.GetUpperBound(0) >= selectedIndex)
+                {
+                    return values[selectedIndex];
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            else
+            {
+                return value;
+            }
+        }
+
+        internal void CreateConnectionString()
         {
             SqlConnectionStringBuilder scsb = new SqlConnectionStringBuilder
             {
@@ -42,9 +117,9 @@ namespace CardonerSistemas.Database.ADO
             {
                 scsb.InitialCatalog = InitialCatalog;
             }
-            if (UserID != null && UserID.Trim().Length > 0)
+            if (UserId != null && UserId.Trim().Length > 0)
             {
-                scsb.UserID = UserID;
+                scsb.UserID = UserId;
             }
             if (Password != null && Password.Trim().Length > 0)
             {
@@ -56,7 +131,7 @@ namespace CardonerSistemas.Database.ADO
             ConnectionString = scsb.ConnectionString;
         }
 
-        public bool Connect()
+        internal bool Connect()
         {
             try
             {
@@ -71,12 +146,12 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public bool IsConnected()
+        internal bool IsConnected()
         {
             return !(Connection == null || Connection.State == ConnectionState.Closed || Connection.State == ConnectionState.Broken);
         }
 
-        public bool Close()
+        internal bool Close()
         {
             if (IsConnected())
             {
@@ -102,7 +177,7 @@ namespace CardonerSistemas.Database.ADO
 
         #region Retrieve data
 
-        public bool OpenDataReader(ref SqlDataReader dataReader, string commandText, CommandType commandType, CommandBehavior commandBehavior, string errorMessage)
+        internal bool OpenDataReader(ref SqlDataReader dataReader, string commandText, CommandType commandType, CommandBehavior commandBehavior, string errorMessage)
         {
             try
             {
@@ -126,7 +201,7 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public bool OpenDataSet(ref SqlDataAdapter dataAdapter, ref DataSet dataSet, string selectCommandText, string sourceTable, string errorMessage)
+        internal bool OpenDataSet(ref SqlDataAdapter dataAdapter, ref DataSet dataSet, string selectCommandText, string sourceTable, string errorMessage)
         {
             try
             {
@@ -146,7 +221,7 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public bool OpenDataTable(ref DataTable dataTable, string selectCommandText, string sourceTable, string errorMessage)
+        internal bool OpenDataTable(ref DataTable dataTable, string selectCommandText, string sourceTable, string errorMessage)
         {
             try
             {
@@ -171,7 +246,7 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public bool Execute(string commandText, CommandType commandType, string errorMessage)
+        internal bool Execute(string commandText, CommandType commandType, string errorMessage)
         {
             try
             {
@@ -192,7 +267,7 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public bool Execute(string commandText, CommandType commandType, SqlParameterCollection sqlParameterCollection, string errorMessage)
+        internal bool Execute(string commandText, CommandType commandType, SqlParameterCollection sqlParameterCollection, string errorMessage)
         {
             try
             {
@@ -221,12 +296,12 @@ namespace CardonerSistemas.Database.ADO
 
         #region Get values - data reader
 
-        public static string DataReaderGetString(SqlDataReader dataReader, string columnName)
+        internal static string DataReaderGetString(SqlDataReader dataReader, string columnName)
         {
             return dataReader.GetString(dataReader.GetOrdinal(columnName));
         }
 
-        public static string DataReaderGetStringSafeAsEmpty(SqlDataReader dataReader, string columnName)
+        internal static string DataReaderGetStringSafeAsEmpty(SqlDataReader dataReader, string columnName)
         {
             string result = DataReaderGetStringSafeAsNull(dataReader, columnName);
             if (result == null)
@@ -239,7 +314,7 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public static string DataReaderGetStringSafeAsNull(SqlDataReader dataReader, string columnName)
+        internal static string DataReaderGetStringSafeAsNull(SqlDataReader dataReader, string columnName)
         {
             int columnIndex = dataReader.GetOrdinal(columnName);
 
@@ -253,12 +328,12 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public static byte DataReaderGetByte(SqlDataReader dataReader, string columnName)
+        internal static byte DataReaderGetByte(SqlDataReader dataReader, string columnName)
         {
             return dataReader.GetByte(dataReader.GetOrdinal(columnName));
         }
 
-        public static byte DataReaderGetByteSafeAsMinValue(SqlDataReader dataReader, string columnName)
+        internal static byte DataReaderGetByteSafeAsMinValue(SqlDataReader dataReader, string columnName)
         {
             byte? result = DataReaderGetByteSafeAsNull(dataReader, columnName);
             if (result.HasValue)
@@ -271,7 +346,7 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public static byte? DataReaderGetByteSafeAsNull(SqlDataReader dataReader, string columnName)
+        internal static byte? DataReaderGetByteSafeAsNull(SqlDataReader dataReader, string columnName)
         {
             int columnIndex = dataReader.GetOrdinal(columnName);
 
@@ -285,12 +360,12 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public static short DataReaderGetShort(SqlDataReader dataReader, string columnName)
+        internal static short DataReaderGetShort(SqlDataReader dataReader, string columnName)
         {
             return dataReader.GetInt16(dataReader.GetOrdinal(columnName));
         }
 
-        public static short DataReaderGetShortSafeAsMinValue(SqlDataReader dataReader, string columnName)
+        internal static short DataReaderGetShortSafeAsMinValue(SqlDataReader dataReader, string columnName)
         {
             short? result = DataReaderGetShortSafeAsNull(dataReader, columnName);
             if (result.HasValue)
@@ -303,7 +378,7 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public static short? DataReaderGetShortSafeAsNull(SqlDataReader dataReader, string columnName)
+        internal static short? DataReaderGetShortSafeAsNull(SqlDataReader dataReader, string columnName)
         {
             int columnIndex = dataReader.GetOrdinal(columnName);
 
@@ -317,12 +392,12 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public static int DataReaderGetInteger(SqlDataReader dataReader, string columnName)
+        internal static int DataReaderGetInteger(SqlDataReader dataReader, string columnName)
         {
             return dataReader.GetInt32(dataReader.GetOrdinal(columnName));
         }
 
-        public static int DataReaderGetIntegerSafeAsMinValue(SqlDataReader dataReader, string columnName)
+        internal static int DataReaderGetIntegerSafeAsMinValue(SqlDataReader dataReader, string columnName)
         {
             int? result = DataReaderGetIntegerSafeAsNull(dataReader, columnName);
             if (result.HasValue)
@@ -335,7 +410,7 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public static int? DataReaderGetIntegerSafeAsNull(SqlDataReader dataReader, string columnName)
+        internal static int? DataReaderGetIntegerSafeAsNull(SqlDataReader dataReader, string columnName)
         {
             int columnIndex = dataReader.GetOrdinal(columnName);
 
@@ -349,12 +424,12 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public static long DataReaderGetLong(SqlDataReader dataReader, string columnName)
+        internal static long DataReaderGetLong(SqlDataReader dataReader, string columnName)
         {
             return dataReader.GetInt64(dataReader.GetOrdinal(columnName));
         }
 
-        public static long DataReaderGetLongSafeAsMinValue(SqlDataReader dataReader, string columnName)
+        internal static long DataReaderGetLongSafeAsMinValue(SqlDataReader dataReader, string columnName)
         {
             long? result = DataReaderGetLongSafeAsNull(dataReader, columnName);
             if (result.HasValue)
@@ -367,7 +442,7 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public static long? DataReaderGetLongSafeAsNull(SqlDataReader dataReader, string columnName)
+        internal static long? DataReaderGetLongSafeAsNull(SqlDataReader dataReader, string columnName)
         {
             int columnIndex = dataReader.GetOrdinal(columnName);
 
@@ -381,12 +456,12 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public static decimal DataReaderGetDecimal(SqlDataReader dataReader, string columnName)
+        internal static decimal DataReaderGetDecimal(SqlDataReader dataReader, string columnName)
         {
             return dataReader.GetDecimal(dataReader.GetOrdinal(columnName));
         }
 
-        public static decimal DataReaderGetDecimalSafeAsMinValue(SqlDataReader dataReader, string columnName)
+        internal static decimal DataReaderGetDecimalSafeAsMinValue(SqlDataReader dataReader, string columnName)
         {
             decimal? result = DataReaderGetDecimalSafeAsNull(dataReader, columnName);
             if (result.HasValue)
@@ -399,7 +474,7 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public static decimal? DataReaderGetDecimalSafeAsNull(SqlDataReader dataReader, string columnName)
+        internal static decimal? DataReaderGetDecimalSafeAsNull(SqlDataReader dataReader, string columnName)
         {
             int columnIndex = dataReader.GetOrdinal(columnName);
 
@@ -418,7 +493,7 @@ namespace CardonerSistemas.Database.ADO
             return dataReader.GetBoolean(dataReader.GetOrdinal(columnName));
         }
 
-        public static byte DataReaderGetBooleanSafeAsByte(SqlDataReader dataReader, string columnName)
+        internal static byte DataReaderGetBooleanSafeAsByte(SqlDataReader dataReader, string columnName)
         {
             bool? result = DataReaderGetBooleanSafeAsNull(dataReader, columnName);
             if (result.HasValue)
@@ -438,7 +513,7 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public static bool? DataReaderGetBooleanSafeAsNull(SqlDataReader dataReader, string columnName)
+        internal static bool? DataReaderGetBooleanSafeAsNull(SqlDataReader dataReader, string columnName)
         {
             int columnIndex = dataReader.GetOrdinal(columnName);
 
@@ -452,12 +527,12 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public static DateTime DataReaderGetDateTime(SqlDataReader dataReader, string columnName)
+        internal static DateTime DataReaderGetDateTime(SqlDataReader dataReader, string columnName)
         {
             return dataReader.GetDateTime(dataReader.GetOrdinal(columnName));
         }
 
-        public static DateTime DataReaderGetDateTimeSafeAsMinValue(SqlDataReader dataReader, string columnName)
+        internal static DateTime DataReaderGetDateTimeSafeAsMinValue(SqlDataReader dataReader, string columnName)
         {
             DateTime? result = DataReaderGetDateTimeSafeAsNull(dataReader, columnName);
             if (result.HasValue)
@@ -470,7 +545,7 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public static DateTime? DataReaderGetDateTimeSafeAsNull(SqlDataReader dataReader, string columnName)
+        internal static DateTime? DataReaderGetDateTimeSafeAsNull(SqlDataReader dataReader, string columnName)
         {
             int columnIndex = dataReader.GetOrdinal(columnName);
 
@@ -488,7 +563,7 @@ namespace CardonerSistemas.Database.ADO
 
         #region Data reader - Get varbinary
 
-        public static Stream DataReaderGetStream(SqlDataReader dataReader, string columnName, string errorMessage = "")
+        internal static Stream DataReaderGetStream(SqlDataReader dataReader, string columnName, string errorMessage = "")
         {
             try
             {
@@ -504,7 +579,7 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public static Image DataReaderGetStreamAsImage(SqlDataReader dataReader, string columnName)
+        internal static Image DataReaderGetStreamAsImage(SqlDataReader dataReader, string columnName)
         {
             Stream stream = DataReaderGetStream(dataReader, columnName);
             if (stream == null)
@@ -528,7 +603,7 @@ namespace CardonerSistemas.Database.ADO
 
         #region Get values - object
 
-        public static string ObjectGetString(object value)
+        internal static string ObjectGetString(object value)
         {
             if (DBNull.Value.Equals(value))
             {
@@ -540,7 +615,7 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public static byte? ObjectGetByte(object value)
+        internal static byte? ObjectGetByte(object value)
         {
             if (DBNull.Value.Equals(value))
             {
@@ -552,7 +627,7 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public static short? ObjectGetShort(object value)
+        internal static short? ObjectGetShort(object value)
         {
             if (DBNull.Value.Equals(value))
             {
@@ -564,7 +639,7 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public static int? ObjectGetInteger(object value)
+        internal static int? ObjectGetInteger(object value)
         {
             if (DBNull.Value.Equals(value))
             {
@@ -576,7 +651,7 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public static long? ObjectGetLong(object value)
+        internal static long? ObjectGetLong(object value)
         {
             if (DBNull.Value.Equals(value))
             {
@@ -588,7 +663,7 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public static decimal? ObjectGetDecimal(object value)
+        internal static decimal? ObjectGetDecimal(object value)
         {
             if (DBNull.Value.Equals(value))
             {
@@ -600,7 +675,7 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public static bool? ObjectGetBoolean(object value)
+        internal static bool? ObjectGetBoolean(object value)
         {
             if (DBNull.Value.Equals(value))
             {
@@ -612,7 +687,7 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        public static DateTime? ObjectGetDateTime(object value)
+        internal static DateTime? ObjectGetDateTime(object value)
         {
             if (DBNull.Value.Equals(value))
             {

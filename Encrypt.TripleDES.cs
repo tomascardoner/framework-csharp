@@ -49,6 +49,11 @@ namespace CardonerSistemas.Encrypt
 
         public bool Decrypt(string encryptedtext, ref string decryptedText)
         {
+            if (encryptedtext == null)
+            {
+                return false;
+            }
+
             if (encryptedtext.Trim() == "")
             {
                 decryptedText = "";

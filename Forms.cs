@@ -330,7 +330,7 @@ namespace CardonerSistemas
                         MaskedTextBox textBox = (MaskedTextBox)control;
                         textBox.ReadOnly = valueState;
                     }
-                    else if (control is ComboBox)
+                    else if (control is System.Windows.Forms.ComboBox)
                     {
                         control.Enabled = !valueState;
                     }

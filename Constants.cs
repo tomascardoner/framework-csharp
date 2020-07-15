@@ -39,7 +39,7 @@ namespace CardonerSistemas
         public const string KeyStringer = "@";
         public const string KeyDelimiter = "|";
 
-        public const string StringListSeparator = "|";
+        public const string StringListSeparator = ";";
         public const string StringListDelimiter = "¬";
 
         ////////////////////

@@ -62,7 +62,7 @@ namespace CardonerSistemas
         {
             if (value.HasValue)
             {
-                return value.Value.ToString("{0:N}");
+                return value.Value.ToString("N0");
             }
             else
             {
@@ -151,6 +151,23 @@ namespace CardonerSistemas
             else
             {
                 return CheckState.Indeterminate;
+            }
+        }
+
+        static internal DateTime DateToDateTimePicker(DateTime? value, DateTimePicker controlToCheck = null)
+        {
+            if (controlToCheck != null)
+            {
+                controlToCheck.Checked = value.HasValue;
+            }
+
+            if (value.HasValue)
+            {
+                return value.Value;
+            }
+            else
+            {
+                return System.DateTime.Today;
             }
         }
 
@@ -274,6 +291,18 @@ namespace CardonerSistemas
                     return null;
                 default:
                     return null;
+            }
+        }
+
+        static internal DateTime? DateTimePickerToDate(DateTimePicker value)
+        {
+            if (value.Checked)
+            {
+                return value.Value;
+            }
+            else
+            {
+                return null;
             }
         }
 
