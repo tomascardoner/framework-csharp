@@ -171,6 +171,21 @@ namespace CardonerSistemas
             }
         }
 
+        static internal System.Drawing.Image ImageToPictureBox(byte[] image)
+        {
+            if (image == null)
+            {
+                return null;
+            }
+            else
+            {
+                byte[] aFoto = image;
+                System.IO.MemoryStream memstr = new System.IO.MemoryStream(aFoto, 0, aFoto.Length);
+                memstr.Write(aFoto, 0, aFoto.Length);
+                return System.Drawing.Image.FromStream(memstr, true);
+            }
+        }
+
         #endregion
 
         #region De Controles a Objectos - TextBox
@@ -303,6 +318,21 @@ namespace CardonerSistemas
             else
             {
                 return null;
+            }
+        }
+
+        static internal byte[] PictureBoxToImage(System.Drawing.Image image)
+        {
+            if (image == null)
+            {
+                return null;
+            }
+            else
+            {
+                System.IO.MemoryStream memstr = new System.IO.MemoryStream();
+                image.Save(memstr, image.RawFormat);
+                byte[] aFoto = memstr.GetBuffer();
+                return aFoto;
             }
         }
 

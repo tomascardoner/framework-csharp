@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Drawing;
+using System.Windows.Forms;
 
 namespace CardonerSistemas
 {
@@ -168,6 +169,28 @@ namespace CardonerSistemas
         static internal void SetSelectedIndexByDisplayValue(System.Windows.Forms.ComboBox comboBox, string displayValue)
         {
             comboBox.Text = displayValue;
+        }
+
+        static internal int GetMaxWidthOfItems(System.Windows.Forms.ComboBox comboBox, string propertyName)
+        {
+            int maxWidth = 0;
+            int tempWidth = 0;
+            string itemText = "";
+
+            if (propertyName.Trim().Length > 0)
+            {
+                foreach (var obj in comboBox.Items)
+                {
+                    itemText = (string)obj.GetType().GetProperty(propertyName).GetValue(obj, null);
+
+                    tempWidth = TextRenderer.MeasureText(itemText, comboBox.Font).Width;
+                    if (tempWidth > maxWidth)
+                    {
+                        maxWidth = tempWidth;
+                    }
+                }
+            }
+            return maxWidth;
         }
 
     }
