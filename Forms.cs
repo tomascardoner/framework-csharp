@@ -7,6 +7,13 @@ namespace CardonerSistemas
     static class Forms
     {
 
+        #region Declarations
+
+        internal const int LabelAndControlSeparation = 6;
+        internal const int WindowMargin = 12;
+
+        #endregion
+
         #region Size and Position
 
         static public void CenterOnScreen(Form theForm)

@@ -74,7 +74,7 @@ namespace CardonerSistemas
         {
             if (value.HasValue)
             {
-                return value.Value.ToString("{0:N}");
+                return value.Value.ToString("N0");
             }
             else
             {
@@ -86,7 +86,7 @@ namespace CardonerSistemas
         {
             if (value.HasValue)
             {
-                return value.Value.ToString("{0:N}");
+                return value.Value.ToString("N0");
             }
             else
             {
