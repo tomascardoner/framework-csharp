@@ -33,34 +33,36 @@ namespace CardonerSistemas.Database
 
         static public Errors TryDecodeDbUpdateException(System.Data.Entity.Infrastructure.DbUpdateException ex)
         {
-            if (ex.InnerException is System.Data.Entity.Core.UpdateException | ex.InnerException.InnerException is System.Data.SqlClient.SqlException)
+            if (ex.InnerException is System.Data.Entity.Core.UpdateException)
             {
-                System.Data.SqlClient.SqlException SqlException = (System.Data.SqlClient.SqlException)ex.InnerException.InnerException;
-
-                foreach (System.Data.SqlClient.SqlError sqlError in SqlException.Errors)
+                if (ex.InnerException.InnerException != null && ex.InnerException.InnerException is System.Data.SqlClient.SqlException)
                 {
-                    switch (sqlError.Number)
+                    System.Data.SqlClient.SqlException SqlException = (System.Data.SqlClient.SqlException)ex.InnerException.InnerException;
+
+                    foreach (System.Data.SqlClient.SqlError sqlError in SqlException.Errors)
                     {
-                        case 207:
-                            return Errors.InvalidColumn;
-                        case 547:
-                            return Errors.RelatedEntity;
-                        case 2601:
-                            return Errors.DuplicatedEntity;
-                        case 2627:
-                            return Errors.PrimaryKeyViolation;
-                        case 5000:
-                            return Errors.UserDefinedError;
-                        default:
-                            break;
+                        switch (sqlError.Number)
+                        {
+                            case 207:
+                                return Errors.InvalidColumn;
+                            case 547:
+                                return Errors.RelatedEntity;
+                            case 2601:
+                                return Errors.DuplicatedEntity;
+                            case 2627:
+                                return Errors.PrimaryKeyViolation;
+                            case 5000:
+                                return Errors.UserDefinedError;
+                            default:
+                                break;
+                        }
                     }
                 }
-
                 return Errors.Unknown;
             }
             else
             {
-                return Errors.NoDBError;
+                return Errors.Unknown;
             }
         }
     }

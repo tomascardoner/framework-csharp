@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SelectDatasource));
             this.toolstripMain = new System.Windows.Forms.ToolStrip();
             this.buttonCancelar = new System.Windows.Forms.ToolStripButton();
             this.buttonAceptar = new System.Windows.Forms.ToolStripButton();
@@ -51,7 +52,7 @@
             // buttonCancelar
             // 
             this.buttonCancelar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.buttonCancelar.Image = global::CS_Micro.Properties.Resources.ImageCancel32;
+            this.buttonCancelar.Image = ((System.Drawing.Image)(resources.GetObject("buttonCancelar.Image")));
             this.buttonCancelar.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.buttonCancelar.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.buttonCancelar.Name = "buttonCancelar";
@@ -62,7 +63,7 @@
             // buttonAceptar
             // 
             this.buttonAceptar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.buttonAceptar.Image = global::CS_Micro.Properties.Resources.ImageOk32;
+            this.buttonAceptar.Image = ((System.Drawing.Image)(resources.GetObject("buttonAceptar.Image")));
             this.buttonAceptar.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.buttonAceptar.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.buttonAceptar.Name = "buttonAceptar";
@@ -82,11 +83,11 @@
             // 
             // pictureboxMain
             // 
-            this.pictureboxMain.Image = global::CS_Micro.Properties.Resources.ImageDatabaseSearch48;
+            this.pictureboxMain.Image = ((System.Drawing.Image)(resources.GetObject("pictureboxMain.Image")));
             this.pictureboxMain.Location = new System.Drawing.Point(12, 49);
             this.pictureboxMain.Name = "pictureboxMain";
             this.pictureboxMain.Size = new System.Drawing.Size(48, 48);
-            this.pictureboxMain.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureboxMain.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureboxMain.TabIndex = 9;
             this.pictureboxMain.TabStop = false;
             // 

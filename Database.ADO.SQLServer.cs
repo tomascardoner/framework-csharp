@@ -53,7 +53,7 @@ namespace CardonerSistemas.Database.ADO
 
             if (datasource.Contains(CardonerSistemas.Constants.StringListSeparator))
             {
-                // Muestro la ventana de selecciónde Datasource
+                // Muestro la ventana de selección del Datasource
                 CardonerSistemas.Database.SelectDatasource selectDatasource = new SelectDatasource();
                 selectDatasource.comboboxDataSource.Items.AddRange(datasource.Split(Convert.ToChar(CardonerSistemas.Constants.StringListSeparator)));
                 if (selectDatasource.ShowDialog() != DialogResult.OK)

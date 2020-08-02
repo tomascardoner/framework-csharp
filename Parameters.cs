@@ -20,5 +20,6 @@ namespace CardonerSistemas
             ReportsFilterText = 103,
             ReportsFilterTextShow = 104
         };
+
     }
 }

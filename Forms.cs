@@ -57,7 +57,7 @@ namespace CardonerSistemas
             else
             {
 
-                //TODO Need to take account of the scaling when different to 1
+                //TODO: Need to take account of the scaling when different to 1
 
                 // Gets the scaling factor of the screen
                 System.Drawing.Graphics g = parentForm.CreateGraphics();
