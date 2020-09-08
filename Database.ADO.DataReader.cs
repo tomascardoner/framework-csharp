@@ -8,11 +8,20 @@ namespace CardonerSistemas.Database.ADO
     internal class DataReader
     {
 
-        #region Get values
+        #region Misc
 
         internal static bool IsDBNull(SqlDataReader dataReader, string columnName)
         { 
             return dataReader.IsDBNull(dataReader.GetOrdinal(columnName));
+        }
+
+        #endregion
+
+        #region Get Values - String
+
+        internal static string GetString(SqlDataReader dataReader, int columnOrdinal)
+        {
+            return dataReader.GetString(columnOrdinal);
         }
 
         internal static string GetString(SqlDataReader dataReader, string columnName)
@@ -20,31 +29,47 @@ namespace CardonerSistemas.Database.ADO
             return dataReader.GetString(dataReader.GetOrdinal(columnName));
         }
 
-        internal static string GetStringSafeAsEmpty(SqlDataReader dataReader, string columnName)
+        internal static string GetStringSafeAsEmpty(SqlDataReader dataReader, int columnOrdinal)
         {
-            string result = GetStringSafeAsNull(dataReader, columnName);
-            if (result == null)
+            if (dataReader.IsDBNull(columnOrdinal))
             {
                 return System.String.Empty;
             }
             else
             {
-                return result;
+                return dataReader.GetString(columnOrdinal);
             }
         }
 
-        internal static string GetStringSafeAsNull(SqlDataReader dataReader, string columnName)
+        internal static string GetStringSafeAsEmpty(SqlDataReader dataReader, string columnName)
         {
-            int columnIndex = dataReader.GetOrdinal(columnName);
+            return GetStringSafeAsEmpty(dataReader, dataReader.GetOrdinal(columnName));
+        }
 
-            if (dataReader.IsDBNull(columnIndex))
+        internal static string GetStringSafeAsNull(SqlDataReader dataReader, int columnOrdinal)
+        {
+            if (dataReader.IsDBNull(columnOrdinal))
             {
                 return null;
             }
             else
             {
-                return dataReader.GetString(columnIndex);
+                return dataReader.GetString(columnOrdinal);
             }
+        }
+
+        internal static string GetStringSafeAsNull(SqlDataReader dataReader, string columnName)
+        {
+            return GetStringSafeAsNull(dataReader, dataReader.GetOrdinal(columnName));
+        }
+
+        #endregion
+
+        #region Get values - Byte
+
+        internal static byte GetByte(SqlDataReader dataReader, int columnOrdinal)
+        {
+            return dataReader.GetByte(columnOrdinal);
         }
 
         internal static byte GetByte(SqlDataReader dataReader, string columnName)
@@ -52,31 +77,47 @@ namespace CardonerSistemas.Database.ADO
             return dataReader.GetByte(dataReader.GetOrdinal(columnName));
         }
 
-        internal static byte GetByteSafeAsMinValue(SqlDataReader dataReader, string columnName)
+        internal static byte GetByteSafeAsMinValue(SqlDataReader dataReader, int columnOrdinal)
         {
-            byte? result = GetByteSafeAsNull(dataReader, columnName);
-            if (result.HasValue)
+            if (dataReader.IsDBNull(columnOrdinal))
             {
-                return result.Value;
+                return Byte.MinValue;
             }
             else
             {
-                return byte.MinValue;
+                return dataReader.GetByte(columnOrdinal);
             }
         }
 
-        internal static byte? GetByteSafeAsNull(SqlDataReader dataReader, string columnName)
+        internal static byte GetByteSafeAsMinValue(SqlDataReader dataReader, string columnName)
         {
-            int columnIndex = dataReader.GetOrdinal(columnName);
+            return GetByteSafeAsMinValue(dataReader, dataReader.GetOrdinal(columnName));
+        }
 
-            if (dataReader.IsDBNull(columnIndex))
+        internal static byte? GetByteSafeAsNull(SqlDataReader dataReader, int columnOrdinal)
+        {
+            if (dataReader.IsDBNull(columnOrdinal))
             {
                 return null;
             }
             else
             {
-                return dataReader.GetByte(columnIndex);
+                return dataReader.GetByte(columnOrdinal);
             }
+        }
+
+        internal static byte? GetByteSafeAsNull(SqlDataReader dataReader, string columnName)
+        {
+            return GetByteSafeAsNull(dataReader, dataReader.GetOrdinal(columnName));
+        }
+
+        #endregion
+
+        #region Get values - Short
+
+        internal static short GetShort(SqlDataReader dataReader, int columnOrdinal)
+        {
+            return dataReader.GetInt16(columnOrdinal);
         }
 
         internal static short GetShort(SqlDataReader dataReader, string columnName)
@@ -84,31 +125,47 @@ namespace CardonerSistemas.Database.ADO
             return dataReader.GetInt16(dataReader.GetOrdinal(columnName));
         }
 
-        internal static short GetShortSafeAsMinValue(SqlDataReader dataReader, string columnName)
+        internal static short GetShortSafeAsMinValue(SqlDataReader dataReader, int columnOrdinal)
         {
-            short? result = GetShortSafeAsNull(dataReader, columnName);
-            if (result.HasValue)
+            if (dataReader.IsDBNull(columnOrdinal))
             {
-                return result.Value;
+                return Byte.MinValue;
             }
             else
             {
-                return short.MinValue;
+                return dataReader.GetInt16(columnOrdinal);
             }
         }
 
-        internal static short? GetShortSafeAsNull(SqlDataReader dataReader, string columnName)
+        internal static short GetShortSafeAsMinValue(SqlDataReader dataReader, string columnName)
         {
-            int columnIndex = dataReader.GetOrdinal(columnName);
+            return GetShortSafeAsMinValue(dataReader, dataReader.GetOrdinal(columnName));
+        }
 
-            if (dataReader.IsDBNull(columnIndex))
+        internal static short? GetShortSafeAsNull(SqlDataReader dataReader, int columnOrdinal)
+        {
+            if (dataReader.IsDBNull(columnOrdinal))
             {
                 return null;
             }
             else
             {
-                return dataReader.GetInt16(columnIndex);
+                return dataReader.GetInt16(columnOrdinal);
             }
+        }
+
+        internal static short? GetShortSafeAsNull(SqlDataReader dataReader, string columnName)
+        {
+            return GetShortSafeAsNull(dataReader, dataReader.GetOrdinal(columnName));
+        }
+
+        #endregion
+
+        #region Get values - Integer
+
+        internal static int GetInteger(SqlDataReader dataReader, int columnOrdinal)
+        {
+            return dataReader.GetInt32(columnOrdinal);
         }
 
         internal static int GetInteger(SqlDataReader dataReader, string columnName)
@@ -116,31 +173,47 @@ namespace CardonerSistemas.Database.ADO
             return dataReader.GetInt32(dataReader.GetOrdinal(columnName));
         }
 
-        internal static int GetIntegerSafeAsMinValue(SqlDataReader dataReader, string columnName)
+        internal static int GetIntegerSafeAsMinValue(SqlDataReader dataReader, int columnOrdinal)
         {
-            int? result = GetIntegerSafeAsNull(dataReader, columnName);
-            if (result.HasValue)
+            if (dataReader.IsDBNull(columnOrdinal))
             {
-                return result.Value;
+                return Byte.MinValue;
             }
             else
             {
-                return int.MinValue;
+                return dataReader.GetInt32(columnOrdinal);
             }
         }
 
-        internal static int? GetIntegerSafeAsNull(SqlDataReader dataReader, string columnName)
+        internal static int GetIntegerSafeAsMinValue(SqlDataReader dataReader, string columnName)
         {
-            int columnIndex = dataReader.GetOrdinal(columnName);
+            return GetIntegerSafeAsMinValue(dataReader, dataReader.GetOrdinal(columnName));
+        }
 
-            if (dataReader.IsDBNull(columnIndex))
+        internal static int? GetIntegerSafeAsNull(SqlDataReader dataReader, int columnOrdinal)
+        {
+            if (dataReader.IsDBNull(columnOrdinal))
             {
                 return null;
             }
             else
             {
-                return dataReader.GetInt32(columnIndex);
+                return dataReader.GetInt32(columnOrdinal);
             }
+        }
+
+        internal static int? GetIntegerSafeAsNull(SqlDataReader dataReader, string columnName)
+        {
+            return GetIntegerSafeAsNull(dataReader, dataReader.GetOrdinal(columnName));
+        }
+
+        #endregion
+
+        #region Get values - Long
+
+        internal static long GetLong(SqlDataReader dataReader, int columnOrdinal)
+        {
+            return dataReader.GetInt64(columnOrdinal);
         }
 
         internal static long GetLong(SqlDataReader dataReader, string columnName)
@@ -148,31 +221,47 @@ namespace CardonerSistemas.Database.ADO
             return dataReader.GetInt64(dataReader.GetOrdinal(columnName));
         }
 
-        internal static long GetLongSafeAsMinValue(SqlDataReader dataReader, string columnName)
+        internal static long GetLongSafeAsMinValue(SqlDataReader dataReader, int columnOrdinal)
         {
-            long? result = GetLongSafeAsNull(dataReader, columnName);
-            if (result.HasValue)
+            if (dataReader.IsDBNull(columnOrdinal))
             {
-                return result.Value;
+                return Byte.MinValue;
             }
             else
             {
-                return long.MinValue;
+                return dataReader.GetInt64(columnOrdinal);
             }
         }
 
-        internal static long? GetLongSafeAsNull(SqlDataReader dataReader, string columnName)
+        internal static long GetLongSafeAsMinValue(SqlDataReader dataReader, string columnName)
         {
-            int columnIndex = dataReader.GetOrdinal(columnName);
+            return GetLongSafeAsMinValue(dataReader, dataReader.GetOrdinal(columnName));
+        }
 
-            if (dataReader.IsDBNull(columnIndex))
+        internal static long? GetLongSafeAsNull(SqlDataReader dataReader, int columnOrdinal)
+        {
+            if (dataReader.IsDBNull(columnOrdinal))
             {
                 return null;
             }
             else
             {
-                return dataReader.GetInt64(columnIndex);
+                return dataReader.GetInt64(columnOrdinal);
             }
+        }
+
+        internal static long? GetLongSafeAsNull(SqlDataReader dataReader, string columnName)
+        {
+            return GetLongSafeAsNull(dataReader, dataReader.GetOrdinal(columnName));
+        }
+
+        #endregion
+
+        #region Get values - Decimal
+
+        internal static decimal GetDecimal(SqlDataReader dataReader, int columnOrdinal)
+        {
+            return dataReader.GetDecimal(columnOrdinal);
         }
 
         internal static decimal GetDecimal(SqlDataReader dataReader, string columnName)
@@ -180,31 +269,47 @@ namespace CardonerSistemas.Database.ADO
             return dataReader.GetDecimal(dataReader.GetOrdinal(columnName));
         }
 
-        internal static decimal GetDecimalSafeAsMinValue(SqlDataReader dataReader, string columnName)
+        internal static decimal GetDecimalSafeAsMinValue(SqlDataReader dataReader, int columnOrdinal)
         {
-            decimal? result = GetDecimalSafeAsNull(dataReader, columnName);
-            if (result.HasValue)
+            if (dataReader.IsDBNull(columnOrdinal))
             {
-                return result.Value;
+                return Byte.MinValue;
             }
             else
             {
-                return decimal.MinValue;
+                return dataReader.GetDecimal(columnOrdinal);
             }
         }
 
-        internal static decimal? GetDecimalSafeAsNull(SqlDataReader dataReader, string columnName)
+        internal static decimal GetDecimalSafeAsMinValue(SqlDataReader dataReader, string columnName)
         {
-            int columnIndex = dataReader.GetOrdinal(columnName);
+            return GetDecimalSafeAsMinValue(dataReader, dataReader.GetOrdinal(columnName));
+        }
 
-            if (dataReader.IsDBNull(columnIndex))
+        internal static decimal? GetDecimalSafeAsNull(SqlDataReader dataReader, int columnOrdinal)
+        {
+            if (dataReader.IsDBNull(columnOrdinal))
             {
                 return null;
             }
             else
             {
-                return dataReader.GetDecimal(columnIndex);
+                return dataReader.GetDecimal(columnOrdinal);
             }
+        }
+
+        internal static decimal? GetDecimalSafeAsNull(SqlDataReader dataReader, string columnName)
+        {
+            return GetDecimalSafeAsNull(dataReader, dataReader.GetOrdinal(columnName));
+        }
+
+        #endregion
+
+        #region Get values - Boolean
+
+        public static bool GetBoolean(SqlDataReader dataReader, int columnOrdinal)
+        {
+            return dataReader.GetBoolean(columnOrdinal);
         }
 
         public static bool GetBoolean(SqlDataReader dataReader, string columnName)
@@ -212,12 +317,15 @@ namespace CardonerSistemas.Database.ADO
             return dataReader.GetBoolean(dataReader.GetOrdinal(columnName));
         }
 
-        internal static byte GetBooleanSafeAsByte(SqlDataReader dataReader, string columnName)
+        internal static byte GetBooleanSafeAsByte(SqlDataReader dataReader, int columnOrdinal)
         {
-            bool? result = GetBooleanSafeAsNull(dataReader, columnName);
-            if (result.HasValue)
+            if (dataReader.IsDBNull(columnOrdinal))
             {
-                if (result.Value)
+                return 2;
+            }
+            else
+            {
+                if (dataReader.GetBoolean(columnOrdinal))
                 {
                     return 1;
                 }
@@ -226,24 +334,37 @@ namespace CardonerSistemas.Database.ADO
                     return 0;
                 }
             }
-            else
-            {
-                return 2;
-            }
         }
 
-        internal static bool? GetBooleanSafeAsNull(SqlDataReader dataReader, string columnName)
+        internal static byte GetBooleanSafeAsByte(SqlDataReader dataReader, string columnName)
         {
-            int columnIndex = dataReader.GetOrdinal(columnName);
+            return GetBooleanSafeAsByte(dataReader, dataReader.GetOrdinal(columnName));
+        }
 
-            if (dataReader.IsDBNull(columnIndex))
+        internal static bool? GetBooleanSafeAsNull(SqlDataReader dataReader, int columnOrdinal)
+        {
+            if (dataReader.IsDBNull(columnOrdinal))
             {
                 return null;
             }
             else
             {
-                return dataReader.GetBoolean(columnIndex);
+                return dataReader.GetBoolean(columnOrdinal);
             }
+        }
+
+        internal static bool? GetBooleanSafeAsNull(SqlDataReader dataReader, string columnName)
+        {
+            return GetBooleanSafeAsNull(dataReader, columnName);
+        }
+
+        #endregion
+
+        #region Get values - DateTime
+
+        internal static DateTime GetDateTime(SqlDataReader dataReader, int columnOrdinal)
+        {
+            return dataReader.GetDateTime(columnOrdinal);
         }
 
         internal static DateTime GetDateTime(SqlDataReader dataReader, string columnName)
@@ -251,42 +372,49 @@ namespace CardonerSistemas.Database.ADO
             return dataReader.GetDateTime(dataReader.GetOrdinal(columnName));
         }
 
-        internal static DateTime GetDateTimeSafeAsMinValue(SqlDataReader dataReader, string columnName)
+        internal static DateTime GetDateTimeSafeAsMinValue(SqlDataReader dataReader, int columnOrdinal)
         {
-            DateTime? result = GetDateTimeSafeAsNull(dataReader, columnName);
-            if (result.HasValue)
-            {
-                return result.Value;
-            }
-            else
+            if (dataReader.IsDBNull(columnOrdinal))
             {
                 return DateTime.MinValue;
             }
+            else
+            {
+                return dataReader.GetDateTime(columnOrdinal);
+            }
         }
 
-        internal static DateTime? GetDateTimeSafeAsNull(SqlDataReader dataReader, string columnName)
+        internal static DateTime GetDateTimeSafeAsMinValue(SqlDataReader dataReader, string columnName)
         {
-            int columnIndex = dataReader.GetOrdinal(columnName);
+            return GetDateTimeSafeAsMinValue(dataReader, dataReader.GetOrdinal(columnName));
+        }
 
-            if (dataReader.IsDBNull(columnIndex))
+        internal static DateTime? GetDateTimeSafeAsNull(SqlDataReader dataReader, int columnOrdinal)
+        {
+            if (dataReader.IsDBNull(columnOrdinal))
             {
                 return null;
             }
             else
             {
-                return dataReader.GetDateTime(columnIndex);
+                return dataReader.GetDateTime(columnOrdinal);
             }
+        }
+
+        internal static DateTime? GetDateTimeSafeAsNull(SqlDataReader dataReader, string columnName)
+        {
+            return GetDateTimeSafeAsNull(dataReader, dataReader.GetOrdinal(columnName));
         }
 
         #endregion
 
-        #region Get varbinary
+        #region Get values - Binary
 
-        internal static Stream GetStream(SqlDataReader dataReader, string columnName, string errorMessage = "")
+        internal static Stream GetStream(SqlDataReader dataReader, int columnOrdinal)
         {
             try
             {
-                return dataReader.GetStream(dataReader.GetOrdinal(columnName));
+                return dataReader.GetStream(columnOrdinal);
             }
             catch (Exception)
             {
@@ -294,9 +422,14 @@ namespace CardonerSistemas.Database.ADO
             }
         }
 
-        internal static Image GetStreamAsImage(SqlDataReader dataReader, string columnName)
+        internal static Stream GetStream(SqlDataReader dataReader, string columnName)
         {
-            Stream stream = GetStream(dataReader, columnName);
+            return GetStream(dataReader, dataReader.GetOrdinal(columnName));
+        }
+
+        internal static Image GetStreamAsImage(SqlDataReader dataReader, int columnOrdinal)
+        {
+            Stream stream = GetStream(dataReader, columnOrdinal);
             if (stream == null)
             {
                 return null;
@@ -312,6 +445,11 @@ namespace CardonerSistemas.Database.ADO
                     return null;
                 }
             }
+        }
+
+        internal static Image GetStreamAsImage(SqlDataReader dataReader, string columnName)
+        {
+            return GetStreamAsImage(dataReader, dataReader.GetOrdinal(columnName));
         }
 
         #endregion
