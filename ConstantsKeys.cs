@@ -4,6 +4,10 @@ namespace CardonerSistemas
 {
     static class ConstantsKeys
     {
+        public const string SHIFT = "+";
+        public const string CTRL = "^";
+        public const string ALT = "%";
+
         public const string BACKSPACE = "{BACKSPACE}";
         public const string BREAK = "{BREAK}";
         public const string CAPSLOCK = "{CAPSLOCK}";

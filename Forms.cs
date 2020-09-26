@@ -1,5 +1,8 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace CardonerSistemas
@@ -8,6 +11,13 @@ namespace CardonerSistemas
     {
 
         #region Declarations
+
+        // For Windows Mobile, replace user32.dll with coredll.dll
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        [DllImport("user32.dll")]
+        static extern bool SetForegroundWindow(IntPtr hWnd);
 
         internal const int LabelAndControlSeparation = 6;
         internal const int WindowMargin = 12;
@@ -174,6 +184,24 @@ namespace CardonerSistemas
         static public void CloseAll(params string[] exceptForms)
         {
             CloseAll(Application.OpenForms.Cast<Form>().ToArray(), exceptForms);
+        }
+
+        #endregion
+
+        #region Find Window and active it
+
+        internal static IntPtr FindWindow(string caption)
+        {
+            return FindWindow(String.Empty, caption);
+        }
+
+        internal static void ActivateApp(string processName)
+        {
+            Process[] p = Process.GetProcessesByName(processName);
+
+            // Activate the first application we find with this name
+            if (p.Count() > 0)
+                SetForegroundWindow(p[0].MainWindowHandle);
         }
 
         #endregion
