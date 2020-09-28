@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -197,11 +196,11 @@ namespace CardonerSistemas
 
         internal static void ActivateApp(string processName)
         {
-            Process[] p = Process.GetProcessesByName(processName);
+            //Process[] p = Process.GetProcessesByName(processName);
 
-            // Activate the first application we find with this name
-            if (p.Count() > 0)
-                SetForegroundWindow(p[0].MainWindowHandle);
+            //// Activate the first application we find with this name
+            //if (p.Count() > 0)
+            //    SetForegroundWindow(p[0].MainWindowHandle);
         }
 
         #endregion
@@ -233,10 +232,10 @@ namespace CardonerSistemas
             MdiForm.Cursor = Cursors.Default;
         }
 
-        static public void MdiChildPositionAndSizeToFit(Form MdiForm, Form childForm)
+        static public void MdiChildPositionAndSizeToFit(Form mdiForm, Form childForm)
         {
             childForm.SuspendLayout();
-            childForm.MdiParent = MdiForm;
+            childForm.MdiParent = mdiForm;
             if (childForm.WindowState != FormWindowState.Normal)
             {
                 childForm.WindowState = FormWindowState.Normal;
