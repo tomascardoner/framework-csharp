@@ -32,7 +32,7 @@ namespace CardonerSistemas
                 return false;
             }
 
-            // Return true if strIn is in valid e-mail format.
+            // Return true if address is in valid e-mail format.
             try
             {
                 return Regex.IsMatch(address, regularExpression, RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
