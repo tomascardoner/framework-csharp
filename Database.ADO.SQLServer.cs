@@ -76,6 +76,9 @@ namespace CardonerSistemas.Database.ADO
                 UserId = userId;
                 PasswordEncrypted = passwordEncrypted;
             }
+            ApplicationName = CardonerSistemas.My.Application.Info.Title;
+            MultipleActiveResultsets = true;
+            WorkstationID = Environment.MachineName;
 
             return true;
         }

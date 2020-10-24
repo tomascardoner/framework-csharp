@@ -123,11 +123,11 @@ namespace CardonerSistemas
             return IsLoaded(Application.OpenForms.Cast<Form>().ToArray(), formName, formText);
         }
 
-        static public Form GetInstance(Form[] forms, string formName)
+        static public Form GetInstance(Form[] forms, string formClassName)
         {
             foreach (Form form in forms)
             {
-                if (form.Name == formName)
+                if (form.Name == formClassName)
                 {
                     return form;
                 }
@@ -135,16 +135,16 @@ namespace CardonerSistemas
             return null;
         }
 
-        static public Form GetInstance(string formName)
+        static public Form GetInstance(string formClassName)
         {
-            return GetInstance(Application.OpenForms.Cast<Form>().ToArray(), formName);
+            return GetInstance(Application.OpenForms.Cast<Form>().ToArray(), formClassName);
         }
 
-        static public Form GetInstance(Form[] forms, string formName, string formText)
+        static public Form GetInstance(Form[] forms, string formClassName, string formText)
         {
             foreach (Form form in forms)
             {
-                if (form.Name == formName && form.Text == formText)
+                if (form.Name == formClassName && form.Text == formText)
                 {
                     return form;
                 }
@@ -152,9 +152,9 @@ namespace CardonerSistemas
             return null;
         }
 
-        static public Form GetInstance(string formName, string formText)
+        static public Form GetInstance(string formClassName, string formText)
         {
-            return GetInstance(Application.OpenForms.Cast<Form>().ToArray(), formName, formText);
+            return GetInstance(Application.OpenForms.Cast<Form>().ToArray(), formClassName, formText);
         }
 
         static public void CloseAll(Form[] forms, params string[] exceptForms)
@@ -264,9 +264,9 @@ namespace CardonerSistemas
             return IsLoaded(MdiForm.MdiChildren, formName, formText);
         }
 
-        static public Form MdiChildGetInstance(Form MdiForm, string formName)
+        static public Form MdiChildGetInstance(Form MdiForm, string formClassName)
         {
-            return GetInstance(MdiForm.MdiChildren, formName);
+            return GetInstance(MdiForm.MdiChildren, formClassName);
         }
 
         static public Form MdiChildGetInstance(Form MdiForm, string formName, string formText)
