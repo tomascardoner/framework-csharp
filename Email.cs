@@ -53,7 +53,7 @@ namespace CardonerSistemas
             {
                 domainName = idn.GetAscii(domainName);
             }
-            catch (System.Exception ex)
+            catch (System.Exception)
             {
                 invalid = true;
             }
