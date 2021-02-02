@@ -1,6 +1,8 @@
-using System.Diagnostics;
+using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using System.Xml.Serialization;
 
 namespace CardonerSistemas
@@ -30,7 +32,7 @@ namespace CardonerSistemas
 
     }
 
-    static class Configuration
+    static class ConfigurationXml
     {
         private const int ErrorFileBadFormat = -2146233079;
         private const int ErrorFileBadFormatInnerElement = -2146232000;
@@ -38,7 +40,7 @@ namespace CardonerSistemas
         private const string ErrorFileBadFormatPositionPattern = @"\(\d+, \d+\)";
         private const string ErrorFileBadFormatPositionLinePattern = @"\d+";
 
-        private static bool CheckFileExist(string configFolder, string fileName, EventLog log)
+        private static bool CheckFileExist(string configFolder, string fileName)
         {
             if (File.Exists(configFolder + fileName))
             {
@@ -46,17 +48,17 @@ namespace CardonerSistemas
             }
             else
             {
-                log.WriteEntry($"No se encontró el archivo de configuración '{fileName}', el cual debe estar ubicado dentro de la carpeta '{configFolder}'.");
+                MessageBox.Show($"No se encontró el archivo de configuración '{fileName}', el cual debe estar ubicado dentro de la carpeta '{configFolder}'.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }
 
-        internal static bool LoadFile<T>(string configFolder, string fileName, ref T configObject, EventLog log)
+        internal static bool LoadFile<T>(string configFolder, string fileName, ref T configObject)
         {
             XmlSerializer serializer;
             FileStream fileStream;
 
-            if (!CheckFileExist(configFolder, fileName, log))
+            if (!CheckFileExist(configFolder, fileName))
             {
                 return false;
             }
@@ -81,7 +83,7 @@ namespace CardonerSistemas
                             {
                                 case ErrorFileBadFormatInnerElement:
                                     // Error en el elemento
-                                    log.WriteEntry($"Error en el formato del archivo de configuración {fileName}.\n\n{ex.InnerException.Message}");
+                                    MessageBox.Show($"Error en el formato del archivo de configuración {fileName}.\n\n{ex.InnerException.Message}", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
                                     break;
                                 case ErrorFileBadFormatInnerElementValue:
                                     // El valor especificado en el elemento no es válido
@@ -103,21 +105,21 @@ namespace CardonerSistemas
 
                                     if (posicionLinea > 0)
                                     {
-                                        log.WriteEntry($"Error en el formato del archivo de configuración '{fileName}', en la línea número {posicionLinea - 1}.\n\n{ex.InnerException.Message}");
+                                        MessageBox.Show($"Error en el formato del archivo de configuración '{fileName}', en la línea número {posicionLinea - 1}.\n\n{ex.InnerException.Message}", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
                                     }
                                     else
                                     {
-                                        log.WriteEntry($"Error en el formato del archivo de configuración '{fileName}'.\n\n{ex.InnerException.Message}");
+                                        MessageBox.Show($"Error en el formato del archivo de configuración '{fileName}'.\n\n{ex.InnerException.Message}", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
                                     }
                                     break;
                                 default:
-                                    log.WriteEntry($"Error al cargar el archivo de configuración '{fileName}'. {ex.Message}.");
+                                    CardonerSistemas.Error.ProcessError(ex, $"Error al cargar el archivo de configuración '{fileName}'.");
                                     break;
                             }
                         }
                         break;
                     default:
-                        log.WriteEntry($"Error al cargar el archivo de configuración '{fileName}'. {ex.Message}.");
+                        CardonerSistemas.Error.ProcessError(ex, $"Error al cargar el archivo de configuración '{fileName}'.");
                         break;
                 }
                 serializer = null;
@@ -125,5 +127,59 @@ namespace CardonerSistemas
                 return false;
             }
         }
+
+        //Private Function SaveFile(ByVal configFolder As String) As Boolean
+        //    Dim serializer As Serializer = New Serializer()
+        //    Dim oututText As String
+
+        //    Try
+        //        oututText = serializer.Serialize(Of Config)(pConfig)
+        //        serializer = Nothing
+        //        Return True
+
+        //    Catch ex As Exception
+        //        CardonerSistemas.ProcessError(ex, String.Format("Error al guardar el archivo de configuración '{0}'.", FileName))
+        //        serializer = Nothing
+        //        Return False
+        //    End Try
+
+        //End Function
+
+        static internal Font ConvertStringToFont(string value)
+        {
+            TypeConverter converter;
+            Font convertedFont;
+
+            try
+            {
+                converter = TypeDescriptor.GetConverter(typeof(Font));
+                convertedFont = (Font)converter.ConvertFromString(value);
+            }
+            catch (System.Exception)
+            {
+                convertedFont = null;
+            }
+
+            return convertedFont;
+        }
+
+        static internal string ConvertFontToString(Font value)
+        {
+            TypeConverter converter;
+            string convertedString;
+
+            try
+            {
+                converter = TypeDescriptor.GetConverter(typeof(Font));
+                convertedString = converter.ConvertToString(value);
+            }
+            catch (System.Exception)
+            {
+                convertedString = "";
+            }
+
+            return convertedString;
+        }
+
     }
 }
