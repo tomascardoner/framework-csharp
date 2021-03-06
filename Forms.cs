@@ -191,7 +191,7 @@ namespace CardonerSistemas
 
         internal static IntPtr FindWindow(string caption)
         {
-            return FindWindow(String.Empty, caption);
+            return FindWindow(System.String.Empty, caption);
         }
 
         internal static void ActivateApp(string processName)
