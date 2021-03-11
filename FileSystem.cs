@@ -134,10 +134,10 @@ namespace CardonerSistemas
 
         #region Process folder name
 
-        private const string FolderTagDropbox = "{DROPBOX}";
-        private const string FolderTagGoogleDrive = "{GOOGLEDRIVE}";
-        private const string FolderTagOneDrive = "{ONEDRIVE}";
-        private const string FolderTagICloudDrive = "{ICLOUDDRIVE}";
+        private const string FolderTagDropbox = "{Dropbox}";
+        private const string FolderTagGoogleDrive = "{GoogleDrive}";
+        private const string FolderTagOneDrive = "{OneDrive}";
+        private const string FolderTagICloudDrive = "{iCloudDrive}";
 
         static internal string ProcessFolderName(string folderName)
         {
