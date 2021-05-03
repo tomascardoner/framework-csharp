@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using IWshRuntimeLibrary;
 using Microsoft.Win32;
@@ -139,42 +140,65 @@ namespace CardonerSistemas
         private const string FolderTagOneDrive = "{OneDrive}";
         private const string FolderTagICloudDrive = "{iCloudDrive}";
 
-        static internal string ProcessFolderName(string folderName)
+        static internal string ProcessFolderName(string folderName, bool ignoreCase)
         {
-            string folderNameProcessed = folderName;
-            
-            if (folderName == null)
+            if (String.IsNullOrWhiteSpace(folderName))
             {
-                return "";
+                return String.Empty;
+            }
+
+            string folderNameProcessed = folderName;
+
+            // Case sensitive
+            string folderNameForContains;
+            string folderTagDropboxForContains;
+            string folderTagGoogleDriveForContains;
+            string folderTagOneDriveForContains;
+            string folderTagICloudDriveForContains;
+            if (ignoreCase)
+            {
+                folderNameForContains = folderName.ToLower();
+                folderTagDropboxForContains = FolderTagDropbox.ToLower();
+                folderTagGoogleDriveForContains = FolderTagGoogleDrive.ToLower();
+                folderTagOneDriveForContains = FolderTagOneDrive.ToLower();
+                folderTagICloudDriveForContains = FolderTagICloudDrive.ToLower();
+            }
+            else
+            {
+                folderNameForContains = folderName;
+                folderTagDropboxForContains = FolderTagDropbox;
+                folderTagGoogleDriveForContains = FolderTagGoogleDrive;
+                folderTagOneDriveForContains = FolderTagOneDrive;
+                folderTagICloudDriveForContains = FolderTagICloudDrive;
             }
 
             // Replace DropBox path
-            if (folderName.Contains(FolderTagDropbox))
+            if (folderNameForContains.Contains(folderTagDropboxForContains.ToLower()))
             {
                 string dropboxFolder = "";
                 if (GetDropboxPath(ref dropboxFolder))
                 {
-                    folderNameProcessed = folderName.Replace(FolderTagDropbox, dropboxFolder).Trim();
+                    folderNameProcessed = Regex.Replace(folderNameProcessed, FolderTagDropbox, dropboxFolder, RegexOptions.IgnoreCase).Trim();
                 }
             }
 
             // Replace Google Drive path
-            if (folderName.Contains(FolderTagGoogleDrive))
+            if (folderNameForContains.Contains(folderTagGoogleDriveForContains))
             {
                 string googleDriveFolder = "";
                 if (GetGoogleDrivePath(ref googleDriveFolder))
                 {
-                    folderNameProcessed = folderName.Replace(FolderTagGoogleDrive, googleDriveFolder).Trim();
+                    folderNameProcessed = Regex.Replace(folderNameProcessed, FolderTagGoogleDrive, googleDriveFolder, RegexOptions.IgnoreCase).Trim();
                 }
             }
 
             // Replace OneDrive path
-            if (folderName.Contains(FolderTagOneDrive))
+            if (folderNameForContains.Contains(folderTagOneDriveForContains))
             {
                 string oneDriveFolder = "";
                 if (GetOneDrivePath(ref oneDriveFolder))
                 {
-                    folderNameProcessed = folderName.Replace(FolderTagOneDrive, oneDriveFolder).Trim();
+                    folderNameProcessed = Regex.Replace(folderNameProcessed, FolderTagOneDrive, oneDriveFolder, RegexOptions.IgnoreCase).Trim();
                 }
             }
 
