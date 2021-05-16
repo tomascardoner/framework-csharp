@@ -350,7 +350,7 @@ namespace CardonerSistemas
             }
         }
 
-        static internal int? IntegerTextBoxToInteger(Syncfusion.Windows.Forms.Tools.IntegerTextBox control)
+        static internal int? IntegerTextBoxToInt(Syncfusion.Windows.Forms.Tools.IntegerTextBox control)
         {
             if (control.AllowNull && control.IsNull)
             {

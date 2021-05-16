@@ -390,5 +390,58 @@ namespace CardonerSistemas
 
         #endregion
 
+        #region Input Box
+
+        static private Form CreateInputBoxForm(string title, string prompt, int width)
+        {
+            Form inputBox = new Form();
+            Size size = new Size(width, 70);
+
+            inputBox.FormBorderStyle = FormBorderStyle.FixedDialog;
+            inputBox.ClientSize = size;
+            inputBox.Text = title;
+
+            TextBox textBox = new TextBox();
+            textBox.Size = new Size(size.Width - 10, 23);
+            textBox.Location = new Point(5, 5);
+            inputBox.Controls.Add(textBox);
+
+            Button okButton = new Button();
+            okButton.DialogResult = DialogResult.OK;
+            okButton.Name = "buttonOk";
+            okButton.Size = new Size(75, 23);
+            okButton.Text = "&Aceptar";
+            okButton.Location = new Point(size.Width - 80 - 80, 39);
+            inputBox.Controls.Add(okButton);
+
+            Button cancelButton = new Button();
+            cancelButton.DialogResult = DialogResult.Cancel;
+            cancelButton.Name = "buttonCancel";
+            cancelButton.Size = new Size(75, 23);
+            cancelButton.Text = "&Cancelar";
+            cancelButton.Location = new Point(size.Width - 80, 39);
+            inputBox.Controls.Add(cancelButton);
+
+            inputBox.AcceptButton = okButton;
+            inputBox.CancelButton = cancelButton;
+
+            return inputBox;
+        }
+
+        static internal DialogResult InputBoxString(string title, string prompt, bool allowEmpty, int maxLenght, ref string value)
+        {
+            if (maxLenght < 1)
+            {
+                return DialogResult.Cancel;
+            }
+
+            Form inputBox = CreateInputBoxForm(title, prompt, 200);
+
+
+            return inputBox.ShowDialog();
+        }
+
+        #endregion
+
     }
 }

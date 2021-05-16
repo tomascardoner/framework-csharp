@@ -140,11 +140,11 @@ namespace CardonerSistemas
         private const string FolderTagOneDrive = "{OneDrive}";
         private const string FolderTagICloudDrive = "{iCloudDrive}";
 
-        static internal string ProcessFolderName(string folderName, bool ignoreCase)
+        static internal string ProcessFolderName(string folderName, bool ignoreCase = true)
         {
-            if (String.IsNullOrWhiteSpace(folderName))
+            if (System.String.IsNullOrWhiteSpace(folderName))
             {
-                return String.Empty;
+                return System.String.Empty;
             }
 
             string folderNameProcessed = folderName;
