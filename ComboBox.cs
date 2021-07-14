@@ -166,9 +166,45 @@ namespace CardonerSistemas
             }
         }
 
-        static internal void SetSelectedIndexByDisplayValue(System.Windows.Forms.ComboBox comboBox, string displayValue)
+        static internal void SetItemByDisplayValue(System.Windows.Forms.ComboBox comboBox, string displayValue, SelectedItemOptions options = SelectedItemOptions.None)
         {
-            comboBox.Text = displayValue;
+            if (comboBox.Items.Count == 0)
+            {
+                return;
+            }
+
+            int index = comboBox.FindStringExact(displayValue);
+            if (index == -1)
+            {
+                switch (options)
+                {
+                    case SelectedItemOptions.None:
+                        comboBox.SelectedIndex = -1;
+                        break;
+                    case SelectedItemOptions.First:
+                        comboBox.SelectedIndex = 0;
+                        break;
+                    case SelectedItemOptions.NoneOrFirstIfUnique:
+                        if (comboBox.Items.Count == 1)
+                        {
+                            comboBox.SelectedIndex = 0;
+                        }
+                        else
+                        {
+                            comboBox.SelectedIndex = -1;
+                        }
+                        break;
+                    case SelectedItemOptions.Last:
+                        comboBox.SelectedIndex = comboBox.Items.Count - 1;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                comboBox.SelectedIndex = index;
+            }
         }
 
         static internal int GetMaxWidthOfItems(System.Windows.Forms.ComboBox comboBox, string propertyName)

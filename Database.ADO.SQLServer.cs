@@ -1,13 +1,13 @@
-﻿using Microsoft.Data.SqlClient;
-using System;
+﻿using System;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
-namespace CardonerSistemas.Database.ADO
+namespace CardonerSistemas.Database.Ado
 {
-    internal class SQLServer
+    internal class SqlServer
     {
 
         #region Properties
@@ -27,19 +27,16 @@ namespace CardonerSistemas.Database.ADO
 
         internal bool PasswordUnencrypt()
         {
-            CardonerSistemas.Encrypt.TripleDES passwordDecrypter = new CardonerSistemas.Encrypt.TripleDES(CardonerSistemas.Constants.PublicEncryptionPassword);
             string unencryptedPassword = "";
-            if (!passwordDecrypter.Decrypt(PasswordEncrypted, ref unencryptedPassword))
+            if (CardonerSistemas.Encrypt.StringCipher.Decrypt(PasswordEncrypted, CardonerSistemas.Constants.PublicEncryptionPassword, ref unencryptedPassword))
             {
-                unencryptedPassword = null;
-                passwordDecrypter = null;
+                Password = unencryptedPassword;
+                return true;
+            }
+            else
+            {
                 return false;
             }
-            Password = unencryptedPassword;
-            unencryptedPassword = null;
-            passwordDecrypter = null;
-
-            return true;
         }
 
         #endregion

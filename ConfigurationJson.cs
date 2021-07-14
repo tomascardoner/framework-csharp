@@ -14,7 +14,7 @@ namespace CardonerSistemas
         private const string ErrorFileBadFormatPositionPattern = @"\(\d+, \d+\)";
         private const string ErrorFileBadFormatPositionLinePattern = @"\d+";
 
-        private static bool CheckFileExist(string configFolder, string fileName)
+        private static bool CheckFileExist(string configFolder, string fileName, bool showMessageIfFileNotExist)
         {
             if (File.Exists(Path.Combine( configFolder , fileName)))
             {
@@ -22,16 +22,26 @@ namespace CardonerSistemas
             }
             else
             {
-                MessageBox.Show($"No se encontró el archivo de configuración '{fileName}', el cual debe estar ubicado dentro de la carpeta '{configFolder}'.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (showMessageIfFileNotExist)
+                {
+                    MessageBox.Show($"No se encontró el archivo de configuración '{fileName}', el cual debe estar ubicado dentro de la carpeta '{configFolder}'.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 return false;
             }
         }
 
-        internal static bool LoadFile<T>(string configFolder, string fileName, ref T configObject)
+        internal static bool LoadFile<T>(string configFolder, string fileName, ref T configObject, bool returnFalseIfFileNotExist = true)
         {
-            if (!CheckFileExist(configFolder, fileName))
+            if (!CheckFileExist(configFolder, fileName, returnFalseIfFileNotExist))
             {
-                return false;
+                if (returnFalseIfFileNotExist)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
             }
 
             string jsonConfigFileString;
@@ -53,6 +63,33 @@ namespace CardonerSistemas
             catch (System.Exception ex)
             {
                 MessageBox.Show($"Error al interpretar el archivo de configuración {fileName}.\n\n{ex.InnerException.Message}", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            return true;
+        }
+
+        internal static bool SaveFile<T>(string configFolder, string fileName, ref T configObject, bool writeIndented = true)
+        {
+            string jsonConfigFileString;
+
+            try
+            {
+                jsonConfigFileString = JsonSerializer.Serialize<T>(configObject, new JsonSerializerOptions() { WriteIndented = writeIndented });
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show($"Error al serializar el objeto en archivo de configuración.\n\n{ex.InnerException.Message}", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            try
+            {
+                File.WriteAllText(Path.Combine(configFolder, fileName), jsonConfigFileString);
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show($"Error al guardar el archivo de configuración {fileName}.\n\n{ex.InnerException.Message}", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
