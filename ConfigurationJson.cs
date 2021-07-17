@@ -62,7 +62,14 @@ namespace CardonerSistemas
             }
             catch (System.Exception ex)
             {
-                MessageBox.Show($"Error al interpretar el archivo de configuración {fileName}.\n\n{ex.InnerException.Message}", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (ex.InnerException == null)
+                {
+                    MessageBox.Show($"Error al interpretar el archivo de configuración {fileName}.\n\n{ex.Message}", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show($"Error al interpretar el archivo de configuración {fileName}.\n\n{ex.InnerException.Message}", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 return false;
             }
 

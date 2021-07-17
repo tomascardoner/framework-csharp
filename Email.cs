@@ -1,7 +1,7 @@
-﻿using System;
+﻿using MimeKit;
+using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using MimeKit;
 using System.Windows.Forms;
 
 namespace CardonerSistemas
@@ -14,7 +14,7 @@ namespace CardonerSistemas
         const string EmailValidationRegularExpression = @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z_])@))(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$";
         static private bool invalid = false;
 
-        static public bool IsValidAddress(string address, string regularExpression = EmailValidationRegularExpression)
+        static internal bool IsValidAddress(string address, string regularExpression = EmailValidationRegularExpression)
         {
 
             if (string.IsNullOrEmpty(address))
@@ -110,9 +110,8 @@ namespace CardonerSistemas
                 return false;
             }
 
-            Encrypt.TripleDES tripleDES = new Encrypt.TripleDES(Constants.PublicEncryptionPassword);
             string decryptedPassword = string.Empty;
-            if (!tripleDES.Decrypt(config.SmtpPassword, ref decryptedPassword))
+            if (!CardonerSistemas.Encrypt.StringCipher.Encrypt(config.SmtpPassword, Constants.PublicEncryptionPassword, ref decryptedPassword))
             {
                 MessageBox.Show("La contraseña de e-mail (SMTP) especificada es incorrecta.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;
@@ -121,12 +120,11 @@ namespace CardonerSistemas
             {
                 smtp.Authenticate(new System.Net.NetworkCredential(config.SmtpUserName, decryptedPassword));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 MessageBox.Show("Error al iniciar sesión en el servidor SMTP.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;
             }
-            tripleDES = null;
 
             // Set the content
             message.Subject = (subject == null ? string.Empty : subject);
@@ -156,7 +154,7 @@ namespace CardonerSistemas
             {
                 smtp.Send(message);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 MessageBox.Show("Error al enviar el e-mail.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;

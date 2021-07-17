@@ -1,5 +1,3 @@
-using System;
-
 namespace CardonerSistemas
 {
     static class Constants

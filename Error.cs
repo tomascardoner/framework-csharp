@@ -20,7 +20,7 @@ namespace CardonerSistemas
                 else
                 { InnerException = ex.InnerException; }
 
-                ExceptionMessageText += string.Format("{0}{0}{1}{0}INNER EXCEPTION:{0}{2}", Environment.NewLine, new string('=', 25), InnerException.Message);
+                ExceptionMessageText += $"\n\n{new string('=', 25)}\nINNER EXCEPTION:\n{InnerException.Message}";
             }
 
             MessageTextToLog = "Where: " + ex.Source;
@@ -45,7 +45,7 @@ namespace CardonerSistemas
                 }
                 else
                 {
-                    MessageBox.Show(string.Format("Se ha producido un error.{0}{0}{1}{0}{0}{2}", Environment.NewLine, FriendlyMessageText, ExceptionMessageText), "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Se ha producido un error.\n\n{FriendlyMessageText}\n\n{ExceptionMessageText}", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
