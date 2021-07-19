@@ -45,14 +45,35 @@ namespace CardonerSistemas
             return stringBuilder.ToString();
         }
 
-        public static string TrimAndReduce(this string str)
+        /// <summary>
+        /// Trims the string and then remove double spaces.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string TrimAndReduce(this string value)
         {
-            return ConvertWhitespacesToSingleSpaces(str).Trim();
+            value = value.Trim(); 
+            return RemoveDoubleSpaces(value);
         }
 
-        public static string ConvertWhitespacesToSingleSpaces(this string value)
+        /// <summary>
+        /// Removes double spaces.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string RemoveDoubleSpaces(this string value)
         {
             return Regex.Replace(value, @"\s+", " ");
+        }
+
+        /// <summary>
+        /// Removes spaces.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string RemoveSpaces(this string value)
+        {
+            return Regex.Replace(value, @"\s+", string.Empty);
         }
     }
 }

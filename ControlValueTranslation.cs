@@ -251,6 +251,42 @@ namespace CardonerSistemas
             }
         }
 
+        static internal string DatetimeToDatetimeShortTextbox(DateTime? value)
+        {
+            if (value.HasValue)
+            {
+                return value.Value.ToShortDateString() + " " + value.Value.ToShortTimeString();
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
+        static internal string DatetimeToDateShortTextbox(DateTime? value)
+        {
+            if (value.HasValue)
+            {
+                return value.Value.ToShortDateString();
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
+        static internal string DatetimeToTimeShortTextbox(DateTime? value)
+        {
+            if (value.HasValue)
+            {
+                return value.Value.ToShortTimeString();
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
         static internal System.Drawing.Image ImageToPictureBox(byte[] image)
         {
             if (image == null)
@@ -312,6 +348,29 @@ namespace CardonerSistemas
                 short returnValue;
 
                 if (short.TryParse(value, out returnValue))
+                {
+                    return returnValue;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        static internal decimal? TextboxToDecimal(string value)
+        {
+            value = value.Trim();
+
+            if (value.Length == 0)
+            {
+                return null;
+            }
+            else
+            {
+                decimal returnValue;
+
+                if (decimal.TryParse(value, out returnValue))
                 {
                     return returnValue;
                 }
