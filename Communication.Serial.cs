@@ -25,6 +25,10 @@ namespace CardonerSistemas.Communication
 
         internal static Handshake HandshakeDefault = Handshake.None;
 
+        internal static int ReadTimeoutDefault = 500;
+
+        internal static int ReadPauseIntervalDefault = 0;
+
         #endregion
 
         #region Methods
