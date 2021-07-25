@@ -45,9 +45,14 @@ namespace CardonerSistemas
 
         #region Serialization Get
 
-        static internal bool GetFromHexString(string value, ref Color color, string evaluateExpression = RegExHexadecimalRgbOrArgbBothDigits)
+        static internal bool GetFromHexString(string value, ref Color color, string evaluateExpression = RegExHexadecimalRgbOrArgbBothDigits, string valueDefault = null)
         {
-            if (value.Length > 0)
+            if (string.IsNullOrWhiteSpace(value) && !string.IsNullOrWhiteSpace(valueDefault))
+            {
+                value = valueDefault;
+            }
+
+            if (string.IsNullOrWhiteSpace(value))
             {
                 value = value.Trim();
                 if (value.StartsWith("#"))
@@ -69,12 +74,16 @@ namespace CardonerSistemas
             return false;
         }
 
-        static internal bool GetFromNameString(string value, ref Color color)
+        static internal bool GetFromNameString(string value, ref Color color, string valueDefault = null)
         {
-            if (value.Length > 0)
+            if (string.IsNullOrWhiteSpace(value) && !string.IsNullOrWhiteSpace(valueDefault))
+            {
+                value = valueDefault;
+            }
+
+            if (string.IsNullOrWhiteSpace(value))
             {
                 value = value.Trim();
-
                 Color namedColor;
                 namedColor = Color.FromName(value);
                 if (namedColor.A + namedColor.R + namedColor.G + namedColor.B > 0)
@@ -86,18 +95,23 @@ namespace CardonerSistemas
             return false;
         }
 
-        static internal bool GetFromHexOrNameString(string value, ref Color color, string evaluateExpression = RegExHexadecimalRgbOrArgbBothDigits)
+        static internal bool GetFromHexOrNameString(string value, ref Color color, string evaluateExpression = RegExHexadecimalRgbOrArgbBothDigits, string valueDefault = null)
         {
-            if (value.Length > 0)
+            if (string.IsNullOrWhiteSpace(value) && !string.IsNullOrWhiteSpace(valueDefault))
+            {
+                value = valueDefault;
+            }
+
+            if (string.IsNullOrWhiteSpace(value))
             {
                 value = value.Trim();
                 if (value.StartsWith("#"))
                 {
-                    return GetFromHexString(value, ref color, evaluateExpression);
+                    return GetFromHexString(value, ref color, evaluateExpression, valueDefault);
                 }
                 else
                 {
-                    return GetFromNameString(value, ref color);
+                    return GetFromNameString(value, ref color, valueDefault);
                 }
             }
             return false;

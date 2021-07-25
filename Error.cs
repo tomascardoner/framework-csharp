@@ -7,30 +7,36 @@ namespace CardonerSistemas
     {
         public static void ProcessError(Exception ex, string FriendlyMessageText ="", bool ShowMessageBox = true, bool CustomMessageBox = true)
         {
-            string ExceptionMessageText;
-            string MessageTextToLog;
-            Exception InnerException;
+            string exceptionMessageText;
+            string messageTextToLog;
+            Exception innerException;
 
             // Prepare Exception Message Text counting for Inner Exceptions
-            ExceptionMessageText = ex.Message;
+            exceptionMessageText = ex.Message;
             if (ex.InnerException != null)
             {
                 if (ex.InnerException.InnerException != null)
-                { InnerException = ex.InnerException.InnerException; }
+                { 
+                    innerException = ex.InnerException.InnerException;
+                }
                 else
-                { InnerException = ex.InnerException; }
+                {
+                    innerException = ex.InnerException;
+                }
 
-                ExceptionMessageText += $"\r\n{new string('=', 25)}\r\nINNER EXCEPTION:\r\n{InnerException.Message}";
+                exceptionMessageText += $"\r\n{new string('=', 25)}\r\nINNER EXCEPTION:\r\n{innerException.Message}";
             }
 
-            MessageTextToLog = "Where: " + ex.Source;
+            messageTextToLog = "Where: " + ex.Source;
 
-            if (FriendlyMessageText != "")
-            { MessageTextToLog += " |#| User Message: " + FriendlyMessageText; }
+            if (!string.IsNullOrWhiteSpace(FriendlyMessageText))
+            {
+                messageTextToLog += " |#| User Message: " + FriendlyMessageText;
+            }
 
-            MessageTextToLog += string.Format(" |#| Stack Trace: {0} |#| Error: {1}", ex.StackTrace, ExceptionMessageText);
+            messageTextToLog += $" |#| Stack Trace: {ex.StackTrace} |#| Error: {exceptionMessageText}";
 
-            // CSFramework.My.Application.Log.WriteException(Exception, TraceEventType.Error, ExceptionMessageText)
+            //CardonerSistemas.My.Application.Log.WriteException(Exception, TraceEventType.Error, ExceptionMessageText)
             
             if (ShowMessageBox)
             {
@@ -40,12 +46,12 @@ namespace CardonerSistemas
                     emb.labelFriendlyMessage.Text = FriendlyMessageText;
                     emb.labelSourceData.Text = ex.Source;
                     emb.textboxStackTraceData.Text = ex.StackTrace;
-                    emb.textboxMessageData.Text = ExceptionMessageText;
+                    emb.textboxMessageData.Text = exceptionMessageText;
                     emb.ShowDialog();
                 }
                 else
                 {
-                    MessageBox.Show($"Se ha producido un error.\n\n{FriendlyMessageText}\n\n{ExceptionMessageText}", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Se ha producido un error.\n\n{FriendlyMessageText}\n\n{exceptionMessageText}", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
