@@ -20,7 +20,7 @@ namespace CardonerSistemas
                 else
                 { InnerException = ex.InnerException; }
 
-                ExceptionMessageText += $"\n\n{new string('=', 25)}\nINNER EXCEPTION:\n{InnerException.Message}";
+                ExceptionMessageText += $"\r\n{new string('=', 25)}\r\nINNER EXCEPTION:\r\n{InnerException.Message}";
             }
 
             MessageTextToLog = "Where: " + ex.Source;
