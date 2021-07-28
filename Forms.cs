@@ -205,7 +205,7 @@ namespace CardonerSistemas
 
         #endregion
 
-        #region MDI Childs
+        #region Mdi Childs
 
         static public void MdiChildShow(Form MdiForm, Form childForm, bool centerForm)
         {
@@ -384,6 +384,46 @@ namespace CardonerSistemas
                     {
                         control.Enabled = !valueState;
                     }
+                }
+            }
+        }
+
+        #endregion
+
+        #region Appearance
+
+        internal static void SetFont(Form form, Font font)
+        {
+            form.Font = font;
+
+            SetFontOfControls(form.Controls, font);
+        }
+
+        private static void SetFontOfControls(Control.ControlCollection controls, Font font)
+        {
+            foreach (Control control in controls)
+            {
+                if (control is ToolStrip)
+                {
+                    control.Font = font;
+                    foreach (ToolStripItem item in ((ToolStrip)control).Items)
+                    {
+                        if (item is ToolStripComboBox | item is ToolStripTextBox)
+                        {
+                            item.Font = font;
+                        }
+                        else if (item is ToolStripControlHost)
+                        {
+                            if (((ToolStripControlHost)item).Control is DateTimePicker)
+                            {
+                                ((DateTimePicker)((ToolStripControlHost)item).Control).CalendarFont = font;
+                            }
+                        }
+                    }
+                }
+                else if (control is FlowLayoutPanel)
+                {
+                    SetFontOfControls(control.Controls, font);
                 }
             }
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -28,6 +29,12 @@ namespace CardonerSistemas
             {
                 return string.Empty;
             }
+        }
+
+        internal static int GetExtends(System.Drawing.Graphics graphicObject, string text, Font font)
+        {
+            SizeF size = graphicObject.MeasureString(text, font);
+            return (int)Math.Ceiling(size.Width);
         }
         
         public static string RemoveDiacritics(this string s)

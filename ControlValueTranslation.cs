@@ -360,9 +360,7 @@ namespace CardonerSistemas
 
         static internal decimal? TextboxToDecimal(string value)
         {
-            value = value.Trim();
-
-            if (value.Length == 0)
+            if (string.IsNullOrWhiteSpace(value))
             {
                 return null;
             }
@@ -370,7 +368,7 @@ namespace CardonerSistemas
             {
                 decimal returnValue;
 
-                if (decimal.TryParse(value, out returnValue))
+                if (decimal.TryParse(value.Trim(), NumberStyles.Currency, Application.CurrentCulture, out returnValue))
                 {
                     return returnValue;
                 }
