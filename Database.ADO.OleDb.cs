@@ -2,7 +2,7 @@
 using System.Data;
 using System.Data.OleDb;
 
-namespace CardonerSistemas.Database.ADO
+namespace CardonerSistemas.Database.Ado
 {
     class OleDb
     {

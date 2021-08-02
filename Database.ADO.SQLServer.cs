@@ -21,13 +21,16 @@ namespace CardonerSistemas.Database.Ado
         internal string Password { get; set; }
         internal bool MultipleActiveResultsets { get; set; }
         internal string WorkstationID { get; set; }
+        internal byte ConnectTimeout { get; set; }
+        internal byte ConnectRetryCount { get; set; }
+        internal byte ConnectRetryInterval { get; set; }
         internal string ConnectionString { get; set; }
 
         internal SqlConnection Connection { get; set; }
 
         internal bool PasswordUnencrypt()
         {
-            string unencryptedPassword = "";
+            string unencryptedPassword = string.Empty;
             if (CardonerSistemas.Encrypt.StringCipher.Decrypt(PasswordEncrypted, CardonerSistemas.Constants.PublicEncryptionPassword, ref unencryptedPassword))
             {
                 Password = unencryptedPassword;
@@ -43,7 +46,7 @@ namespace CardonerSistemas.Database.Ado
 
         #region Connection
 
-        internal bool SetProperties(string datasource, string initialCatalog, string userId, string passwordEncrypted)
+        internal bool SetProperties(string datasource, string initialCatalog, string userId, string passwordEncrypted, byte connectTimeout, byte connectRetryCount, byte connectRetryInterval)
         {
             int selectedDatasourceIndex;
 
@@ -58,7 +61,6 @@ namespace CardonerSistemas.Database.Ado
                 }
                 selectedDatasourceIndex = selectDatasource.comboboxDataSource.SelectedIndex;
                 selectDatasource.Close();
-                selectDatasource = null;
 
                 // Asigno las propiedades
                 Datasource = SelectProperty(datasource, selectedDatasourceIndex);
@@ -73,6 +75,9 @@ namespace CardonerSistemas.Database.Ado
                 UserId = userId;
                 PasswordEncrypted = passwordEncrypted;
             }
+            ConnectTimeout = connectTimeout;
+            ConnectRetryCount = connectRetryCount;
+            ConnectRetryInterval = connectRetryInterval;
             ApplicationName = CardonerSistemas.My.Application.Info.Title;
             MultipleActiveResultsets = true;
             WorkstationID = Environment.MachineName;
@@ -92,7 +97,7 @@ namespace CardonerSistemas.Database.Ado
                 }
                 else
                 {
-                    return "";
+                    return string.Empty;
                 }
             }
             else
@@ -124,6 +129,9 @@ namespace CardonerSistemas.Database.Ado
             {
                 scsb.Password = Password;
             }
+            scsb.ConnectTimeout = ConnectTimeout;
+            scsb.ConnectRetryCount = ConnectRetryCount;
+            scsb.ConnectRetryInterval = ConnectRetryInterval;
             scsb.MultipleActiveResultSets = MultipleActiveResultsets;
             scsb.WorkstationID = WorkstationID;
 

@@ -345,9 +345,7 @@ namespace CardonerSistemas
             }
             else
             {
-                short returnValue;
-
-                if (short.TryParse(value, out returnValue))
+                if (short.TryParse(value, out short returnValue))
                 {
                     return returnValue;
                 }
@@ -366,9 +364,7 @@ namespace CardonerSistemas
             }
             else
             {
-                decimal returnValue;
-
-                if (decimal.TryParse(value.Trim(), NumberStyles.Currency, Application.CurrentCulture, out returnValue))
+                if (decimal.TryParse(value.Trim(), NumberStyles.Currency, Application.CurrentCulture, out decimal returnValue))
                 {
                     return returnValue;
                 }

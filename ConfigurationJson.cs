@@ -8,13 +8,13 @@ namespace CardonerSistemas
 {
     static class ConfigurationJson
     {
-        private const int ErrorFileBadFormat = -2146233079;
-        private const int ErrorFileBadFormatInnerElement = -2146232000;
-        private const int ErrorFileBadFormatInnerElementValue = -2146233033;
-        private const string ErrorFileBadFormatPositionPattern = @"\(\d+, \d+\)";
-        private const string ErrorFileBadFormatPositionLinePattern = @"\d+";
+        //private const int ErrorFileBadFormat = -2146233079;
+        //private const int ErrorFileBadFormatInnerElement = -2146232000;
+        //private const int ErrorFileBadFormatInnerElementValue = -2146233033;
+        //private const string ErrorFileBadFormatPositionPattern = @"\(\d+, \d+\)";
+        //private const string ErrorFileBadFormatPositionLinePattern = @"\d+";
 
-        private static bool CheckFileExist(string configFolder, string fileName, bool showMessageIfFileNotExist)
+        private static bool CheckFileExist(string configFolder, string fileName, bool showMessageIfFileNotExist, Log log = null)
         {
             if (File.Exists(Path.Combine( configFolder , fileName)))
             {
@@ -22,17 +22,32 @@ namespace CardonerSistemas
             }
             else
             {
-                if (showMessageIfFileNotExist)
+                string message = $"No se encontró el archivo de configuración '{fileName}', el cual debe estar ubicado dentro de la carpeta '{configFolder}'.";
+                if (log == null)
                 {
-                    MessageBox.Show($"No se encontró el archivo de configuración '{fileName}', el cual debe estar ubicado dentro de la carpeta '{configFolder}'.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    if (showMessageIfFileNotExist)
+                    {
+                        MessageBox.Show(message, My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    if (showMessageIfFileNotExist)
+                    {
+                        log.WriteAndShowError(message);
+                    }
+                    else
+                    {
+                        log.WriteError(message);
+                    }
                 }
                 return false;
             }
         }
 
-        internal static bool LoadFile<T>(string configFolder, string fileName, ref T configObject, bool returnFalseIfFileNotExist = true)
+        internal static bool LoadFile<T>(string configFolder, string fileName, ref T configObject, bool returnFalseIfFileNotExist = true, Log log = null)
         {
-            if (!CheckFileExist(configFolder, fileName, returnFalseIfFileNotExist))
+            if (!CheckFileExist(configFolder, fileName, returnFalseIfFileNotExist, log))
             {
                 if (returnFalseIfFileNotExist)
                 {
@@ -52,7 +67,15 @@ namespace CardonerSistemas
             }
             catch (System.Exception ex)
             {
-                MessageBox.Show($"Error al leer el archivo de configuración {fileName}.\n\n{ex.InnerException.Message}", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string message = $"Error al leer el archivo de configuración {fileName}.\n\n{ex.InnerException.Message}";
+                if (log == null)
+                {
+                    MessageBox.Show(message, My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    log.WriteAndShowError(message);
+                }
                 return false;
             }
 
@@ -62,13 +85,22 @@ namespace CardonerSistemas
             }
             catch (System.Exception ex)
             {
+                string message;
                 if (ex.InnerException == null)
                 {
-                    MessageBox.Show($"Error al interpretar el archivo de configuración {fileName}.\n\n{ex.Message}", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    message = $"Error al interpretar el archivo de configuración {fileName}.\n\n{ex.Message}";
                 }
                 else
                 {
-                    MessageBox.Show($"Error al interpretar el archivo de configuración {fileName}.\n\n{ex.InnerException.Message}", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    message = $"Error al interpretar el archivo de configuración {fileName}.\n\n{ex.InnerException.Message}";
+                }
+                if (log == null)
+                {
+                    MessageBox.Show(message, My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    log.WriteAndShowError(message);
                 }
                 return false;
             }
@@ -76,7 +108,7 @@ namespace CardonerSistemas
             return true;
         }
 
-        internal static bool SaveFile<T>(string configFolder, string fileName, ref T configObject, bool writeIndented = true)
+        internal static bool SaveFile<T>(string configFolder, string fileName, ref T configObject, bool writeIndented = true, Log log = null)
         {
             string jsonConfigFileString;
 
@@ -86,7 +118,15 @@ namespace CardonerSistemas
             }
             catch (System.Exception ex)
             {
-                MessageBox.Show($"Error al serializar el objeto en archivo de configuración.\n\n{ex.InnerException.Message}", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string message = $"Error al serializar el objeto en archivo de configuración.\n\n{ex.InnerException.Message}";
+                if (log == null)
+                {
+                    MessageBox.Show(message, My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    log.WriteAndShowError(message);
+                }
                 return false;
             }
 
@@ -96,7 +136,15 @@ namespace CardonerSistemas
             }
             catch (System.Exception ex)
             {
-                MessageBox.Show($"Error al guardar el archivo de configuración {fileName}.\n\n{ex.InnerException.Message}", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string message = $"Error al guardar el archivo de configuración {fileName}.\n\n{ex.InnerException.Message}";
+                if (log == null)
+                {
+                    MessageBox.Show(message, My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    log.WriteAndShowError(message);
+                }
                 return false;
             }
 

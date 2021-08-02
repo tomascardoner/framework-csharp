@@ -5,14 +5,18 @@ namespace CardonerSistemas
 {
     static class Error
     {
-        public static void ProcessError(Exception ex, string FriendlyMessageText ="", bool ShowMessageBox = true, bool CustomMessageBox = true)
+        public static void ProcessError(Exception ex, string FriendlyMessageText ="", bool ShowMessageBox = true, bool CustomMessageBox = true, Log log = null, bool logStackTrace = false)
         {
             string exceptionMessageText;
+            string exceptionMessageToLog;
             string messageTextToLog;
             Exception innerException;
 
+            const string TextSeparator = " // ";
+
             // Prepare Exception Message Text counting for Inner Exceptions
             exceptionMessageText = ex.Message;
+            exceptionMessageToLog = ex.Message;
             if (ex.InnerException != null)
             {
                 if (ex.InnerException.InnerException != null)
@@ -24,25 +28,33 @@ namespace CardonerSistemas
                     innerException = ex.InnerException;
                 }
 
-                exceptionMessageText += $"\r\n{new string('=', 25)}\r\nINNER EXCEPTION:\r\n{innerException.Message}";
+                exceptionMessageText += $"\r\n{new string('=', 16)}\r\nInner Exception:\r\n{innerException.Message}";
+                exceptionMessageToLog += $"{TextSeparator}Inner Exception: {innerException.Message.Replace("\r\n", " ")}";
             }
 
-            messageTextToLog = "Where: " + ex.Source;
+            messageTextToLog = "Source: " + ex.Source;
 
             if (!string.IsNullOrWhiteSpace(FriendlyMessageText))
             {
-                messageTextToLog += " |#| User Message: " + FriendlyMessageText;
+                messageTextToLog += $"{TextSeparator}User Message: {FriendlyMessageText}";
             }
 
-            messageTextToLog += $" |#| Stack Trace: {ex.StackTrace} |#| Error: {exceptionMessageText}";
+            if (logStackTrace)
+            {
+                messageTextToLog += $"{TextSeparator}Stack Trace: {ex.StackTrace}";
+            }
+            messageTextToLog += $"{TextSeparator}Error: {exceptionMessageToLog}";
 
-            //CardonerSistemas.My.Application.Log.WriteException(Exception, TraceEventType.Error, ExceptionMessageText)
-            
+            if (log != null)
+            {
+                log.WriteError(messageTextToLog);
+            }
+
             if (ShowMessageBox)
             {
                 if (CustomMessageBox)
                 {
-                    CardonerSistemas.ErrorMessageBox emb = new CardonerSistemas.ErrorMessageBox();
+                    ErrorMessageBox emb = new ErrorMessageBox();
                     emb.labelFriendlyMessage.Text = FriendlyMessageText;
                     emb.labelSourceData.Text = ex.Source;
                     emb.textboxStackTraceData.Text = ex.StackTrace;

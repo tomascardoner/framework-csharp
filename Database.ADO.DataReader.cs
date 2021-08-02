@@ -3,7 +3,7 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 
-namespace CardonerSistemas.Database.ADO
+namespace CardonerSistemas.Database.Ado
 {
     internal class DataReader
     {

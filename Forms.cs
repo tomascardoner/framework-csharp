@@ -69,8 +69,8 @@ namespace CardonerSistemas
                 //TODO: Need to take account of the scaling when different to 1
 
                 // Gets the scaling factor of the screen
-                System.Drawing.Graphics g = parentForm.CreateGraphics();
-                float scalingFactor = (int)g.DpiX / 96;
+                // System.Drawing.Graphics g = parentForm.CreateGraphics();
+                // float scalingFactor = (int)g.DpiX / 96;
 
                 // Parent form title bar height and border size calculation
                 int borderSize = (parentForm.Width - parentForm.ClientSize.Width) / 2;
@@ -192,15 +192,6 @@ namespace CardonerSistemas
         internal static IntPtr FindWindow(string caption)
         {
             return FindWindow(System.String.Empty, caption);
-        }
-
-        internal static void ActivateApp(string processName)
-        {
-            //Process[] p = Process.GetProcessesByName(processName);
-
-            //// Activate the first application we find with this name
-            //if (p.Count() > 0)
-            //    SetForegroundWindow(p[0].MainWindowHandle);
         }
 
         #endregion
@@ -354,15 +345,13 @@ namespace CardonerSistemas
                         ControlsChangeStateReadOnly(control.Controls, valueState, recursive, exceptControls);
                     }
 
-                    if (control is TextBox)
+                    if (control is TextBox textBox)
                     {
-                        TextBox textBox = (TextBox)control;
                         textBox.ReadOnly = valueState;
                     }
-                    else if (control is MaskedTextBox)
+                    else if (control is MaskedTextBox maskedTextBox)
                     {
-                        MaskedTextBox textBox = (MaskedTextBox)control;
-                        textBox.ReadOnly = valueState;
+                        maskedTextBox.ReadOnly = valueState;
                     }
                     else if (control is System.Windows.Forms.ComboBox)
                     {
@@ -403,20 +392,20 @@ namespace CardonerSistemas
         {
             foreach (Control control in controls)
             {
-                if (control is ToolStrip)
+                if (control is ToolStrip toolStrip)
                 {
                     control.Font = font;
-                    foreach (ToolStripItem item in ((ToolStrip)control).Items)
+                    foreach (ToolStripItem item in toolStrip.Items)
                     {
                         if (item is ToolStripComboBox | item is ToolStripTextBox)
                         {
                             item.Font = font;
                         }
-                        else if (item is ToolStripControlHost)
+                        else if (item is ToolStripControlHost toolStripControlHost)
                         {
-                            if (((ToolStripControlHost)item).Control is DateTimePicker)
+                            if (toolStripControlHost.Control is DateTimePicker dateTimePicker)
                             {
-                                ((DateTimePicker)((ToolStripControlHost)item).Control).CalendarFont = font;
+                                dateTimePicker.CalendarFont = font;
                             }
                         }
                     }
@@ -441,25 +430,32 @@ namespace CardonerSistemas
             inputBox.ClientSize = size;
             inputBox.Text = title;
 
-            TextBox textBox = new TextBox();
-            textBox.Size = new Size(size.Width - 10, 23);
-            textBox.Location = new Point(5, 5);
+            TextBox textBox = new TextBox()
+            {
+                Size = new Size(size.Width - 10, 23),
+                Location = new Point(5, 5),
+                Text = prompt
+            };
             inputBox.Controls.Add(textBox);
 
-            Button okButton = new Button();
-            okButton.DialogResult = DialogResult.OK;
-            okButton.Name = "buttonOk";
-            okButton.Size = new Size(75, 23);
-            okButton.Text = "&Aceptar";
-            okButton.Location = new Point(size.Width - 80 - 80, 39);
+            Button okButton = new Button
+            {
+                DialogResult = DialogResult.OK,
+                Name = "buttonOk",
+                Size = new Size(75, 23),
+                Text = "&Aceptar",
+                Location = new Point(size.Width - 80 - 80, 39)
+            };
             inputBox.Controls.Add(okButton);
 
-            Button cancelButton = new Button();
-            cancelButton.DialogResult = DialogResult.Cancel;
-            cancelButton.Name = "buttonCancel";
-            cancelButton.Size = new Size(75, 23);
-            cancelButton.Text = "&Cancelar";
-            cancelButton.Location = new Point(size.Width - 80, 39);
+            Button cancelButton = new Button
+            {
+                DialogResult = DialogResult.Cancel,
+                Name = "buttonCancel",
+                Size = new Size(75, 23),
+                Text = "&Cancelar",
+                Location = new Point(size.Width - 80, 39)
+            };
             inputBox.Controls.Add(cancelButton);
 
             inputBox.AcceptButton = okButton;
@@ -476,8 +472,15 @@ namespace CardonerSistemas
             }
 
             Form inputBox = CreateInputBoxForm(title, prompt, 200);
+            if (allowEmpty)
+            {
 
+            }
 
+            if (inputBox.DialogResult == DialogResult.OK)
+            {
+                value = string.Empty;
+            }
             return inputBox.ShowDialog();
         }
 
