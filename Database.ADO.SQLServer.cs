@@ -31,7 +31,7 @@ namespace CardonerSistemas.Database.Ado
         internal bool PasswordUnencrypt()
         {
             string unencryptedPassword = string.Empty;
-            if (CardonerSistemas.Encrypt.StringCipher.Decrypt(PasswordEncrypted, CardonerSistemas.Constants.PublicEncryptionPassword, ref unencryptedPassword))
+            if (Encrypt.StringCipher.Decrypt(PasswordEncrypted, CardonerSistemas.Constants.PublicEncryptionPassword, ref unencryptedPassword))
             {
                 Password = unencryptedPassword;
                 return true;

@@ -111,7 +111,7 @@ namespace CardonerSistemas
             }
 
             string decryptedPassword = string.Empty;
-            if (!CardonerSistemas.Encrypt.StringCipher.Encrypt(config.SmtpPassword, Constants.PublicEncryptionPassword, ref decryptedPassword))
+            if (!Encrypt.StringCipher.Decrypt(config.SmtpPassword, Constants.PublicEncryptionPassword, ref decryptedPassword))
             {
                 MessageBox.Show("La contraseña de e-mail (SMTP) especificada es incorrecta.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;

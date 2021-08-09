@@ -211,15 +211,25 @@ namespace CardonerSistemas
 
         private class DropboxConfigInfoRoot
         {
+#pragma warning disable IDE1006 // Naming Styles
             public DropboxConfigInfoPersonal personal { get; set; }
+#pragma warning restore IDE1006 // Naming Styles
         }
 
         private class DropboxConfigInfoPersonal
         {
+#pragma warning disable IDE1006 // Naming Styles
             public string path { get; set; }
+#pragma warning restore IDE1006 // Naming Styles
+#pragma warning disable IDE1006 // Naming Styles
             public long host { get; set; }
+#pragma warning restore IDE1006 // Naming Styles
+#pragma warning disable IDE1006 // Naming Styles
             public bool is_team { get; set; }
+#pragma warning restore IDE1006 // Naming Styles
+#pragma warning disable IDE1006 // Naming Styles
             public string subscription_type { get; set; }
+#pragma warning restore IDE1006 // Naming Styles
         }
 
         internal static bool GetDropboxPath(ref string path)
