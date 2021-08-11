@@ -81,7 +81,7 @@ namespace CardonerSistemas
                 value = valueDefault;
             }
 
-            if (string.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(value))
             {
                 value = value.Trim();
                 Color namedColor;
@@ -102,7 +102,7 @@ namespace CardonerSistemas
                 value = valueDefault;
             }
 
-            if (string.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(value))
             {
                 value = value.Trim();
                 if (value.StartsWith("#"))

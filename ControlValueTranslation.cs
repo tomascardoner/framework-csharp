@@ -299,7 +299,23 @@ namespace CardonerSistemas
 
         #region De Controles a Objectos - Otros
 
-        static internal byte? ComboBoxToByte(object selectedValue, byte valueForNull = CardonerSistemas.Constants.ByteFieldValueNotSpecified)
+        static internal string ComboBoxToString(object selectedValue, string valueForNull = "")
+        {
+            if (selectedValue == null)
+            {
+                return null;
+            }
+            else if (Convert.ToString(selectedValue) == valueForNull)
+            {
+                return null;
+            }
+            else
+            {
+                return Convert.ToString(selectedValue);
+            }
+        }
+
+        static internal byte? ComboBoxToByte(object selectedValue, byte valueForNull = Constants.ByteFieldValueNotSpecified)
         {
             if (selectedValue == null)
             {
