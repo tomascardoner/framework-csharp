@@ -83,7 +83,7 @@ namespace CardonerSistemas
 
         static internal bool Send(EmailConfig config, InternetAddressList recipientsTo, InternetAddressList recipientsCc, InternetAddressList recipientsBcc, string subject, bool isHtml, string body, MimeKit.AttachmentCollection attachments)
         {
-            if (recipientsTo.Count == 0 && recipientsCc.Count == 0 && recipientsBcc.Count == 0)
+            if ((recipientsTo == null || recipientsTo.Count == 0 ) && (recipientsCc == null || recipientsCc.Count == 0) && (recipientsBcc == null || recipientsBcc.Count == 0))
             {
                 return false;
             }
@@ -94,9 +94,9 @@ namespace CardonerSistemas
 
             // Set the recipients
             message.From.Add(new MailboxAddress(config.DisplayName, config.Address));
-            message.To.AddRange(recipientsTo);
-            message.Cc.AddRange(recipientsCc);
-            message.Bcc.AddRange(recipientsBcc);
+            message.To.AddRange(recipientsTo ?? new InternetAddressList());
+            message.Cc.AddRange(recipientsCc ?? new InternetAddressList());
+            message.Bcc.AddRange(recipientsBcc ?? new InternetAddressList());
 
             // Set the properties and establish the Smtp server connection
             smtp.Timeout = config.SmtpTimeout;
@@ -109,7 +109,6 @@ namespace CardonerSistemas
                 Error.ProcessError(ex, "Error al conectar al servidor SMTP.");
                 return false;
             }
-
             string decryptedPassword = string.Empty;
             if (!Encrypt.StringCipher.Decrypt(config.SmtpPassword, Constants.PublicEncryptionPassword, ref decryptedPassword))
             {
@@ -127,7 +126,7 @@ namespace CardonerSistemas
             }
 
             // Set the content
-            message.Subject = (subject == null ? string.Empty : subject);
+            message.Subject = subject ?? string.Empty;
             if (isHtml)
             {
                 bodyBuilder.HtmlBody = body;
