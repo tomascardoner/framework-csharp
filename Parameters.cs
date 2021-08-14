@@ -14,11 +14,11 @@ namespace CardonerSistemas
             Time = 8,
             YesNo = 9,
             Image = 10,
-            ListOfTextShort = 51,
-            ReportsCompany = 101,
-            ReportsTitle = 102,
-            ReportsFilterText = 103,
-            ReportsFilterTextShow = 104
+            ListOfTextShort = 31,
+            ReportsCompany = 51,
+            ReportsTitle = 52,
+            ReportsFilterText = 53,
+            ReportsFilterTextShow = 54
         };
 
     }
