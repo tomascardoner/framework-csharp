@@ -154,14 +154,14 @@ namespace CardonerSistemas
             string folderTagDropboxForContains;
             string folderTagGoogleDriveForContains;
             string folderTagOneDriveForContains;
-            string folderTagICloudDriveForContains;
+            //string folderTagICloudDriveForContains;
             if (ignoreCase)
             {
                 folderNameForContains = folderName.ToLower();
                 folderTagDropboxForContains = FolderTagDropbox.ToLower();
                 folderTagGoogleDriveForContains = FolderTagGoogleDrive.ToLower();
                 folderTagOneDriveForContains = FolderTagOneDrive.ToLower();
-                folderTagICloudDriveForContains = FolderTagICloudDrive.ToLower();
+                //folderTagICloudDriveForContains = FolderTagICloudDrive.ToLower();
             }
             else
             {
@@ -169,7 +169,7 @@ namespace CardonerSistemas
                 folderTagDropboxForContains = FolderTagDropbox;
                 folderTagGoogleDriveForContains = FolderTagGoogleDrive;
                 folderTagOneDriveForContains = FolderTagOneDrive;
-                folderTagICloudDriveForContains = FolderTagICloudDrive;
+                //folderTagICloudDriveForContains = FolderTagICloudDrive;
             }
 
             // Replace DropBox path

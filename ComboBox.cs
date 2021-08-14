@@ -207,17 +207,17 @@ namespace CardonerSistemas
             }
         }
 
-        static internal int GetMaxWidthOfItems(System.Windows.Forms.ComboBox comboBox, string propertyName)
+        static internal int GetMaxWidthOfItems(System.Windows.Forms.ComboBox comboBox)
         {
             int maxWidth = 0;
-            int tempWidth = 0;
-            string itemText = "";
+            int tempWidth;
+            string itemText;
 
-            if (propertyName.Trim().Length > 0)
+            if (!string.IsNullOrWhiteSpace(comboBox.DisplayMember))
             {
                 foreach (var obj in comboBox.Items)
                 {
-                    itemText = (string)obj.GetType().GetProperty(propertyName).GetValue(obj, null);
+                    itemText = (string)obj.GetType().GetProperty(comboBox.DisplayMember).GetValue(obj, null);
 
                     tempWidth = TextRenderer.MeasureText(itemText, comboBox.Font).Width;
                     if (tempWidth > maxWidth)
