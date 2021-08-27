@@ -67,7 +67,11 @@ namespace CardonerSistemas
             }
             catch (System.Exception ex)
             {
-                string message = $"Error al leer el archivo de configuración {fileName}.\n\n{ex.InnerException.Message}";
+                string message = $"Error al leer el archivo de configuración {fileName}.\n\n{ex.Message}";
+                if (ex.InnerException != null)
+                {
+                    message += $"\n\nInner message:\n{ex.InnerException.Message}";
+                }
                 if (log == null)
                 {
                     MessageBox.Show(message, My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -114,11 +118,16 @@ namespace CardonerSistemas
 
             try
             {
+                log.WriteDebug($"Serializer of {configObject.ToString()}");
                 jsonConfigFileString = JsonSerializer.Serialize<T>(configObject, new JsonSerializerOptions() { WriteIndented = writeIndented });
             }
             catch (System.Exception ex)
             {
-                string message = $"Error al serializar el objeto en archivo de configuración.\n\n{ex.InnerException.Message}";
+                string message = $"Error al serializar el objeto en archivo de configuración.\n\n{ex.Message}";
+                if (ex.InnerException != null)
+                {
+                    message += $"\n\nInner message:\n{ex.InnerException.Message}";
+                }
                 if (log == null)
                 {
                     MessageBox.Show(message, My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -136,7 +145,11 @@ namespace CardonerSistemas
             }
             catch (System.Exception ex)
             {
-                string message = $"Error al guardar el archivo de configuración {fileName}.\n\n{ex.InnerException.Message}";
+                string message = $"Error al guardar el archivo de configuración {fileName}.\n\n{ex.Message}";
+                if (ex.InnerException != null)
+                {
+                    message += $"\n\nInner message:\n{ex.InnerException.Message}";
+                }
                 if (log == null)
                 {
                     MessageBox.Show(message, My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);

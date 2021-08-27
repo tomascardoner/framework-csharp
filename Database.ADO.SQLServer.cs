@@ -31,7 +31,7 @@ namespace CardonerSistemas.Database.Ado
         internal bool PasswordUnencrypt()
         {
             string unencryptedPassword = string.Empty;
-            if (Encrypt.StringCipher.Decrypt(PasswordEncrypted, CardonerSistemas.Constants.PublicEncryptionPassword, ref unencryptedPassword))
+            if (Encrypt.StringCipher.Decrypt(PasswordEncrypted, Constants.PublicEncryptionPassword, ref unencryptedPassword))
             {
                 Password = unencryptedPassword;
                 return true;
@@ -50,11 +50,11 @@ namespace CardonerSistemas.Database.Ado
         {
             int selectedDatasourceIndex;
 
-            if (datasource.Contains(CardonerSistemas.Constants.StringListSeparator))
+            if (datasource.Contains(Constants.StringListSeparator))
             {
                 // Muestro la ventana de selección del Datasource
-                CardonerSistemas.Database.SelectDatasource selectDatasource = new SelectDatasource();
-                selectDatasource.comboboxDataSource.Items.AddRange(datasource.Split(Convert.ToChar(CardonerSistemas.Constants.StringListSeparator)));
+                SelectDatasource selectDatasource = new SelectDatasource();
+                selectDatasource.comboboxDataSource.Items.AddRange(datasource.Split(Convert.ToChar(Constants.StringListSeparator)));
                 if (selectDatasource.ShowDialog() != DialogResult.OK)
                 {
                     return false;
@@ -78,7 +78,7 @@ namespace CardonerSistemas.Database.Ado
             ConnectTimeout = connectTimeout;
             ConnectRetryCount = connectRetryCount;
             ConnectRetryInterval = connectRetryInterval;
-            ApplicationName = CardonerSistemas.My.Application.Info.Title;
+            ApplicationName = My.Application.Info.Title;
             MultipleActiveResultsets = true;
             WorkstationID = Environment.MachineName;
 
@@ -87,10 +87,10 @@ namespace CardonerSistemas.Database.Ado
 
         private string SelectProperty(string value, int selectedIndex)
         {
-            if (value.Contains(CardonerSistemas.Constants.StringListSeparator))
+            if (value.Contains(Constants.StringListSeparator))
             {
                 string[] values;
-                values = value.Split(Convert.ToChar(CardonerSistemas.Constants.StringListSeparator));
+                values = value.Split(Convert.ToChar(Constants.StringListSeparator));
                 if (values.GetUpperBound(0) >= selectedIndex)
                 {
                     return values[selectedIndex];
@@ -148,7 +148,7 @@ namespace CardonerSistemas.Database.Ado
             }
             catch (Exception ex)
             {
-                CardonerSistemas.Error.ProcessError(ex, "Error al conectarse a la Base de Datos.");
+                Error.ProcessError(ex, "Error al conectarse a la Base de Datos.");
                 return false;
             }
         }
@@ -170,7 +170,7 @@ namespace CardonerSistemas.Database.Ado
                 }
                 catch (Exception ex)
                 {
-                    CardonerSistemas.Error.ProcessError(ex, "Error al cerrar la conexión a la Base de Datos.");
+                    Error.ProcessError(ex, "Error al cerrar la conexión a la Base de Datos.");
                     return false;
                 }
             }
@@ -203,7 +203,7 @@ namespace CardonerSistemas.Database.Ado
             }
             catch (Exception ex)
             {
-                CardonerSistemas.Error.ProcessError(ex, errorMessage);
+                Error.ProcessError(ex, errorMessage);
                 return false;
             }
         }
@@ -223,7 +223,7 @@ namespace CardonerSistemas.Database.Ado
             }
             catch (Exception ex)
             {
-                CardonerSistemas.Error.ProcessError(ex, errorMessage);
+                Error.ProcessError(ex, errorMessage);
                 return false;
             }
         }
@@ -248,7 +248,7 @@ namespace CardonerSistemas.Database.Ado
             }
             catch (Exception ex)
             {
-                CardonerSistemas.Error.ProcessError(ex, errorMessage);
+                Error.ProcessError(ex, errorMessage);
                 return false;
             }
         }
@@ -269,7 +269,7 @@ namespace CardonerSistemas.Database.Ado
             }
             catch (Exception ex)
             {
-                CardonerSistemas.Error.ProcessError(ex, errorMessage);
+                Error.ProcessError(ex, errorMessage);
                 return false;
             }
         }
@@ -294,7 +294,7 @@ namespace CardonerSistemas.Database.Ado
             }
             catch (Exception ex)
             {
-                CardonerSistemas.Error.ProcessError(ex, errorMessage);
+                Error.ProcessError(ex, errorMessage);
                 return false;
             }
         }

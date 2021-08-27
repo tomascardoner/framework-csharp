@@ -27,7 +27,7 @@ namespace CardonerSistemas.Communication
 
         internal static int ReadTimeoutDefault = 500;
 
-        internal static int ReadPauseIntervalDefault = 0;
+        internal static int ReadPauseIntervalDefault = 500;
 
         #endregion
 
