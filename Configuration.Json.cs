@@ -4,9 +4,9 @@ using System.IO;
 using System.Text.Json;
 using System.Windows.Forms;
 
-namespace CardonerSistemas
+namespace CardonerSistemas.Configuration
 {
-    static class ConfigurationJson
+    static class Json
     {
         //private const int ErrorFileBadFormat = -2146233079;
         //private const int ErrorFileBadFormatInnerElement = -2146232000;

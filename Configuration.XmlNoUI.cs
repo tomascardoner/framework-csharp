@@ -3,7 +3,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
-namespace CardonerSistemas
+namespace CardonerSistemas.Configuration
 {
     class Serializer
     {
@@ -30,7 +30,7 @@ namespace CardonerSistemas
 
     }
 
-    static class ConfigurationXml
+    static class Xml
     {
         private const int ErrorFileBadFormat = -2146233079;
         private const int ErrorFileBadFormatInnerElement = -2146232000;
