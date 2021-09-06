@@ -15,20 +15,23 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABI
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 DEALINGS IN THE SOFTWARE.
 
-Converted to C# and stylished by Tomás A. Cardoner, september 2021
+Tomás A. Cardoner, september 2021:
+- Converted to C#
+- Changed some implementations like use of Lists instead of ArrayList
+- Code clean and styling
 */
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 
-namespace CardonerSistemas.Configuration
+namespace CardonerSistemas.Configuration.IniFile
 {
 
     internal class IniFile
     {
-        private ArrayList sections = new ArrayList();
+        private List<Section> sections = new List<Section>();
         private const string CommentString = ";";
 
         private enum LineContents : byte
@@ -67,7 +70,7 @@ namespace CardonerSistemas.Configuration
                 }
             }
 
-            // Clear the arraylist
+            // Clear the list
             sections.Clear();
 
             try
@@ -81,17 +84,17 @@ namespace CardonerSistemas.Configuration
 
                 do
                 {
-                    // Evalue the contents of the line
+                    // Evaluate the contents of the line
                     switch (Eval(thisLine))
                     {
                         case LineContents.Section:
                             // Add the section to the sections arraylist
-                            AddSection(RemoveBrackets(RemoveComment(thisLine)), IsCommented(thisLine));
+                            AddSection(RemoveBrackets(thisLine));
                             // Make this the current section, so we know where to keys to
-                            currentSection = RemoveBrackets(RemoveComment(thisLine));
+                            currentSection = RemoveBrackets(thisLine);
                             break;
                         case LineContents.Key:
-                            AddKey(GetKeyName(thisLine), GetKeyValue(thisLine), currentSection, IsCommented(thisLine));
+                            AddKey(GetKeyName(thisLine), GetKeyValue(thisLine), currentSection);
                             break;
                         case LineContents.Comment:
                             // AddComment(thisLine, currentSection);
@@ -118,7 +121,7 @@ namespace CardonerSistemas.Configuration
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error: {ex.ToString()}", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error: {ex}", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }
@@ -134,24 +137,22 @@ namespace CardonerSistemas.Configuration
                 return LineContents.Blank;
             }
 
-            // If the value is surrounded by brackets, then it is a section
-            if (RemoveComment(value).StartsWith("[") && RemoveComment(value).EndsWith("]"))
-            {
-                return LineContents.Section;
-            }
-
-            // If the value contains an equals sign (=), then it is a value. This test can be fooled by 
-            // comment with an equals sign in it, but it is the best test we have. We test for this before
-            // testing for a comment in case the key is commented out. It is still a key.
-            if (RemoveComment(value).Contains("="))
-            {
-                return LineContents.Key;
-            }
-
             // If the value is preceeded by the comment string, then it is a pure comment
             if (IsCommented(value))
             {
                 return LineContents.Comment;
+            }
+
+            // If the value is surrounded by brackets, then it is a section
+            if (value.StartsWith("[") && value.EndsWith("]"))
+            {
+                return LineContents.Section;
+            }
+
+            // If the value contains an equals sign (=), then it is a value
+            if (value.Contains("="))
+            {
+                return LineContents.Key;
             }
 
             return LineContents.Unknown;
@@ -159,12 +160,6 @@ namespace CardonerSistemas.Configuration
 
         private string GetKeyName(string value)
         {
-            // If the value is commented out, then remove the comment string so we can get the name
-            if (IsCommented(value))
-            {
-                value = RemoveComment(value);
-            }
-
             // Locate the equals sign
             int equalsPos = value.IndexOf("=");
 
@@ -172,7 +167,7 @@ namespace CardonerSistemas.Configuration
             if (equalsPos > 0)
             {
                 // Return everything before the equals sign
-                return value.Substring(0, equalsPos - 1);
+                return value.Substring(0, equalsPos);
             }
             else
             {
@@ -220,11 +215,11 @@ namespace CardonerSistemas.Configuration
         /// <summary>
         /// Adds a key/value to a given section. If the section does not exist, it is created.
         /// </summary>
-        /// <param name="KeyName">The name of the key to add. If the key alreadys exists, then no action is taken.</param>
-        /// <param name="KeyValue">The value to assign to the new key.</param>
-        /// <param name="SectionName">The section to add the new key to. If it does not exist, it is created.</param>
-        /// <param name="IsCommented">Optional, defaults to false. Will create the key in commented state.</param>
-        /// <param name="InsertBefore">Optional. Will insert the new key prior to the specified key.</param>
+        /// <param name="keyName">The name of the key to add. If the key alreadys exists, then no action is taken.</param>
+        /// <param name="keyValue">The value to assign to the new key.</param>
+        /// <param name="sectionName">The section to add the new key to. If it does not exist, it is created.</param>
+        /// <param name="isCommented">Optional, defaults to false. Will create the key in commented state.</param>
+        /// <param name="insertBefore">Optional. Will insert the new key prior to the specified key.</param>
         /// <returns></returns>
         /// <remarks>If the section does not exist, it will be created. If the 'IsCommented' option is true, then the newly created section will also be commented. If the 'InsertBefore' option is used, the specified key does not exist, then the new key is simply added to the section. If the section the key is being added to is commented, then the key will be commented as well.
         /// </remarks>
@@ -261,7 +256,7 @@ namespace CardonerSistemas.Configuration
             if (insertBefore == null)
             {
                 // Then add the new key to the bottom of the section
-                thisSection.Add(thisKey);
+                thisSection.Keys.Add(thisKey);
                 return true;
             }
             else
@@ -272,13 +267,13 @@ namespace CardonerSistemas.Configuration
                 if (keyIndex > -1)
                 {
                     // Then do the insert
-                    thisSection.Insert(keyIndex, thisKey);
+                    thisSection.Keys.Insert(keyIndex, thisKey);
                     return true;
                 }
                 else
                 {
                     // The key to insert prior to wasn't found, so just add it
-                    thisSection.Add(thisKey);
+                    thisSection.Keys.Add(thisKey);
                     // The key to insert prior to was not found
                     return false;
                 }
@@ -287,25 +282,19 @@ namespace CardonerSistemas.Configuration
 
         private int GetKeyIndex(string keyName, string sectionName)
         {
-            IEnumerator sectionEnumerator = sections.GetEnumerator();
-            while (sectionEnumerator.MoveNext())
+            Section thisSection = GetSection(sectionName);
+            if (thisSection == null)
             {
-                Section currentSection = (Section)sectionEnumerator.Current;
-                if (currentSection.Name == sectionName)
-                {
-                    IEnumerator keyEnumerator = currentSection.GetEnumerator();
-                    while (keyEnumerator.MoveNext())
-                    {
-                        Key currentKey = (Key)keyEnumerator.Current;
-                        if (currentKey.Name == keyName)
-                        {
-                            return currentSection.IndexOf(currentKey);
-                        }
-                    }
-                }
+                return -1;
             }
 
-            return -1;
+            Key thisKey = GetKey(keyName, thisSection);
+            if (thisKey == null)
+            {
+                return -1;
+            }
+
+            return thisSection.Keys.IndexOf(thisKey);
         }
 
         /// -----------------------------------------------------------------------------
@@ -331,13 +320,11 @@ namespace CardonerSistemas.Configuration
 
         private Section GetSection(string sectionName)
         {
-            IEnumerator myEnumerator = sections.GetEnumerator();
-            while (myEnumerator.MoveNext())
+            foreach (Section section in sections)
             {
-                Section currentSection = (Section)myEnumerator.Current;
-                if (string.Compare(currentSection.Name, sectionName, StringComparison.InvariantCultureIgnoreCase) == 0)
+                if (string.Compare(section.Name, sectionName, StringComparison.InvariantCultureIgnoreCase) == 0)
                 {
-                    return currentSection;
+                    return section;
                 }
             }
             return null;
@@ -347,22 +334,16 @@ namespace CardonerSistemas.Configuration
         /// <summary>
         /// Return the sections in the IniFile.
         /// </summary>
-        /// <returns>Returns an ArrayList of Section objects.</returns>
+        /// <returns>Returns a List of Section objects.</returns>
         /// <remarks>
         /// </remarks>
         /// <history>
         /// 	[TDavis]	1/19/2004	Created
         /// </history>
         /// -----------------------------------------------------------------------------
-        internal ArrayList GetSections()
+        internal List<Section> GetSections()
         {
-            ArrayList listOfSections = new ArrayList();
-            IEnumerator myEnumerator = sections.GetEnumerator();
-            while (myEnumerator.MoveNext())
-            {
-                listOfSections.Add(myEnumerator.Current);
-            }
-            return listOfSections;
+            return sections;
         }
 
         /// -----------------------------------------------------------------------------
@@ -377,20 +358,15 @@ namespace CardonerSistemas.Configuration
         /// 	[TDavis]	1/19/2004	Created
         /// </history>
         /// -----------------------------------------------------------------------------
-        internal ArrayList GetKeys(string sectionName)
+        internal List<Key> GetKeys(string sectionName)
         {
-            ArrayList listOfKeys = new ArrayList();
             Section thisSection = GetSection(sectionName);
             if (thisSection == null)
             {
                 return null;
             }
-            IEnumerator keyEnumerator = thisSection.GetEnumerator();
-            while (keyEnumerator.MoveNext())
-            {
-                listOfKeys.Add(keyEnumerator.Current);
-            }
-            return listOfKeys;
+
+            return thisSection.Keys;
         }
 
         /// -----------------------------------------------------------------------------
@@ -415,11 +391,10 @@ namespace CardonerSistemas.Configuration
                 return false;
             }
             thisSection.IsCommented = commented;
-            IEnumerator myEnumerator = thisSection.GetEnumerator();
-            while (myEnumerator.MoveNext())
+
+            foreach (Key key in thisSection.Keys)
             {
-                Key currentKey = (Key)myEnumerator.Current;
-                currentKey.IsCommented = commented;
+                key.IsCommented = commented;
             }
             return true;
         }
@@ -543,13 +518,11 @@ namespace CardonerSistemas.Configuration
                 return null;
             }
 
-            IEnumerator myEnumerator = section.GetEnumerator();
-            while (myEnumerator.MoveNext())
+            foreach (Key key in section.Keys)
             {
-                Key currentKey = (Key)myEnumerator.Current;
-                if (string.Compare(currentKey.Name, keyName, StringComparison.InvariantCultureIgnoreCase) == 0)
+                if (string.Compare(key.Name, keyName, StringComparison.InvariantCultureIgnoreCase) == 0)
                 {
-                    return currentKey;
+                    return key;
                 }
             }
             return null;
@@ -564,7 +537,7 @@ namespace CardonerSistemas.Configuration
             }
             else
             {
-                return GetKey(keyName, sectionName);
+                return GetKey(keyName, thisSection);
             }
         }
 
@@ -619,7 +592,7 @@ namespace CardonerSistemas.Configuration
                 return false;
             }
 
-            thisSection.Remove(thisKey);
+            thisSection.Keys.Remove(thisKey);
             return true;
         }
 
@@ -631,20 +604,15 @@ namespace CardonerSistemas.Configuration
                 File.Delete(fileName);
             }
 
-            // Loop through the arraylist (Content) and write each line to the file
+            // Loop through the list (Content) and write each line to the file
             StreamWriter sw = new StreamWriter(fileName);
 
-            IEnumerator sectionEnumerator = sections.GetEnumerator();
-            while (sectionEnumerator.MoveNext())
+            foreach (Section section in sections)
             {
-                Section currentSection = (Section)sectionEnumerator.Current;
-                sw.Write(AddBrackets(currentSection.Name) + "\r\n");
-
-                IEnumerator keyEnumerator = currentSection.GetEnumerator();
-                while (keyEnumerator.MoveNext())
+                sw.Write(AddBrackets(section.Name) + "\r\n");
+                foreach (Key key in section.Keys)
                 {
-                    Key currentKey = (Key)keyEnumerator.Current;
-                    sw.Write($"{currentKey.Name}={currentKey.Value}\r\n");
+                    sw.Write($"{key.Name}={key.Value}\r\n");
                 }
             }
             sw.Close();
@@ -654,7 +622,7 @@ namespace CardonerSistemas.Configuration
         {
             value = value.Trim();
             value = value.TrimStart('[');
-            value = value.TrimEnd('[');
+            value = value.TrimEnd(']');
             return value;
         }
 
@@ -664,16 +632,17 @@ namespace CardonerSistemas.Configuration
         }
     }
 
-
-    internal class Section : ArrayList
+    internal class Section
     {
         internal string Name { get; set; }
         internal bool IsCommented { get; set; }
+        internal List<Key> Keys { get; set; }
 
         internal Section(string name, bool isCommented = false)
         {
             Name = name;
             IsCommented = isCommented;
+            Keys = new List<Key>();
         }
 
         public override bool Equals(Object obj)
