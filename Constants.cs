@@ -11,7 +11,7 @@ namespace CardonerSistemas
 
         // To String formats
         internal const string FormatStringToNumber = "N";
-        internal const string FormatStringToNumberInteger = "G";
+        internal const string FormatStringToNumberInteger = "N0";
         internal const string FormatStringToCurrency = "C";
         internal const string FormatStringToPercent = "P";
         internal const string FormatStringToHexadecimal = "X";
