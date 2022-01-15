@@ -5,7 +5,7 @@ namespace CardonerSistemas
 {
     static class Error
     {
-        public static void ProcessError(Exception ex, string FriendlyMessageText ="", bool ShowMessageBox = true, bool CustomMessageBox = true, Log log = null, bool logStackTrace = false)
+        public static void ProcessError(Exception ex, string FriendlyMessageText = "", bool ShowMessageBox = true, bool CustomMessageBox = true, Log log = null, bool logStackTrace = false)
         {
             string exceptionMessageText;
             string exceptionMessageToLog;

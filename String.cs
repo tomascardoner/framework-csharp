@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace CardonerSistemas
 {
@@ -81,6 +82,26 @@ namespace CardonerSistemas
         public static string RemoveSpaces(this string value)
         {
             return Regex.Replace(value, @"\s+", string.Empty);
+        }
+
+        /// <summary>
+        /// Converts the specified string to title case (except for words that are entirely in uppercase, which are considered to be acronyms).
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string ToTitleCase(this string value)
+        {
+            return Application.CurrentCulture.TextInfo.ToTitleCase(value);
+        }
+
+        /// <summary>
+        /// Converts the specified string to title case (also the words that are entirely in uppercase).
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string ToTitleCaseAll(this string value)
+        {
+            return Application.CurrentCulture.TextInfo.ToTitleCase(value.ToLower());
         }
     }
 }
