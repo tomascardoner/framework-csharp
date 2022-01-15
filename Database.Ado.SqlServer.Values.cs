@@ -103,7 +103,7 @@ namespace CardonerSistemas.Database.Ado
 
         internal static short? GetShortSafeAsNull(SqlDataReader dataReader, string columnName)
         {
-            return GetShortSafeAsValue(dataReader, columnName, null).Value;
+            return GetShortSafeAsValue(dataReader, columnName, null);
         }
 
         #endregion
