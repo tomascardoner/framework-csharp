@@ -8,7 +8,7 @@ namespace CardonerSistemas.Configuration
 {
     static class Json
     {
-        private static bool CheckFileExist(string configFolder, string fileName, bool showMessageIfFileNotExist)
+        private static bool CheckFileExist(string configFolder, string fileName, bool showMessageIfFileNotExist, Log log = null)
         {
             if (File.Exists(Path.Combine( configFolder , fileName)))
             {
@@ -17,17 +17,31 @@ namespace CardonerSistemas.Configuration
             else
             {
                 string message = $"No se encontró el archivo de configuración '{fileName}', el cual debe estar ubicado dentro de la carpeta '{configFolder}'.";
-                if (showMessageIfFileNotExist)
+                if (log == null)
                 {
-                    MessageBox.Show(message, My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    if (showMessageIfFileNotExist)
+                    {
+                        MessageBox.Show(message, My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    if (showMessageIfFileNotExist)
+                    {
+                        log.WriteAndShowError(message);
+                    }
+                    else
+                    {
+                        log.WriteError(message);
+                    }
                 }
                 return false;
             }
         }
 
-        internal static bool LoadFile<T>(string configFolder, string fileName, ref T configObject, bool returnFalseIfFileNotExist = true)
+        internal static bool LoadFile<T>(string configFolder, string fileName, ref T configObject, bool returnFalseIfFileNotExist = true, Log log = null)
         {
-            if (!CheckFileExist(configFolder, fileName, returnFalseIfFileNotExist))
+            if (!CheckFileExist(configFolder, fileName, returnFalseIfFileNotExist, log))
             {
                 if (returnFalseIfFileNotExist)
                 {
@@ -52,7 +66,14 @@ namespace CardonerSistemas.Configuration
                 {
                     message += $"\n\nInner message:\n{ex.InnerException.Message}";
                 }
-                MessageBox.Show(message, My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (log == null)
+                {
+                    MessageBox.Show(message, My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    log.WriteAndShowError(message);
+                }
                 return false;
             }
 
@@ -71,19 +92,27 @@ namespace CardonerSistemas.Configuration
                 {
                     message = $"Error al interpretar el archivo de configuración {fileName}.\n\n{ex.InnerException.Message}";
                 }
-                MessageBox.Show(message, My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (log == null)
+                {
+                    MessageBox.Show(message, My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    log.WriteAndShowError(message);
+                }
                 return false;
             }
 
             return true;
         }
 
-        internal static bool SaveFile<T>(string configFolder, string fileName, ref T configObject, bool writeIndented = true)
+        internal static bool SaveFile<T>(string configFolder, string fileName, ref T configObject, bool writeIndented = true, Log log = null)
         {
             string jsonConfigFileString;
 
             try
             {
+                log.WriteDebug($"Serializer of {configObject.ToString()}");
                 jsonConfigFileString = JsonSerializer.Serialize<T>(configObject, new JsonSerializerOptions() { WriteIndented = writeIndented });
             }
             catch (System.Exception ex)
@@ -93,7 +122,14 @@ namespace CardonerSistemas.Configuration
                 {
                     message += $"\n\nInner message:\n{ex.InnerException.Message}";
                 }
-                MessageBox.Show(message, My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (log == null)
+                {
+                    MessageBox.Show(message, My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    log.WriteAndShowError(message);
+                }
                 return false;
             }
 
@@ -108,7 +144,14 @@ namespace CardonerSistemas.Configuration
                 {
                     message += $"\n\nInner message:\n{ex.InnerException.Message}";
                 }
-                MessageBox.Show(message, My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (log == null)
+                {
+                    MessageBox.Show(message, My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    log.WriteAndShowError(message);
+                }
                 return false;
             }
 

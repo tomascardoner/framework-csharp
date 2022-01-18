@@ -296,11 +296,11 @@ namespace CardonerSistemas.Database.Ado
             {
                 return dataReader.GetStream(dataReader.GetOrdinal(columnName));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 if (errorMessage != "")
                 {
-                    // CardonerSistemas.Error.ProcessError(ex, errorMessage);
+                    CardonerSistemas.Error.ProcessError(ex, errorMessage);
                 }
                 return null;
             }
