@@ -444,6 +444,18 @@ namespace CardonerSistemas.Database.Ado
             }
         }
 
+        internal static object SetValue(string value)
+        {
+            if (value == null || value.Trim() == string.Empty)
+            {
+                return DBNull.Value;
+            }
+            else
+            {
+                return value;
+            }
+        }
+
         #endregion
 
     }

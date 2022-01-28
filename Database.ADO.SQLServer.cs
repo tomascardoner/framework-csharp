@@ -251,6 +251,39 @@ namespace CardonerSistemas.Database.Ado
             }
         }
 
+        internal bool OpenDataTableFromDataReader(ref DataTable dataTable, string commandText, CommandType commandType, string errorMessage)
+        {
+            SqlDataReader dataReader = null;
+            try
+            {
+                SqlCommand command = new SqlCommand
+                {
+                    Connection = Connection,
+                    CommandText = commandText,
+                    CommandType = commandType,
+                };
+                dataReader = command.ExecuteReader();
+                command.Dispose();
+                if (dataReader.HasRows)
+                {
+                    dataTable.Load(dataReader);
+                }
+                dataReader.Close();
+                dataReader = null;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                if (dataReader != null)
+                {
+                    dataReader.Close();
+                }
+                Cursor.Current = Cursors.Default;
+                CardonerSistemas.Error.ProcessError(ex, errorMessage);
+                return false;
+            }
+        }
+
         internal bool Execute(string commandText, CommandType commandType, string errorMessage)
         {
             try
