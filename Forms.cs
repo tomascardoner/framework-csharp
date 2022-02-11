@@ -196,7 +196,7 @@ namespace CardonerSistemas
 
         #endregion
 
-        #region Mdi Childs
+        #region Mdi childs
 
         static public void MdiChildShow(Form MdiForm, Form childForm, bool centerForm)
         {

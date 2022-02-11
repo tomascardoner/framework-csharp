@@ -7,8 +7,9 @@ using System.Windows.Forms;
 
 namespace CardonerSistemas
 {
-    public static class String
+    internal static class String
     {
+
         /// <summary>
         /// Gets a sub-string given it's zero-based order position and separator
         /// </summary>
@@ -16,7 +17,7 @@ namespace CardonerSistemas
         /// <param name="orderPosition">Zero-based order index</param>
         /// <param name="separator">String separator</param>
         /// <returns></returns>
-        public static string GetSubString(string mainString, int orderPosition, string separator)
+        internal static string GetSubString(string mainString, int orderPosition, string separator)
         {
             // Splits the string into an array of substrings delimited by separator
             string[] stringSeparators = new string[] { separator };
@@ -32,13 +33,35 @@ namespace CardonerSistemas
             }
         }
 
+        /// <summary>
+        /// Gets the last sub-string given it's separator
+        /// </summary>
+        /// <param name="mainString">String in where to search</param>
+        /// <param name="separator">String separator</param>
+        /// <returns></returns>
+        internal static string GetLastSubString(string mainString, string separator)
+        {
+            // Splits the string into an array of substrings delimited by separator
+            string[] stringSeparators = new string[] { separator };
+            string[] subStrings = mainString.Split(stringSeparators, StringSplitOptions.None);
+
+            if (subStrings.GetUpperBound(0) > -1)
+            {
+                return subStrings[subStrings.GetUpperBound(0)];
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
         internal static int GetExtends(System.Drawing.Graphics graphicObject, string text, Font font)
         {
             SizeF size = graphicObject.MeasureString(text, font);
             return (int)Math.Ceiling(size.Width);
         }
         
-        public static string RemoveDiacritics(this string s)
+        internal static string RemoveDiacritics(this string s)
         {
             string normalizedString = s.Normalize(NormalizationForm.FormD);
             StringBuilder stringBuilder = new StringBuilder();
@@ -58,7 +81,7 @@ namespace CardonerSistemas
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static string TrimAndReduce(this string value)
+        internal static string TrimAndReduce(this string value)
         {
             value = value.Trim(); 
             return RemoveDoubleSpaces(value);
@@ -69,7 +92,7 @@ namespace CardonerSistemas
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static string RemoveDoubleSpaces(this string value)
+        internal static string RemoveDoubleSpaces(this string value)
         {
             return Regex.Replace(value, @"\s+", " ");
         }
@@ -79,7 +102,7 @@ namespace CardonerSistemas
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static string RemoveSpaces(this string value)
+        internal static string RemoveSpaces(this string value)
         {
             return Regex.Replace(value, @"\s+", string.Empty);
         }
@@ -89,7 +112,7 @@ namespace CardonerSistemas
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static string ToTitleCase(this string value)
+        internal static string ToTitleCase(this string value)
         {
             return Application.CurrentCulture.TextInfo.ToTitleCase(value);
         }
@@ -99,9 +122,25 @@ namespace CardonerSistemas
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static string ToTitleCaseAll(this string value)
+        internal static string ToTitleCaseAll(this string value)
         {
             return Application.CurrentCulture.TextInfo.ToTitleCase(value.ToLower());
+        }
+
+        /// <summary>
+        /// Checks if all characters are numeric digits.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        internal static bool IsDigitsOnly(this string value)
+        {
+            foreach (char c in value)
+            {
+                if (c < '0' || c > '9')
+                    return false;
+            }
+
+            return true;
         }
     }
 }
