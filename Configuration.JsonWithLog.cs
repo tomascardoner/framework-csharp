@@ -10,7 +10,7 @@ namespace CardonerSistemas.Configuration
     {
         private static bool CheckFileExist(string configFolder, string fileName, bool showMessageIfFileNotExist, Log log = null)
         {
-            if (File.Exists(Path.Combine( configFolder , fileName)))
+            if (File.Exists(Path.Combine(configFolder, fileName)))
             {
                 return true;
             }

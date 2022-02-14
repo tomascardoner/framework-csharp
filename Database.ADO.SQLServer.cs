@@ -8,6 +8,8 @@ namespace CardonerSistemas.Database.Ado
     internal class SqlServer
     {
 
+        private const string ErrorLoginFailed = "Login failed for user ";
+
         #region Properties
 
         internal string ApplicationName { get; set; }
@@ -25,6 +27,20 @@ namespace CardonerSistemas.Database.Ado
         internal string ConnectionString { get; set; }
 
         internal SqlConnection Connection { get; set; }
+
+        internal bool PasswordEncrypt()
+        {
+            string encryptedPassword = string.Empty;
+            if (Encrypt.StringCipher.Encrypt(Password, Constants.PublicEncryptionPassword, ref encryptedPassword))
+            {
+                PasswordEncrypted = encryptedPassword;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         internal bool PasswordUnencrypt()
         {
@@ -148,6 +164,61 @@ namespace CardonerSistemas.Database.Ado
             {
                 Error.ProcessError(ex, "Error al conectarse a la Base de Datos.");
                 return false;
+            }
+        }
+
+        internal bool Connect(DatabaseConfig databaseConfig, ref bool newLoginData)
+        {
+            newLoginData = false;
+
+            while (true)
+            {
+                try
+                {
+                    Connection = new SqlConnection(ConnectionString);
+                    Connection.Open();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    if (ex.HResult == -2146232060 && ex.Message.Contains(ErrorLoginFailed))
+                    {
+                        // Los datos de inicio de sesión en la base de datos son incorrectos.
+                        MessageBox.Show("Los datos de inicio de sesión a la base de datos son incorrectos.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                        // Pido datos nuevos.
+                        LoginInfo loginInfo = new LoginInfo();
+                        loginInfo.textboxUsuario.Text = UserId;
+                        loginInfo.textboxPassword.Text = Password;
+                        if (loginInfo.ShowDialog() != DialogResult.OK)
+                        {
+                            return false;
+                        }
+                        UserId = loginInfo.textboxUsuario.Text.TrimAndReduce();
+                        databaseConfig.UserId = loginInfo.textboxUsuario.Text.TrimAndReduce();
+                        Password = loginInfo.textboxPassword.Text.Trim();
+                        if (Password.Length > 0)
+                        {
+                            if (PasswordEncrypt())
+                            {
+                                databaseConfig.Password = PasswordEncrypted;
+                            }
+                        }
+                        else
+                        {
+                            databaseConfig.Password = string.Empty;
+                        }
+                        CreateConnectionString();
+                        loginInfo.Close();
+                        loginInfo.Dispose();
+                        newLoginData = true;
+                    }
+                    else
+                    {
+                        Error.ProcessError(ex, "Error al conectarse a la Base de Datos.");
+                        return false;
+                    }
+                }
             }
         }
 

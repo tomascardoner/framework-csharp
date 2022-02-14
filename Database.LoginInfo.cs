@@ -3,12 +3,15 @@ using System.Windows.Forms;
 
 namespace CardonerSistemas.Database
 {
-    public partial class SelectDatasource : Form
+    public partial class LoginInfo : Form
     {
-        public SelectDatasource()
+        public LoginInfo()
         {
             InitializeComponent();
         }
+
+        internal string Usuario { get; set; }
+        internal string Password { get; set; }
 
         private void This_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -27,10 +30,10 @@ namespace CardonerSistemas.Database
 
         private void ButtonAceptar_Click(object sender, EventArgs e)
         {
-            if (comboboxDataSource.SelectedIndex == -1)
+            if (string.IsNullOrWhiteSpace(textboxUsuario.Text))
             {
-                MessageBox.Show("Debe seleccionar el origen de los datos.", CardonerSistemas.My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                comboboxDataSource.Focus();
+                MessageBox.Show("Debe ingresar el usuario.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                textboxUsuario.Focus();
                 return;
             }
 
