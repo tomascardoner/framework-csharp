@@ -58,6 +58,18 @@ namespace CardonerSistemas
             }
         }
 
+        static internal string LongToTextBox(long? value)
+        {
+            if (value.HasValue)
+            {
+                return value.Value.ToString("N0");
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
         static internal string IntegerToTextBox(int? value)
         {
             if (value.HasValue)
@@ -251,6 +263,27 @@ namespace CardonerSistemas
                         return textInfo.ToTitleCase(value);
                     default:
                         return value;
+                }
+            }
+        }
+
+        static internal long? TextBoxToLong(string value)
+        {
+            value = value.Trim();
+
+            if (value.Length == 0)
+            {
+                return null;
+            }
+            else
+            {
+                if (long.TryParse(value, out long returnValue))
+                {
+                    return returnValue;
+                }
+                else
+                {
+                    return null;
                 }
             }
         }
