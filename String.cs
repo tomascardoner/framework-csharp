@@ -108,6 +108,24 @@ namespace CardonerSistemas
         }
 
         /// <summary>
+        /// Replace end of a string with a new string.
+        /// </summary>
+        /// <param name="oldValue"></param>
+        /// <param name="newValue"></param>
+        /// <returns></returns>
+        internal static string ReplaceEnd(this string value, string oldValue, string newValue)
+        {
+            if (value.EndsWith(oldValue))
+            {
+                return value.Substring(0, value.Length - oldValue.Length) + newValue;
+            }
+            else
+            {
+                return value;
+            }
+        }
+
+        /// <summary>
         /// Converts the specified string to title case (except for words that are entirely in uppercase, which are considered to be acronyms).
         /// </summary>
         /// <param name="value"></param>
