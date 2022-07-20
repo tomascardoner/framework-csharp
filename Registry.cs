@@ -10,8 +10,8 @@ namespace CardonerSistemas
 
         #region Declarations
 
-        private static FileVersionInfo fvi;
-        private static string applicationConfigurationSubKeyName;
+        private static readonly FileVersionInfo fvi;
+        private static readonly string applicationConfigurationSubKeyName;
 
         internal enum Keys
         {
