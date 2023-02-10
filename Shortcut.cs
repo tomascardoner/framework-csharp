@@ -1,16 +1,12 @@
 using System;
 using System.IO;
-using System.Text.Json;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using IWshRuntimeLibrary;
-using Microsoft.Win32;
 
 namespace CardonerSistemas
 {
     static class Shortcut
     {
-        internal static void ShortcutAddToStartMenu(string filePath, string workingFolder, string subFolderName, string displayName, string iconFilePath = null, int iconFileIndex = 0)
+        internal static void AddToStartMenu(string filePath, string workingFolder, string subFolderName, string displayName, string iconFilePath = null, int iconFileIndex = 0)
         {
             string startMenuPath = Environment.GetFolderPath(Environment.SpecialFolder.StartMenu);
             string appStartMenuPath;
@@ -50,7 +46,7 @@ namespace CardonerSistemas
             shortcut.Save();
         }
 
-        internal static void ShortcutAddToDesktop(string filePath, string workingFolder, string displayName, string iconFilePath = null, int iconFileIndex = 0)
+        internal static void AddToDesktop(string filePath, string workingFolder, string displayName, string iconFilePath = null, int iconFileIndex = 0)
         {
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             string shortcutLocation = Path.Combine(desktopPath, displayName + ".lnk");
