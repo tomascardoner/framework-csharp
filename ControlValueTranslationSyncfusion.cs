@@ -2,7 +2,7 @@
 
 namespace CardonerSistemas
 {
-    static class SyncfusionControlValueTranslation
+    static class ControlValueTranslationSyncfusion
     {
 
         #region Declarations
