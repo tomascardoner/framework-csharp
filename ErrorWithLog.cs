@@ -45,10 +45,7 @@ namespace CardonerSistemas
             }
             messageTextToLog += $"{TextSeparator}Error: {exceptionMessageToLog}";
 
-            if (log != null)
-            {
-                log.WriteError(messageTextToLog);
-            }
+            log?.WriteError(messageTextToLog);
 
             if (ShowMessageBox)
             {

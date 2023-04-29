@@ -76,6 +76,25 @@ namespace CardonerSistemas
             }
         }
 
+        static internal void LongToIntegerTextBox(long? value, Syncfusion.Windows.Forms.Tools.IntegerTextBox control)
+        {
+            if (value.HasValue)
+            {
+                control.IntegerValue = value.Value;
+            }
+            else
+            {
+                if (control.AllowNull)
+                {
+                    control.BindableValue = null;
+                }
+                else
+                {
+                    control.IntegerValue = control.MinValue;
+                }
+            }
+        }
+
         static internal void DecimalToCurrencyTextBox(Decimal? value, Syncfusion.Windows.Forms.Tools.CurrencyTextBox control)
         {
             if (value.HasValue)

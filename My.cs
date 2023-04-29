@@ -14,9 +14,9 @@ namespace CardonerSistemas
         {
             public static class Info
             {
-                static System.Diagnostics.FileVersionInfo fvi;
-                static System.Reflection.Assembly ensamblado;
-                static AssemblyName an;
+                static readonly FileVersionInfo fvi;
+                static readonly Assembly ensamblado;
+                static readonly AssemblyName an;
 
                 static Info()
                 {
@@ -53,8 +53,7 @@ namespace CardonerSistemas
                 {
                     get
                     {
-                        return fvi.FileDescription; 
-                        // antes mostraba esto: fvi.ProductName;
+                        return fvi.FileDescription;
                     }
                 }
                 public static string Copyright

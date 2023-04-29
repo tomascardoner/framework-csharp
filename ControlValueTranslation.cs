@@ -19,226 +19,223 @@ namespace CardonerSistemas
 
         #endregion
 
-        #region Objectos a Controles - TextBox
+        #region Objectos a controles - TextBox
 
-        static internal string StringToTextBox(string value)
+        internal static void ValueToTextBox(System.Windows.Forms.TextBox textBox, string value)
         {
             if (string.IsNullOrEmpty(value))
             {
-                return string.Empty;
+                textBox.Text = string.Empty;
             }
             else
             {
-                return value;
+                textBox.Text = value;
             }
         }
 
-        static internal string MoneyToTextBox(decimal? value)
+        internal static void ValueToTextBox(System.Windows.Forms.MaskedTextBox maskedTextBox, string value)
         {
-            if (value.HasValue)
+            if (string.IsNullOrEmpty(value))
             {
-                return value.Value.ToString(CardonerSistemas.Constants.FormatStringToCurrency);
-
+                maskedTextBox.Text = string.Empty;
             }
             else
             {
-                return string.Empty;
+                maskedTextBox.Text = value;
             }
         }
 
-        static internal string DecimalToTextBox(decimal? value)
+        private static string ValueToTextBox(long? value, bool formatNumber = true, string textToShowOnZeroOrNull = "")
         {
             if (value.HasValue)
             {
-                return value.Value.ToString(CardonerSistemas.Constants.FormatStringToNumber);
+                if (value.Value == 0 && textToShowOnZeroOrNull != "")
+                {
+                    return textToShowOnZeroOrNull;
+                }
+                else
+                {
+                    if (formatNumber)
+                    {
+                        return value.Value.ToString(CardonerSistemas.Constants.FormatStringToNumberInteger);
+                    }
+                    else
+                    {
+                        return value.Value.ToString();
+                    }
+                }
             }
             else
             {
-                return string.Empty;
+                return textToShowOnZeroOrNull;
             }
         }
 
-        static internal string LongToTextBox(long? value)
+        internal static void ValueToTextBox(System.Windows.Forms.TextBox textBox, long? value, bool formatNumber = true, string textToShowOnZeroOrNull = "")
         {
-            if (value.HasValue)
-            {
-                return value.Value.ToString("N0");
-            }
-            else
-            {
-                return string.Empty;
-            }
+            textBox.Text = ValueToTextBox(value, formatNumber, textToShowOnZeroOrNull);
         }
 
-        static internal string IntegerToTextBox(int? value)
+        internal static void ValueToTextBox(System.Windows.Forms.MaskedTextBox maskedTextBox, long? value, bool formatNumber = true, string textToShowOnZeroOrNull = "")
         {
-            if (value.HasValue)
-            {
-                return value.Value.ToString("N0");
-            }
-            else
-            {
-                return string.Empty;
-            }
-        }
-
-        static internal string ShortToTextBox(short? value)
-        {
-            if (value.HasValue)
-            {
-                return value.Value.ToString("N0");
-            }
-            else
-            {
-                return string.Empty;
-            }
-        }
-
-        static internal string ByteToTextBox(byte? value)
-        {
-            if (value.HasValue)
-            {
-                return value.Value.ToString("N0");
-            }
-            else
-            {
-                return string.Empty;
-            }
+            maskedTextBox.Text = ValueToTextBox(value, formatNumber, textToShowOnZeroOrNull);
         }
 
         #endregion
 
-        #region Objectos a Controles - Otros
+        #region Objectos a controles - ComboBox
 
-        static internal decimal IntegerToUpDown(int? value)
+        static internal void ValueToComboBox(System.Windows.Forms.ComboBox comboBox, string value, CardonerSistemas.ComboBox.SelectedItemOptions selectedItemOptions = ComboBox.SelectedItemOptions.ValueOrFirstIfUnique, string valueForNull = "")
+        {
+            ComboBox.SetSelectedValue(comboBox, selectedItemOptions, value, valueForNull);
+        }
+
+        static internal void ValueToComboBox(System.Windows.Forms.ComboBox comboBox, byte? value, CardonerSistemas.ComboBox.SelectedItemOptions selectedItemOptions = ComboBox.SelectedItemOptions.ValueOrFirstIfUnique, byte valueForNull = CardonerSistemas.Constants.ByteFieldValueNotSpecified)
+        {
+            ComboBox.SetSelectedValue(comboBox, selectedItemOptions, value, valueForNull);
+        }
+
+        static internal void ValueToComboBox(System.Windows.Forms.ComboBox comboBox, short? value, CardonerSistemas.ComboBox.SelectedItemOptions selectedItemOptions = ComboBox.SelectedItemOptions.ValueOrFirstIfUnique, short valueForNull = CardonerSistemas.Constants.ShortFieldValueNotSpecified)
+        {
+            ComboBox.SetSelectedValue(comboBox, selectedItemOptions, value, valueForNull);
+        }
+
+        static internal void ValueToComboBox(System.Windows.Forms.ComboBox comboBox, int? value, CardonerSistemas.ComboBox.SelectedItemOptions selectedItemOptions = ComboBox.SelectedItemOptions.ValueOrFirstIfUnique, int valueForNull = CardonerSistemas.Constants.IntegerFieldValueNotSpecified)
+        {
+            ComboBox.SetSelectedValue(comboBox, selectedItemOptions, value, valueForNull);
+        }
+
+        #endregion
+
+        #region Objectos a controles - Otros
+
+        internal static void IntegerToUpDown(System.Windows.Forms.NumericUpDown numericUpDown, int? value)
         {
             if (value.HasValue)
             {
-                return value.Value;
+                numericUpDown.Value = value.Value;
             }
             else
             {
-                return decimal.Zero;
+                numericUpDown.Value = decimal.Zero;
             }
         }
 
-        static internal decimal ShortToUpDown(short? value)
+        internal static void ShortToUpDown(System.Windows.Forms.NumericUpDown numericUpDown, short? value)
         {
             if (value.HasValue)
             {
-                return value.Value;
+                numericUpDown.Value = value.Value;
             }
             else
             {
-                return decimal.Zero;
+                numericUpDown.Value = decimal.Zero;
             }
         }
 
-        static internal decimal ByteToUpDown(byte? value)
+        internal static void ByteToUpDown(System.Windows.Forms.NumericUpDown numericUpDown, byte? value)
         {
             if (value.HasValue)
             {
-                return value.Value;
+                numericUpDown.Value = value.Value;
             }
             else
             {
-                return decimal.Zero;
+                numericUpDown.Value = decimal.Zero;
             }
         }
 
-        static internal CheckState BooleanToCheckBox(bool? value)
+        internal static void ValueToCheckBox(System.Windows.Forms.CheckBox checkBox, bool? value)
         {
             if (value.HasValue)
             {
                 if (value.Value)
                 {
-                    return CheckState.Checked;
+                    checkBox.CheckState = CheckState.Checked;
 
                 }
                 else
                 {
-                    return CheckState.Unchecked;
+                    checkBox.CheckState = CheckState.Unchecked;
                 }
             }
             else
             {
-                return CheckState.Indeterminate;
+                checkBox.CheckState = CheckState.Indeterminate;
             }
         }
 
-        static internal DateTime DateToDateTimePicker(DateTime? value, DateTimePicker controlToCheck = null)
-        {
-            if (controlToCheck != null)
-            {
-                controlToCheck.Checked = value.HasValue;
-            }
-
-            if (value.HasValue)
-            {
-                return value.Value;
-            }
-            else
-            {
-                return System.DateTime.Today;
-            }
-        }
-
-        static internal string DatetimeToDatetimeShortTextbox(DateTime? value)
+        internal static void ValueToDateTimePicker(System.Windows.Forms.DateTimePicker dateTimePicker, System.DateTime? value)
         {
             if (value.HasValue)
             {
-                return value.Value.ToShortDateString() + " " + value.Value.ToShortTimeString();
+                dateTimePicker.Value = value.Value;
             }
             else
             {
-                return string.Empty;
+                dateTimePicker.Value = System.DateTime.Today;
             }
+            dateTimePicker.Checked = value.HasValue;
         }
 
-        static internal string DatetimeToDateShortTextbox(DateTime? value)
+        internal static void ValueToTextBoxAsShortDateTime(System.Windows.Forms.TextBox textBox, System.DateTime? value)
         {
             if (value.HasValue)
             {
-                return value.Value.ToShortDateString();
+                textBox.Text = value.Value.ToShortDateString() + " " + value.Value.ToShortTimeString();
             }
             else
             {
-                return string.Empty;
+                textBox.Text = string.Empty;
             }
         }
 
-        static internal string DatetimeToTimeShortTextbox(DateTime? value)
+        internal static void ValueToTextBoxAsShortDate(System.Windows.Forms.TextBox textBox, System.DateTime? value)
         {
             if (value.HasValue)
             {
-                return value.Value.ToShortTimeString();
+                textBox.Text = value.Value.ToShortDateString();
             }
             else
             {
-                return string.Empty;
+                textBox.Text = string.Empty;
             }
         }
 
-        static internal System.Drawing.Image ImageToPictureBox(byte[] image)
+        internal static void ValueToTextBoxAsShortTime(System.Windows.Forms.TextBox textBox, System.DateTime? value)
+        {
+            if (value.HasValue)
+            {
+                textBox.Text = value.Value.ToShortTimeString();
+            }
+            else
+            {
+                textBox.Text = string.Empty;
+            }
+        }
+
+        internal static void ValueToPictureBox(System.Windows.Forms.PictureBox pictureBox, byte[] image)
         {
             if (image == null)
             {
-                return null;
+                pictureBox.Image = null;
             }
             else
             {
                 byte[] aFoto = image;
-                System.IO.MemoryStream memstr = new System.IO.MemoryStream(aFoto, 0, aFoto.Length);
-                memstr.Write(aFoto, 0, aFoto.Length);
-                return System.Drawing.Image.FromStream(memstr, true);
+                using (System.IO.MemoryStream memstr = new System.IO.MemoryStream(aFoto, 0, aFoto.Length))
+                {
+                    memstr.Write(aFoto, 0, aFoto.Length);
+                    pictureBox.Image = System.Drawing.Image.FromStream(memstr, true);
+                }
             }
         }
 
         #endregion
 
-        #region De Controles a Objectos - TextBox
+        #region Controles a objectos - TextBox
 
-        static internal string TextBoxToString(string value, bool trimText = true, ChangeCase changeCase = ChangeCase.None)
+        private static string TextBoxToString(string value, bool trimText = true, ChangeCase changeCase = ChangeCase.None)
         {
             if (trimText)
             {
@@ -267,10 +264,19 @@ namespace CardonerSistemas
             }
         }
 
-        static internal long? TextBoxToLong(string value)
+        internal static string TextBoxToString(System.Windows.Forms.TextBox textBox, bool trimText = true, ChangeCase changeCase = ChangeCase.None)
+        { 
+            return TextBoxToString(textBox.Text, trimText, changeCase);
+        }
+
+        internal static string TextBoxToString(System.Windows.Forms.MaskedTextBox maskedTextBox, bool trimText = true, ChangeCase changeCase = ChangeCase.None)
+        {
+            return TextBoxToString(maskedTextBox.Text, trimText, changeCase);
+        }
+
+        private static long? TextBoxToLong(string value)
         {
             value = value.Trim();
-
             if (value.Length == 0)
             {
                 return null;
@@ -288,10 +294,49 @@ namespace CardonerSistemas
             }
         }
 
-        static internal short? TextBoxToShort(string value)
+        internal static long? TextBoxToLong(System.Windows.Forms.TextBox textBox)
+        {
+            return TextBoxToLong(textBox.Text);
+        }
+
+        internal static long? TextBoxToLong(System.Windows.Forms.MaskedTextBox maskedTextBox)
+        {
+            return TextBoxToLong(maskedTextBox.Text);
+        }
+
+        private static int? TextBoxToInt(string value)
         {
             value = value.Trim();
+            if (value.Length == 0)
+            {
+                return null;
+            }
+            else
+            {
+                if (int.TryParse(value, out int returnValue))
+                {
+                    return returnValue;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
 
+        internal static int? TextBoxToInt(System.Windows.Forms.TextBox textBox)
+        {
+            return TextBoxToInt(textBox.Text);
+        }
+
+        internal static int? TextBoxToInt(System.Windows.Forms.MaskedTextBox maskedTextBox)
+        {
+            return TextBoxToInt(maskedTextBox.Text);
+        }
+
+        private static short? TextBoxToShort(string value)
+        {
+            value = value.Trim();
             if (value.Length == 0)
             {
                 return null;
@@ -309,15 +354,26 @@ namespace CardonerSistemas
             }
         }
 
-        static internal decimal? TextboxToDecimal(string value)
+        internal static short? TextBoxToShort(System.Windows.Forms.TextBox textBox)
         {
-            if (string.IsNullOrWhiteSpace(value))
+            return TextBoxToShort(textBox.Text);
+        }
+
+        internal static short? TextBoxToShort(System.Windows.Forms.MaskedTextBox maskedTextBox)
+        {
+            return TextBoxToShort(maskedTextBox.Text);
+        }
+
+        private static byte? TextBoxToByte(string value)
+        {
+            value = value.Trim();
+            if (value.Length == 0)
             {
                 return null;
             }
             else
             {
-                if (decimal.TryParse(value.Trim(), NumberStyles.Currency, Application.CurrentCulture, out decimal returnValue))
+                if (byte.TryParse(value, out byte returnValue))
                 {
                     return returnValue;
                 }
@@ -328,77 +384,87 @@ namespace CardonerSistemas
             }
         }
 
+        internal static byte? TextBoxToByte(System.Windows.Forms.TextBox textBox)
+        {
+            return TextBoxToByte(textBox.Text);
+        }
+
+        internal static byte? MaskedTextBoxToByte(System.Windows.Forms.MaskedTextBox maskedTextBox)
+        {
+            return TextBoxToByte(maskedTextBox.Text);
+        }
+
         #endregion
 
-        #region De Controles a Objectos - Otros
+        #region Controles a objetos - ComboBox
 
-        static internal string ComboBoxToString(object selectedValue, string valueForNull = "")
+        internal static string ComboBoxToString(System.Windows.Forms.ComboBox comboBox, string valueForNull = "")
         {
-            if (selectedValue == null)
+            if (comboBox.SelectedValue == null)
             {
                 return null;
             }
-            else if (Convert.ToString(selectedValue) == valueForNull)
+            else if (Convert.ToString(comboBox.SelectedValue) == valueForNull)
             {
                 return null;
             }
             else
             {
-                return Convert.ToString(selectedValue);
+                return Convert.ToString(comboBox.SelectedValue);
             }
         }
 
-        static internal byte? ComboBoxToByte(object selectedValue, byte valueForNull = Constants.ByteFieldValueNotSpecified)
+        internal static byte? ComboBoxToByte(System.Windows.Forms.ComboBox comboBox, byte valueForNull = Constants.ByteFieldValueNotSpecified)
         {
-            if (selectedValue == null)
+            if (comboBox.SelectedValue == null)
             {
                 return null;
             }
-            else if (Convert.ToByte(selectedValue) == valueForNull)
+            else if (Convert.ToByte(comboBox.SelectedValue) == valueForNull)
             {
                 return null;
             }
             else
             {
-                return Convert.ToByte(selectedValue);
+                return Convert.ToByte(comboBox.SelectedValue);
             }
         }
 
-        static internal short? ComboBoxToShort(object selectedValue, short valueForNull = CardonerSistemas.Constants.ShortFieldValueNotSpecified)
+        internal static short? ComboBoxToShort(System.Windows.Forms.ComboBox comboBox, short valueForNull = CardonerSistemas.Constants.ShortFieldValueNotSpecified)
         {
-            if (selectedValue == null)
+            if (comboBox.SelectedValue == null)
             {
                 return null;
             }
-            else if (Convert.ToInt16(selectedValue) == valueForNull)
+            else if (Convert.ToInt16(comboBox.SelectedValue) == valueForNull)
             {
                 return null;
             }
             else
             {
-                return Convert.ToInt16(selectedValue);
+                return Convert.ToInt16(comboBox.SelectedValue);
             }
         }
 
-        static internal int? ComboBoxToInteger(object selectedValue, int valueForNull = CardonerSistemas.Constants.IntegerFieldValueNotSpecified)
+        internal static int? ComboBoxToInt(System.Windows.Forms.ComboBox comboBox, int valueForNull = CardonerSistemas.Constants.IntegerFieldValueNotSpecified)
         {
-            if (selectedValue == null)
+            if (comboBox.SelectedValue == null)
             {
                 return null;
             }
-            else if (Convert.ToInt32(selectedValue) == valueForNull)
+            else if (Convert.ToInt32(comboBox.SelectedValue) == valueForNull)
             {
                 return null;
             }
             else
             {
-                return Convert.ToInt32(selectedValue);
+                return Convert.ToInt32(comboBox.SelectedValue);
             }
         }
 
-        static internal bool? CheckBoxToBoolean(CheckState state)
+        internal static bool? CheckBoxToBoolean(System.Windows.Forms.CheckBox checkBox)
         {
-            switch (state)
+            switch (checkBox.CheckState)
             {
                 case CheckState.Unchecked:
                     return false;
@@ -411,7 +477,11 @@ namespace CardonerSistemas
             }
         }
 
-        static internal DateTime? DateTimePickerToDate(DateTimePicker value)
+        #endregion
+
+        #region Controles a objectos - Otros
+
+        internal static System.DateTime? DateTimePickerToDate(DateTimePicker value)
         {
             if (value.Checked)
             {
@@ -423,7 +493,7 @@ namespace CardonerSistemas
             }
         }
 
-        static internal byte[] PictureBoxToImage(System.Drawing.Image image)
+        internal static byte[] PictureBoxToImage(System.Drawing.Image image)
         {
             if (image == null)
             {
