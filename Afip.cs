@@ -5,6 +5,14 @@ namespace CardonerSistemas
 {
     static class Afip
     {
+        internal enum ConceptosComprobantes : byte
+        { 
+            Productos = 1,
+            Servicios = 2,
+            ProductosYServicios = 3,
+            Otro = 4
+        }
+
         static internal byte? ObtenerDigitoVerificadorCuit(string cuit)
         {
             string cuitLimpio;

@@ -21,6 +21,7 @@ namespace CardonerSistemas
 
         #region Objectos a controles - TextBox
 
+        // Valores string
         internal static void ValueToTextBox(System.Windows.Forms.TextBox textBox, string value)
         {
             if (string.IsNullOrEmpty(value))
@@ -45,6 +46,7 @@ namespace CardonerSistemas
             }
         }
 
+        // Valores numéricos - función
         private static string ValueToTextBox(long? value, bool formatNumber = true, string textToShowOnZeroOrNull = "")
         {
             if (value.HasValue)
@@ -71,6 +73,7 @@ namespace CardonerSistemas
             }
         }
 
+        // Valores numéricos - con formato
         internal static void ValueToTextBox(System.Windows.Forms.TextBox textBox, long? value, bool formatNumber = true, string textToShowOnZeroOrNull = "")
         {
             textBox.Text = ValueToTextBox(value, formatNumber, textToShowOnZeroOrNull);
@@ -79,6 +82,25 @@ namespace CardonerSistemas
         internal static void ValueToTextBox(System.Windows.Forms.MaskedTextBox maskedTextBox, long? value, bool formatNumber = true, string textToShowOnZeroOrNull = "")
         {
             maskedTextBox.Text = ValueToTextBox(value, formatNumber, textToShowOnZeroOrNull);
+        }
+
+        // Valores numéricos - con zeros a la izquierda
+        internal static void ValueToTextBox(System.Windows.Forms.TextBox textBox, long? value, byte totalDigits)
+        {
+            if (!value.HasValue)
+            {
+                value = 0;
+            }
+            textBox.Text = value.Value.ToString("D" + totalDigits.ToString());
+        }
+
+        internal static void ValueToTextBox(System.Windows.Forms.MaskedTextBox maskedTextBox, long? value, byte totalDigits)
+        {
+            if (!value.HasValue)
+            {
+                value = 0;
+            }
+            maskedTextBox.Text = value.Value.ToString("D" + totalDigits.ToString());
         }
 
         #endregion
