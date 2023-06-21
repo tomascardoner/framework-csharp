@@ -107,24 +107,24 @@ namespace CardonerSistemas
 
         #region Objectos a controles - ComboBox
 
-        static internal void ValueToComboBox(System.Windows.Forms.ComboBox comboBox, string value, CardonerSistemas.ComboBox.SelectedItemOptions selectedItemOptions = ComboBox.SelectedItemOptions.ValueOrFirstIfUnique, string valueForNull = "")
+        static internal void ValueToComboBox(System.Windows.Forms.ComboBox comboBox, string value, ComboBoxExtension.SelectedItemOptions selectedItemOptions = ComboBoxExtension.SelectedItemOptions.ValueOrFirstIfUnique, string valueForNull = "")
         {
-            ComboBox.SetSelectedValue(comboBox, selectedItemOptions, value, valueForNull);
+            ComboBoxExtension.SetSelectedValue(comboBox, selectedItemOptions, value, valueForNull);
         }
 
-        static internal void ValueToComboBox(System.Windows.Forms.ComboBox comboBox, byte? value, CardonerSistemas.ComboBox.SelectedItemOptions selectedItemOptions = ComboBox.SelectedItemOptions.ValueOrFirstIfUnique, byte valueForNull = CardonerSistemas.Constants.ByteFieldValueNotSpecified)
+        static internal void ValueToComboBox(System.Windows.Forms.ComboBox comboBox, byte? value, ComboBoxExtension.SelectedItemOptions selectedItemOptions = ComboBoxExtension.SelectedItemOptions.ValueOrFirstIfUnique, byte valueForNull = CardonerSistemas.Constants.ByteFieldValueNotSpecified)
         {
-            ComboBox.SetSelectedValue(comboBox, selectedItemOptions, value, valueForNull);
+            ComboBoxExtension.SetSelectedValue(comboBox, selectedItemOptions, value, valueForNull);
         }
 
-        static internal void ValueToComboBox(System.Windows.Forms.ComboBox comboBox, short? value, CardonerSistemas.ComboBox.SelectedItemOptions selectedItemOptions = ComboBox.SelectedItemOptions.ValueOrFirstIfUnique, short valueForNull = CardonerSistemas.Constants.ShortFieldValueNotSpecified)
+        static internal void ValueToComboBox(System.Windows.Forms.ComboBox comboBox, short? value, ComboBoxExtension.SelectedItemOptions selectedItemOptions = ComboBoxExtension.SelectedItemOptions.ValueOrFirstIfUnique, short valueForNull = CardonerSistemas.Constants.ShortFieldValueNotSpecified)
         {
-            ComboBox.SetSelectedValue(comboBox, selectedItemOptions, value, valueForNull);
+            ComboBoxExtension.SetSelectedValue(comboBox, selectedItemOptions, value, valueForNull);
         }
 
-        static internal void ValueToComboBox(System.Windows.Forms.ComboBox comboBox, int? value, CardonerSistemas.ComboBox.SelectedItemOptions selectedItemOptions = ComboBox.SelectedItemOptions.ValueOrFirstIfUnique, int valueForNull = CardonerSistemas.Constants.IntegerFieldValueNotSpecified)
+        static internal void ValueToComboBox(System.Windows.Forms.ComboBox comboBox, int? value, ComboBoxExtension.SelectedItemOptions selectedItemOptions = ComboBoxExtension.SelectedItemOptions.ValueOrFirstIfUnique, int valueForNull = CardonerSistemas.Constants.IntegerFieldValueNotSpecified)
         {
-            ComboBox.SetSelectedValue(comboBox, selectedItemOptions, value, valueForNull);
+            ComboBoxExtension.SetSelectedValue(comboBox, selectedItemOptions, value, valueForNull);
         }
 
         #endregion

@@ -126,6 +126,24 @@ namespace CardonerSistemas
         }
 
         /// <summary>
+        /// Converts the first char of the specified string to upper case.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        internal static string FirstCharToUpperCase(this string value)
+        {
+            switch (value.Length)
+            {
+                case 0:
+                    return value;
+                case 1:
+                    return value.ToUpper();
+                default:
+                    return value[0].ToString().ToUpper() + value.Substring(1);
+            }
+        }
+
+        /// <summary>
         /// Converts the specified string to title case (except for words that are entirely in uppercase, which are considered to be acronyms).
         /// </summary>
         /// <param name="value"></param>

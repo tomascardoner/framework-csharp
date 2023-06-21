@@ -93,7 +93,7 @@ namespace CardonerSistemas
         {
             foreach (Form form in forms)
             {
-                if (form.Name == formName)
+                if (form.Name.ToLower() == formName.ToLower())
                 {
                     return true;
                 }
@@ -110,7 +110,7 @@ namespace CardonerSistemas
         {
             foreach (Form form in forms)
             {
-                if (form.Name == formName && form.Text == formText)
+                if (form.Name.ToLower() == formName.ToLower() && form.Text == formText)
                 {
                     return true;
                 }

@@ -2,7 +2,7 @@
 
 namespace CardonerSistemas
 {
-    static class ComboBox
+    static class ComboBoxExtension
     {
 
         #region Declarations

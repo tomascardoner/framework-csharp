@@ -3,7 +3,7 @@ using CSGestion.Properties;
 
 namespace CardonerSistemas
 {
-    static class DateTime
+    static class DateTimeExtension
     {
         
         #region Declarations
@@ -114,35 +114,35 @@ namespace CardonerSistemas
 
                     switch (periodDayValue)
                     {
-                        case DateTime.PeriodDayValues.DayToday:
+                        case PeriodDayValues.DayToday:
                             dateFrom = System.DateTime.Today;
                             dateTo = dateFrom.AddDays(1).AddMilliseconds(-1);
                             break;
-                        case DateTime.PeriodDayValues.DayYesterday:
+                        case PeriodDayValues.DayYesterday:
                             dateFrom = System.DateTime.Today.AddDays(-1);
                             dateTo = dateFrom.AddDays(1).AddMilliseconds(-1);
                             break;
-                        case DateTime.PeriodDayValues.DayBeforeYesterday:
+                        case PeriodDayValues.DayBeforeYesterday:
                             dateFrom = System.DateTime.Today.AddDays(-2);
                             dateTo = dateFrom.AddDays(1).AddMilliseconds(-1);
                             break;
-                        case DateTime.PeriodDayValues.DayLast2:
+                        case PeriodDayValues.DayLast2:
                             dateFrom = System.DateTime.Today.AddDays(-1);
                             dateTo = System.DateTime.Today.AddDays(1).AddMilliseconds(-1);
                             break;
-                        case DateTime.PeriodDayValues.DayLast3:
+                        case PeriodDayValues.DayLast3:
                             dateFrom = System.DateTime.Today.AddDays(-2);
                             dateTo = System.DateTime.Today.AddDays(1).AddMilliseconds(-1);
                             break;
-                        case DateTime.PeriodDayValues.DayLast4:
+                        case PeriodDayValues.DayLast4:
                             dateFrom = System.DateTime.Today.AddDays(-3);
                             dateTo = System.DateTime.Today.AddDays(1).AddMilliseconds(-1);
                             break;
-                        case DateTime.PeriodDayValues.DayLast7:
+                        case PeriodDayValues.DayLast7:
                             dateFrom = System.DateTime.Today.AddDays(-6);
                             dateTo = System.DateTime.Today.AddDays(1).AddMilliseconds(-1);
                             break;
-                        case DateTime.PeriodDayValues.DayLast15:
+                        case PeriodDayValues.DayLast15:
                             dateFrom = System.DateTime.Today.AddDays(-14);
                             dateTo = System.DateTime.Today.AddDays(1).AddMilliseconds(-1);
                             break;
@@ -150,7 +150,7 @@ namespace CardonerSistemas
                     break;
 
                 // Weeks
-                case DateTime.PeriodTypes.Week:
+                case PeriodTypes.Week:
                     PeriodWeekValues periodWeekValue = (PeriodWeekValues)periodValue;
 
                     switch (periodWeekValue)
@@ -159,15 +159,15 @@ namespace CardonerSistemas
                             dateFrom = System.DateTime.Today.AddDays(-(double)System.DateTime.Today.DayOfWeek);
                             dateTo = System.DateTime.Today.AddDays(1).AddMilliseconds(-1);
                             break;
-                        case DateTime.PeriodWeekValues.WeekBeforeCurrent:
+                        case PeriodWeekValues.WeekBeforeCurrent:
                             dateFrom = System.DateTime.Today.AddDays(-(double)System.DateTime.Today.DayOfWeek - 7);
                             dateTo = System.DateTime.Today.AddDays(-(double)System.DateTime.Today.DayOfWeek).AddMilliseconds(-1);
                             break;
-                        case DateTime.PeriodWeekValues.WeekLast2:
+                        case PeriodWeekValues.WeekLast2:
                             dateFrom = System.DateTime.Today.AddDays(-(double)System.DateTime.Today.DayOfWeek - 7);
                             dateTo = System.DateTime.Today.AddDays(7 - (double)System.DateTime.Today.DayOfWeek).AddMilliseconds(-1);
                             break;
-                        case DateTime.PeriodWeekValues.WeekLast3:
+                        case PeriodWeekValues.WeekLast3:
                             dateFrom = System.DateTime.Today.AddDays(-(double)System.DateTime.Today.DayOfWeek - 14);
                             dateTo = System.DateTime.Today.AddDays(7 - (double)System.DateTime.Today.DayOfWeek).AddMilliseconds(-1);
                             break;
@@ -213,7 +213,7 @@ namespace CardonerSistemas
                             dateFrom = new System.DateTime(System.DateTime.Today.Year, 1, 1);
                             dateTo = new System.DateTime(System.DateTime.Today.Year, 1, 1).AddYears(1).AddMilliseconds(-1);
                             break;
-                        case DateTime.PeriodYearValues.YearBeforeCurrent:
+                        case PeriodYearValues.YearBeforeCurrent:
                             dateFrom = new System.DateTime(System.DateTime.Today.Year, 1, 1).AddYears(-1);
                             dateTo = new System.DateTime(System.DateTime.Today.Year, 1, 1).AddMilliseconds(-1);
                             break;
