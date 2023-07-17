@@ -5,19 +5,7 @@ namespace CardonerSistemas
     static class ControlValueTranslationSyncfusion
     {
 
-        #region Declarations
-
-        internal enum ChangeCase
-        {
-            None,
-            Lower,
-            Upper,
-            TitleCase
-        }
-
-        #endregion
-
-        #region De Objectos a Controles - TextBox (SyncFusion)
+        #region De objectos a controles - Integer TextBox
 
         static internal void ByteToIntegerTextBox(byte? value, Syncfusion.Windows.Forms.Tools.IntegerTextBox control)
         {
@@ -95,6 +83,10 @@ namespace CardonerSistemas
             }
         }
 
+        #endregion
+
+        #region De objectos a controles - Currency TextBox
+
         static internal void DecimalToCurrencyTextBox(Decimal? value, Syncfusion.Windows.Forms.Tools.CurrencyTextBox control)
         {
             if (value.HasValue)
@@ -116,7 +108,53 @@ namespace CardonerSistemas
 
         #endregion
 
-        #region De Controles a Objectos - TextBox (SyncFusion)
+        #region De objectos a controles - Percent TextBox
+
+        static internal void DecimalToPercentTextBox(Decimal? value, Syncfusion.Windows.Forms.Tools.PercentTextBox control)
+        {
+            if (value.HasValue)
+            {
+                control.DoubleValue = Convert.ToDouble(value.Value);
+            }
+            else
+            {
+                if (control.AllowNull)
+                {
+                    control.BindableValue = null;
+                }
+                else
+                {
+                    control.DoubleValue = control.MinValue;
+                }
+            }
+        }
+
+        #endregion
+
+        #region De objectos a controles - Double TextBox
+
+        static internal void DecimalToDoubleTextBox(Decimal? value, Syncfusion.Windows.Forms.Tools.DoubleTextBox control)
+        {
+            if (value.HasValue)
+            {
+                control.DoubleValue = Convert.ToDouble(value.Value);
+            }
+            else
+            {
+                if (control.AllowNull)
+                {
+                    control.BindableValue = null;
+                }
+                else
+                {
+                    control.DoubleValue = control.MinValue;
+                }
+            }
+        }
+
+        #endregion
+
+        #region De controles a objectos - Integer TextBox
 
         static internal byte? IntegerTextBoxToByte(Syncfusion.Windows.Forms.Tools.IntegerTextBox control)
         {
@@ -154,29 +192,9 @@ namespace CardonerSistemas
             }
         }
 
-        //static internal double? FromControlDoubleTextBoxToObjectDouble(object bindableValue)
-        //{
-        //    if (bindableValue is null | !  bindableValue)
-        //    {
-        //        return null;
-        //    }
-        //    else
-        //    {
-        //        return Convert.ToDouble(bindableValue);
-        //    }
-        //}
+        #endregion
 
-        //static internal decimal? FromControlDoubleTextBoxToObjectDecimal(object bindableValue)
-        //{
-        //    if (bindableValue == null | !isnumeric(bindableValue))
-        //    {
-        //        return null;
-        //    }
-        //    else
-        //    {
-        //        return Convert.ToDecimal(bindableValue);
-        //    }
-        //}
+        #region De controles a objectos - Currency TextBox
 
         static internal decimal? CurrencyTextBoxToDecimal(Syncfusion.Windows.Forms.Tools.CurrencyTextBox control)
         {
@@ -187,6 +205,38 @@ namespace CardonerSistemas
             else
             {
                 return control.DecimalValue;
+            }
+        }
+
+        #endregion
+
+        #region De controles a objectos - Percent TextBox
+
+        static internal decimal? PercentTextBoxToDecimal(Syncfusion.Windows.Forms.Tools.PercentTextBox control)
+        {
+            if (control.AllowNull && control.IsNull)
+            {
+                return null;
+            }
+            else
+            {
+                return Convert.ToDecimal(control.DoubleValue);
+            }
+        }
+
+        #endregion
+
+        #region De controles a objectos - Double TextBox
+
+        static internal decimal? DoubleTextBoxToDecimal(Syncfusion.Windows.Forms.Tools.DoubleTextBox control)
+        {
+            if (control.AllowNull && control.IsNull)
+            {
+                return null;
+            }
+            else
+            {
+                return Convert.ToDecimal(control.DoubleValue);
             }
         }
 
