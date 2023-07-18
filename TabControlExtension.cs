@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace CardonerSistemas
@@ -15,6 +16,9 @@ namespace CardonerSistemas
 
         public TabControlExtension(TabControl tabControl)
         {
+            // Esto es necesario porque el TabControl tiene un bug que no inserta las TabPages si no se creó el handle
+            IntPtr h = tabControl.Handle;
+
             tabPagesOrder = new List<string>();
             tabPagesHidden = new List<TabPage>();
             foreach (TabPage tabPageCurrent in tabControl.TabPages)
