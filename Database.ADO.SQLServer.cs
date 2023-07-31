@@ -345,10 +345,7 @@ namespace CardonerSistemas.Database.Ado
             }
             catch (Exception ex)
             {
-                if (dataReader != null)
-                {
-                    dataReader.Close();
-                }
+                dataReader?.Close();
                 Cursor.Current = Cursors.Default;
                 CardonerSistemas.Error.ProcessError(ex, errorMessage);
                 return false;
