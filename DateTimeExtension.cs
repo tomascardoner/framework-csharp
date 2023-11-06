@@ -67,7 +67,7 @@ namespace CardonerSistemas
 
         internal static void FillPeriodTypesComboBox(System.Windows.Forms.ComboBox control, PeriodTypes selectedPeriodType)
         {
-            control.Items.AddRange(new string[] { Resources.StringItemAllMale, "Día:", "Semana:", "Mes:", "Año:", "Fecha" });
+            control.Items.AddRange(new string[] { Resources.StringItemAllMaleEnclosed, "Día:", "Semana:", "Mes:", "Año:", "Fecha" });
             control.SelectedIndex = (int)selectedPeriodType;
         }
 

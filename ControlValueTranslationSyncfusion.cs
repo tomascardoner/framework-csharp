@@ -7,7 +7,7 @@ namespace CardonerSistemas
 
         #region De objectos a controles - Integer TextBox
 
-        static internal void ByteToIntegerTextBox(byte? value, Syncfusion.Windows.Forms.Tools.IntegerTextBox control)
+        static internal void ByteToIntegerTextBox(Syncfusion.Windows.Forms.Tools.IntegerTextBox control, byte? value)
         {
             if (value.HasValue)
             {
@@ -26,7 +26,7 @@ namespace CardonerSistemas
             }
         }
 
-        static internal void ShortToIntegerTextBox(short? value, Syncfusion.Windows.Forms.Tools.IntegerTextBox control)
+        static internal void ShortToIntegerTextBox(Syncfusion.Windows.Forms.Tools.IntegerTextBox control, short? value)
         {
             if (value.HasValue)
             {
@@ -45,7 +45,7 @@ namespace CardonerSistemas
             }
         }
 
-        static internal void IntToIntegerTextBox(int? value, Syncfusion.Windows.Forms.Tools.IntegerTextBox control)
+        static internal void IntToIntegerTextBox(Syncfusion.Windows.Forms.Tools.IntegerTextBox control, int? value)
         {
             if (value.HasValue)
             {
@@ -64,7 +64,7 @@ namespace CardonerSistemas
             }
         }
 
-        static internal void LongToIntegerTextBox(long? value, Syncfusion.Windows.Forms.Tools.IntegerTextBox control)
+        static internal void LongToIntegerTextBox(Syncfusion.Windows.Forms.Tools.IntegerTextBox control, long? value)
         {
             if (value.HasValue)
             {
@@ -87,7 +87,7 @@ namespace CardonerSistemas
 
         #region De objectos a controles - Currency TextBox
 
-        static internal void DecimalToCurrencyTextBox(Decimal? value, Syncfusion.Windows.Forms.Tools.CurrencyTextBox control)
+        static internal void DecimalToCurrencyTextBox(Syncfusion.Windows.Forms.Tools.CurrencyTextBox control, Decimal? value)
         {
             if (value.HasValue)
             {
@@ -110,11 +110,11 @@ namespace CardonerSistemas
 
         #region De objectos a controles - Percent TextBox
 
-        static internal void DecimalToPercentTextBox(Decimal? value, Syncfusion.Windows.Forms.Tools.PercentTextBox control)
+        static internal void DecimalToPercentTextBox(Syncfusion.Windows.Forms.Tools.PercentTextBox control, Decimal? value)
         {
             if (value.HasValue)
             {
-                control.DoubleValue = Convert.ToDouble(value.Value);
+                control.DoubleValue = (double)value.Value;
             }
             else
             {
@@ -133,7 +133,7 @@ namespace CardonerSistemas
 
         #region De objectos a controles - Double TextBox
 
-        static internal void DecimalToDoubleTextBox(Decimal? value, Syncfusion.Windows.Forms.Tools.DoubleTextBox control)
+        static internal void DecimalToDoubleTextBox(Syncfusion.Windows.Forms.Tools.DoubleTextBox control, Decimal? value)
         {
             if (value.HasValue)
             {
@@ -220,7 +220,7 @@ namespace CardonerSistemas
             }
             else
             {
-                return Convert.ToDecimal(control.DoubleValue);
+                return (decimal)control.DoubleValue;
             }
         }
 

@@ -515,6 +515,26 @@ namespace CardonerSistemas
             }
         }
 
+        internal static System.DateTime? DateTimePickersToDateTime(DateTimePicker dateValue, DateTimePicker timeValue)
+        {
+            if (dateValue.Checked && timeValue.Checked)
+            {
+                return new DateTime(dateValue.Value.Year, dateValue.Value.Month, dateValue.Value.Day, timeValue.Value.Hour, timeValue.Value.Minute, timeValue.Value.Second);
+            }
+            else if (dateValue.Checked)
+            {
+                return new DateTime(dateValue.Value.Year, dateValue.Value.Month, dateValue.Value.Day);
+            }
+            else if (timeValue.Checked)
+            {
+                return new DateTime().AddHours(timeValue.Value.Hour).AddMinutes(timeValue.Value.Minute).AddSeconds(timeValue.Value.Second);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         internal static byte[] PictureBoxToImage(System.Drawing.Image image)
         {
             if (image == null)
