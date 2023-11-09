@@ -5,6 +5,30 @@ namespace CardonerSistemas
 {
     static class Afip
     {
+        // Prefijos CUIT
+        internal const string CuitPrefijoMasculino = "20";
+        internal const string CuitPrefijoMasculinoAlternativo = "23";
+        internal const string CuitPrefijoFemenino = "27";
+        internal const string CuitPrefijoFemeninoAlternativo = "24";
+        internal const string CuitPrefijoPersonaJuridica = "30";
+        internal const string CuitPrefijoPersonaJuridicaAlternativo1 = "33";
+        internal const string CuitPrefijoPersonaJuridicaAlternativo2 = "34";
+
+        // Códigos QR en comprobantes
+        internal const string ComprobantesCodigoQRDataField = "{DATA}";
+        internal const string ComprobantesCodigoQRDataFieldFecha = "{FECHA}";
+        internal const string ComprobantesCodigoQRDataFieldCuit = "{CUIT}";
+        internal const string ComprobantesCodigoQRDataFieldPuntoVenta = "{PUNTOVENTA}";
+        internal const string ComprobantesCodigoQRDataFieldTipoComprobante = "{TIPOCOMPROBANTE}";
+        internal const string ComprobantesCodigoQRDataFieldNumeroComprobante = "{NUMEROCOMPROBANTE}";
+        internal const string ComprobantesCodigoQRDataFieldImporte = "{IMPORTE}";
+        internal const string ComprobantesCodigoQRDataFieldMoneda = "{MONEDA}";
+        internal const string ComprobantesCodigoQRDataFieldCotizacion = "{COTIZACION}";
+        internal const string ComprobantesCodigoQRDataFieldTipoDocumento = "{TIPODOCUMENTO}";
+        internal const string ComprobantesCodigoQRDataFieldNumeroDocumento = "{NUMERODOCUMENTO}";
+        internal const string ComprobantesCodigoQRDataFieldTipoCodigoAutorizacion = "{TIPOCODIGOAUTORIZACION}";
+        internal const string ComprobantesCodigoQRDataFieldCodigoAutorizacion = "{CODIGOAUTORIZACION}";
+
         internal enum ConceptosComprobantes : byte
         { 
             Productos = 1,

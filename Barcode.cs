@@ -3,6 +3,8 @@
     static class Barcode
     {
 
+        internal const string QRCodeDataField = "{DATA}";
+
         #region Documentation
 
         // Códigos de barras utilizados en la identificación de productos:
