@@ -1,8 +1,8 @@
 // Simular (en parte) el objeto My de Visual Basic 2005 (o superior)
 // Nuevas propiedades                                           (21/Nov/07)
 
-using System.Reflection;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace CardonerSistemas
 {
@@ -24,7 +24,7 @@ namespace CardonerSistemas
                     fvi = FileVersionInfo.GetVersionInfo(ensamblado.Location);
                     an = ensamblado.GetName();
                 }
-                
+
                 /// <summary>
                 /// La versión del ensamblado
                 /// Equivale al atributo AssemblyVersion
@@ -36,7 +36,7 @@ namespace CardonerSistemas
                         return an.Version;
                     }
                 }
-                
+
                 /// <summary>
                 /// La versión del ensamblado (FileVersion)
                 /// equivale al atributo: AssemblyFileVersion

@@ -1,9 +1,9 @@
+using Microsoft.Win32;
 using System;
 using System.IO;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Microsoft.Win32;
 
 namespace CardonerSistemas
 {
@@ -35,8 +35,8 @@ namespace CardonerSistemas
         internal static bool PathEndsWithDirectorySeparator(string path)
         {
             if (path.Length == 0)
-            { 
-                    return false;
+            {
+                return false;
             }
 
             return path.EndsWith(Path.DirectorySeparatorChar.ToString()) || path.EndsWith(Path.AltDirectorySeparatorChar.ToString());
@@ -57,7 +57,7 @@ namespace CardonerSistemas
         internal static char GetDirectorySeparatorUsedInPath(string path)
         {
             if (path.Contains(Path.AltDirectorySeparatorChar.ToString()))
-            { 
+            {
                 return Path.AltDirectorySeparatorChar;
             }
 
