@@ -5,10 +5,10 @@ using System.IO;
 
 namespace CardonerSistemas.Database.Ado
 {
-    internal class DataReader
+    internal static class DataReader
     {
 
-        #region Misc
+        #region Common
 
         internal static bool IsDBNull(SqlDataReader dataReader, string columnName)
         { 
@@ -355,7 +355,7 @@ namespace CardonerSistemas.Database.Ado
 
         internal static bool? GetBooleanSafeAsNull(SqlDataReader dataReader, string columnName)
         {
-            return GetBooleanSafeAsNull(dataReader, columnName);
+            return GetBooleanSafeAsNull(dataReader, dataReader.GetOrdinal(columnName));
         }
 
         #endregion

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CardonerSistemas
+namespace CardonerSistemas.Afip
 {
-    static class AfipWebServices
+    static class WebServices
     {
 
         #region Declarations

@@ -1,13 +1,19 @@
 using System;
-using CSGestion.Properties;
 
 namespace CardonerSistemas
 {
     static class DateTimeExtension
     {
-        
+
         #region Declarations
-        
+
+        private static readonly string[] itemsPeriodTypes = { "«Todos»", "Día:", "Semana:", "Mes:", "Año:", "Fecha" };
+        private static readonly string[] itemsDays = { "Hoy", "Ayer", "Anteayer", "Últimos 2", "Últimos 3", "Últimos 4", "Últimos 7", "Últimos 15" };
+        private static readonly string[] itemsWeeks = { "Actual", "Anterior", "Últimas 2", "Últimas 3" };
+        private static readonly string[] itemsMonths = { "Actual", "Anterior", "Últimos 2", "Últimos 3", "Últimos 6" };
+        private static readonly string[] itemsYears = { "Actual", "Anterior", "Últimos 2" };
+        private static readonly string[] itemsRange = { "es igual a:", "es anterior a:", "es posterior a:", "está entre:" };
+
         internal enum PeriodTypes : byte
         {
             All,
@@ -20,45 +26,46 @@ namespace CardonerSistemas
         
         internal enum PeriodDayValues : byte
         {
-            DayToday,
-            DayYesterday,
-            DayBeforeYesterday,
-            DayLast2,
-            DayLast3,
-            DayLast4,
-            DayLast7,
-            DayLast15
+            Today,
+            Yesterday,
+            BeforeYesterday,
+            Last2,
+            Last3,
+            Last4,
+            Last7,
+            Last15
         }
 
         internal enum PeriodWeekValues : byte
         {
-            WeekCurrent,
-            WeekBeforeCurrent,
-            WeekLast2,
-            WeekLast3
+            Current,
+            BeforeCurrent,
+            Last2,
+            Last3
         }
 
         internal enum PeriodMonthValues : byte
         {
-            MonthCurrent,
-            MonthBeforeCurrent,
-            MonthLast2,
-            MonthLast3,
-            MonthLast6
+            Current,
+            BeforeCurrent,
+            Last2,
+            Last3,
+            Last6
         }
 
         internal enum PeriodYearValues : byte
         {
-            YearCurrent,
-            YearBeforeCurrent
+            Current,
+            BeforeCurrent,
+            Last2
         }
 
         internal enum PeriodRangeValues : byte
         {
-            DateEqual,
-            DateBefore,
-            DateAfter,
-            DateBetween
+            Equal,
+            Before,
+            After,
+            Between
         }
 
         #endregion
@@ -67,7 +74,7 @@ namespace CardonerSistemas
 
         internal static void FillPeriodTypesComboBox(System.Windows.Forms.ComboBox control, PeriodTypes selectedPeriodType)
         {
-            control.Items.AddRange(new string[] { Resources.StringItemAllMaleEnclosed, "Día:", "Semana:", "Mes:", "Año:", "Fecha" });
+            control.Items.AddRange(itemsPeriodTypes);
             control.SelectedIndex = (int)selectedPeriodType;
         }
 
@@ -80,33 +87,36 @@ namespace CardonerSistemas
                     control.Items.Add(string.Empty);
                     break;
                 case PeriodTypes.Day:
-                    control.Items.AddRange(new string[] { "Hoy", "Ayer", "Anteayer", "Últimos 2", "Últimos 3", "Últimos 4", "Últimos 7", "Últimos 15" });
+                    control.Items.AddRange(itemsDays);
                     break;
                 case PeriodTypes.Week:
-                    control.Items.AddRange(new string[] { "Actual", "Anterior", "Últimas 2", "Últimas 3" });
+                    control.Items.AddRange(itemsWeeks);
                     break;
                 case PeriodTypes.Month:
-                    control.Items.AddRange(new string[] { "Actual", "Anterior", "Últimos 2", "Últimos 3", "Últimos 6" });
+                    control.Items.AddRange(itemsMonths);
                     break;
                 case PeriodTypes.Year:
-                    control.Items.AddRange(new string[] { "Actual", "Anterior" });
+                    control.Items.AddRange(itemsYears);
                     break;
                 case PeriodTypes.Range:
-                    control.Items.AddRange(new string[] { "es igual a:", "es anterior a:", "es posterior a:", "está entre:" });
+                    control.Items.AddRange(itemsRange);
                     break;
             }
             control.Visible = (periodType != PeriodTypes.All);
             control.SelectedIndex = 0;
         }
 
-        internal static void GetDatesFromPeriodTypeAndValue(PeriodTypes periodType, byte periodValue, ref System.DateTime dateFrom, ref System.DateTime dateTo, System.DateTime dateValueFrom, System.DateTime dateValueTo)
+        internal static void GetDatesFromPeriodTypeAndValue(PeriodTypes periodType, byte periodValue, out DateTime dateFrom, out DateTime dateTo, DateTime dateValueFrom, DateTime dateValueTo)
         {
+            dateFrom = DateTime.MinValue;
+            dateTo = DateTime.MaxValue;
+
             switch (periodType)
             {
                 // All
                 case PeriodTypes.All:
-                    dateFrom = System.DateTime.MinValue;
-                    dateTo = System.DateTime.MaxValue;
+                    dateFrom = DateTime.MinValue;
+                    dateTo = DateTime.MaxValue;
                     break;
                 // Days
                 case PeriodTypes.Day:
@@ -114,37 +124,37 @@ namespace CardonerSistemas
 
                     switch (periodDayValue)
                     {
-                        case PeriodDayValues.DayToday:
-                            dateFrom = System.DateTime.Today;
+                        case PeriodDayValues.Today:
+                            dateFrom = DateTime.Today;
                             dateTo = dateFrom.AddDays(1).AddMilliseconds(-1);
                             break;
-                        case PeriodDayValues.DayYesterday:
-                            dateFrom = System.DateTime.Today.AddDays(-1);
+                        case PeriodDayValues.Yesterday:
+                            dateFrom = DateTime.Today.AddDays(-1);
                             dateTo = dateFrom.AddDays(1).AddMilliseconds(-1);
                             break;
-                        case PeriodDayValues.DayBeforeYesterday:
-                            dateFrom = System.DateTime.Today.AddDays(-2);
+                        case PeriodDayValues.BeforeYesterday:
+                            dateFrom = DateTime.Today.AddDays(-2);
                             dateTo = dateFrom.AddDays(1).AddMilliseconds(-1);
                             break;
-                        case PeriodDayValues.DayLast2:
-                            dateFrom = System.DateTime.Today.AddDays(-1);
-                            dateTo = System.DateTime.Today.AddDays(1).AddMilliseconds(-1);
+                        case PeriodDayValues.Last2:
+                            dateFrom = DateTime.Today.AddDays(-1);
+                            dateTo = DateTime.Today.AddDays(1).AddMilliseconds(-1);
                             break;
-                        case PeriodDayValues.DayLast3:
-                            dateFrom = System.DateTime.Today.AddDays(-2);
-                            dateTo = System.DateTime.Today.AddDays(1).AddMilliseconds(-1);
+                        case PeriodDayValues.Last3:
+                            dateFrom = DateTime.Today.AddDays(-2);
+                            dateTo = DateTime.Today.AddDays(1).AddMilliseconds(-1);
                             break;
-                        case PeriodDayValues.DayLast4:
-                            dateFrom = System.DateTime.Today.AddDays(-3);
-                            dateTo = System.DateTime.Today.AddDays(1).AddMilliseconds(-1);
+                        case PeriodDayValues.Last4:
+                            dateFrom = DateTime.Today.AddDays(-3);
+                            dateTo = DateTime.Today.AddDays(1).AddMilliseconds(-1);
                             break;
-                        case PeriodDayValues.DayLast7:
-                            dateFrom = System.DateTime.Today.AddDays(-6);
-                            dateTo = System.DateTime.Today.AddDays(1).AddMilliseconds(-1);
+                        case PeriodDayValues.Last7:
+                            dateFrom = DateTime.Today.AddDays(-6);
+                            dateTo = DateTime.Today.AddDays(1).AddMilliseconds(-1);
                             break;
-                        case PeriodDayValues.DayLast15:
-                            dateFrom = System.DateTime.Today.AddDays(-14);
-                            dateTo = System.DateTime.Today.AddDays(1).AddMilliseconds(-1);
+                        case PeriodDayValues.Last15:
+                            dateFrom = DateTime.Today.AddDays(-14);
+                            dateTo = DateTime.Today.AddDays(1).AddMilliseconds(-1);
                             break;
                     }
                     break;
@@ -155,21 +165,21 @@ namespace CardonerSistemas
 
                     switch (periodWeekValue)
                     {
-                        case PeriodWeekValues.WeekCurrent:
-                            dateFrom = System.DateTime.Today.AddDays(-(double)System.DateTime.Today.DayOfWeek);
-                            dateTo = System.DateTime.Today.AddDays(1).AddMilliseconds(-1);
+                        case PeriodWeekValues.Current:
+                            dateFrom = DateTime.Today.AddDays(-(double)DateTime.Today.DayOfWeek);
+                            dateTo = DateTime.Today.AddDays(1).AddMilliseconds(-1);
                             break;
-                        case PeriodWeekValues.WeekBeforeCurrent:
-                            dateFrom = System.DateTime.Today.AddDays(-(double)System.DateTime.Today.DayOfWeek - 7);
-                            dateTo = System.DateTime.Today.AddDays(-(double)System.DateTime.Today.DayOfWeek).AddMilliseconds(-1);
+                        case PeriodWeekValues.BeforeCurrent:
+                            dateFrom = DateTime.Today.AddDays(-(double)DateTime.Today.DayOfWeek - 7);
+                            dateTo = DateTime.Today.AddDays(-(double)DateTime.Today.DayOfWeek).AddMilliseconds(-1);
                             break;
-                        case PeriodWeekValues.WeekLast2:
-                            dateFrom = System.DateTime.Today.AddDays(-(double)System.DateTime.Today.DayOfWeek - 7);
-                            dateTo = System.DateTime.Today.AddDays(7 - (double)System.DateTime.Today.DayOfWeek).AddMilliseconds(-1);
+                        case PeriodWeekValues.Last2:
+                            dateFrom = DateTime.Today.AddDays(-(double)DateTime.Today.DayOfWeek - 7);
+                            dateTo = DateTime.Today.AddDays(7 - (double)DateTime.Today.DayOfWeek).AddMilliseconds(-1);
                             break;
-                        case PeriodWeekValues.WeekLast3:
-                            dateFrom = System.DateTime.Today.AddDays(-(double)System.DateTime.Today.DayOfWeek - 14);
-                            dateTo = System.DateTime.Today.AddDays(7 - (double)System.DateTime.Today.DayOfWeek).AddMilliseconds(-1);
+                        case PeriodWeekValues.Last3:
+                            dateFrom = DateTime.Today.AddDays(-(double)DateTime.Today.DayOfWeek - 14);
+                            dateTo = DateTime.Today.AddDays(7 - (double)DateTime.Today.DayOfWeek).AddMilliseconds(-1);
                             break;
                     }
                     break;
@@ -180,25 +190,25 @@ namespace CardonerSistemas
 
                     switch (periodMonthValue)
                     {
-                        case PeriodMonthValues.MonthCurrent:
-                            dateFrom = new System.DateTime(System.DateTime.Today.Year, System.DateTime.Today.Month, 1);
-                            dateTo = new System.DateTime(System.DateTime.Today.Year, System.DateTime.Today.Month, 1).AddMonths(1).AddMilliseconds(-1);
+                        case PeriodMonthValues.Current:
+                            dateFrom = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+                            dateTo = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddMilliseconds(-1);
                             break;
-                        case PeriodMonthValues.MonthBeforeCurrent:
-                            dateFrom = new System.DateTime(System.DateTime.Today.Year, System.DateTime.Today.Month, 1).AddMonths(-1);
-                            dateTo = new System.DateTime(System.DateTime.Today.Year, System.DateTime.Today.Month, 1).AddMilliseconds(-1);
+                        case PeriodMonthValues.BeforeCurrent:
+                            dateFrom = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(-1);
+                            dateTo = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMilliseconds(-1);
                             break;
-                        case PeriodMonthValues.MonthLast2:
-                            dateFrom = new System.DateTime(System.DateTime.Today.Year, System.DateTime.Today.Month, 1).AddMonths(-1);
-                            dateTo = new System.DateTime(System.DateTime.Today.Year, System.DateTime.Today.Month, 1).AddMonths(1).AddMilliseconds(-1);
+                        case PeriodMonthValues.Last2:
+                            dateFrom = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(-1);
+                            dateTo = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddMilliseconds(-1);
                             break;
-                        case PeriodMonthValues.MonthLast3:
-                            dateFrom = new System.DateTime(System.DateTime.Today.Year, System.DateTime.Today.Month, 1).AddMonths(-2);
-                            dateTo = new System.DateTime(System.DateTime.Today.Year, System.DateTime.Today.Month, 1).AddMonths(1).AddMilliseconds(-1);
+                        case PeriodMonthValues.Last3:
+                            dateFrom = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(-2);
+                            dateTo = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddMilliseconds(-1);
                             break;
-                        case PeriodMonthValues.MonthLast6:
-                            dateFrom = new System.DateTime(System.DateTime.Today.Year, System.DateTime.Today.Month, 1).AddMonths(-5);
-                            dateTo = new System.DateTime(System.DateTime.Today.Year, System.DateTime.Today.Month, 1).AddMonths(1).AddMilliseconds(-1);
+                        case PeriodMonthValues.Last6:
+                            dateFrom = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(-5);
+                            dateTo = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddMilliseconds(-1);
                             break;
                     }
                     break;
@@ -209,13 +219,17 @@ namespace CardonerSistemas
 
                     switch (periodYearValue)
                     {
-                        case PeriodYearValues.YearCurrent:
-                            dateFrom = new System.DateTime(System.DateTime.Today.Year, 1, 1);
-                            dateTo = new System.DateTime(System.DateTime.Today.Year, 1, 1).AddYears(1).AddMilliseconds(-1);
+                        case PeriodYearValues.Current:
+                            dateFrom = new DateTime(DateTime.Today.Year, 1, 1);
+                            dateTo = new DateTime(DateTime.Today.Year, 1, 1).AddYears(1).AddMilliseconds(-1);
                             break;
-                        case PeriodYearValues.YearBeforeCurrent:
-                            dateFrom = new System.DateTime(System.DateTime.Today.Year, 1, 1).AddYears(-1);
-                            dateTo = new System.DateTime(System.DateTime.Today.Year, 1, 1).AddMilliseconds(-1);
+                        case PeriodYearValues.BeforeCurrent:
+                            dateFrom = new DateTime(DateTime.Today.Year, 1, 1).AddYears(-1);
+                            dateTo = new DateTime(DateTime.Today.Year, 1, 1).AddMilliseconds(-1);
+                            break;
+                        case PeriodYearValues.Last2:
+                            dateFrom = new DateTime(DateTime.Today.Year, 1, 1).AddYears(-1);
+                            dateTo = new DateTime(DateTime.Today.Year, 1, 1).AddYears(1).AddMilliseconds(-1);
                             break;
                     }
                     break;
@@ -226,19 +240,19 @@ namespace CardonerSistemas
 
                     switch (periodRangeValue)
                     {
-                        case PeriodRangeValues.DateEqual:
+                        case PeriodRangeValues.Equal:
                             dateFrom = dateValueFrom;
                             dateTo = dateValueFrom.AddDays(1).AddMilliseconds(-1);
                             break;
-                        case PeriodRangeValues.DateBefore:
-                            dateFrom = System.DateTime.MinValue;
+                        case PeriodRangeValues.Before:
+                            dateFrom = DateTime.MinValue;
                             dateTo = dateValueFrom.AddMilliseconds(-1);
                             break;
-                        case PeriodRangeValues.DateAfter:
+                        case PeriodRangeValues.After:
                             dateFrom = dateValueFrom.AddDays(1);
-                            dateTo = System.DateTime.MaxValue;
+                            dateTo = DateTime.MaxValue;
                             break;
-                        case PeriodRangeValues.DateBetween:
+                        case PeriodRangeValues.Between:
                             dateFrom = dateValueFrom;
                             dateTo = dateValueTo.AddDays(1).AddMilliseconds(-1);
                             break;
@@ -249,12 +263,12 @@ namespace CardonerSistemas
 
         #endregion
 
-        internal static long GetElapsedCompleteYearsFromDates(System.DateTime startDate, System.DateTime endDate)
+        internal static long GetElapsedCompleteYearsFromDates(DateTime startDate, DateTime endDate)
         {
             long elapsedYears;
 
             elapsedYears = endDate.Year - startDate.Year;
-            if ((startDate.Month > endDate.Month) | (startDate.Month == endDate.Month && startDate.Day > endDate.Day))
+            if ((startDate.Month > endDate.Month) || (startDate.Month == endDate.Month && startDate.Day > endDate.Day))
             {
                 elapsedYears--;
             }

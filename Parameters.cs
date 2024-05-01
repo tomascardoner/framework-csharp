@@ -1,6 +1,6 @@
 namespace CardonerSistemas
 {
-    static class Parameters
+    internal class Parameters
     {
         internal enum ParameterTypes : byte
         { 

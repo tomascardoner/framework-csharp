@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
@@ -251,119 +252,195 @@ namespace CardonerSistemas.Database.Ado
 
         #endregion
 
+        #region Parameters
+
+        internal static object GetParameterValue(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return DBNull.Value;
+            }
+            else
+            {
+                return value;
+            }
+        }
+
+        internal static object GetParameterValue(int selectedIndex, int minimumListIndex, string textValue)
+        {
+            if (selectedIndex < minimumListIndex)
+            {
+                return DBNull.Value;
+            }
+            else
+            {
+                return textValue;
+            }
+        }
+
+        internal static object GetParameterValue(int selectedIndex, int trueListIndex, int falseListIndex)
+        {
+            if (selectedIndex == trueListIndex)
+            {
+                return 1;
+            }
+            else if (selectedIndex == falseListIndex)
+            {
+                return 0;
+            }
+            else
+            {
+                return DBNull.Value;
+            }
+        }
+
+        #endregion Parameters
+
         #region Retrieve data
 
-        internal bool OpenDataReader(ref SqlDataReader dataReader, string commandText, CommandType commandType, CommandBehavior commandBehavior, string errorMessage)
+        public bool CreateCommand(out SqlCommand sqlCommand, string commandText, CommandType commandType, List<SqlParameter> parameters, string errorMessage)
         {
             try
             {
-                SqlCommand Command = new SqlCommand
+                sqlCommand = new SqlCommand()
                 {
                     Connection = Connection,
                     CommandText = commandText,
                     CommandType = commandType
                 };
-
-                dataReader = Command.ExecuteReader(commandBehavior);
-
-                Command.Dispose();
-
+                if (parameters != null)
+                {
+                    sqlCommand.Parameters.AddRange(parameters.ToArray());
+                }
                 return true;
             }
             catch (Exception ex)
             {
+                sqlCommand = null;
                 Error.ProcessError(ex, errorMessage);
                 return false;
             }
         }
 
-        internal bool OpenDataSet(ref SqlDataAdapter dataAdapter, ref DataSet dataSet, string selectCommandText, string sourceTable, string errorMessage)
+        public bool OpenDataReader(out SqlDataReader dataReader, string commandText, CommandType commandType, CommandBehavior commandBehavior, List<SqlParameter> parameters, string errorMessage)
         {
+            if (!CreateCommand(out SqlCommand sqlCommand, commandText, commandType, parameters, errorMessage))
+            {
+                dataReader = null;
+                return false;
+            }
+            try
+            {
+                dataReader = sqlCommand.ExecuteReader(commandBehavior);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                dataReader = null;
+                Error.ProcessError(ex, errorMessage);
+                return false;
+            }
+        }
+
+        public bool OpenDataReader(out SqlDataReader dataReader, string commandText, CommandType commandType, CommandBehavior commandBehavior, string errorMessage)
+        {
+            return OpenDataReader(out dataReader, commandText, commandType, commandBehavior, null, errorMessage);
+        }
+
+        public bool OpenDataSet(out SqlDataAdapter dataAdapter, out DataSet dataSet, string commandText, CommandType commandType, List<SqlParameter> parameters, string sourceTable, string errorMessage)
+        {
+            if (!CreateCommand(out SqlCommand sqlCommand, commandText, commandType, parameters, errorMessage))
+            {
+                dataAdapter = null;
+                dataSet = null;
+                return false;
+            }
             try
             {
                 dataSet = new DataSet();
-                dataAdapter = new SqlDataAdapter(selectCommandText, Connection);
-                SqlCommandBuilder commandBuilder = new SqlCommandBuilder(dataAdapter);
-                dataAdapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
-                dataAdapter.Fill(dataSet, sourceTable);
-                commandBuilder.Dispose();
-
+                dataAdapter = new SqlDataAdapter(sqlCommand);
+                using (SqlCommandBuilder commandBuilder = new SqlCommandBuilder(dataAdapter))
+                {
+                    dataAdapter.MissingSchemaAction = MissingSchemaAction.AddWithKey;
+                    dataAdapter.Fill(dataSet, sourceTable);
+                }
                 return true;
             }
             catch (Exception ex)
             {
+                dataAdapter = null;
+                dataSet = null;
                 Error.ProcessError(ex, errorMessage);
                 return false;
             }
         }
 
-        internal bool OpenDataTable(ref DataTable dataTable, string selectCommandText, string sourceTable, string errorMessage)
+        public bool OpenDataSet(out SqlDataAdapter dataAdapter, out DataSet dataSet, string commandText, CommandType commandType, string sourceTable, string errorMessage)
         {
+            return OpenDataSet(out dataAdapter, out dataSet, commandText, commandType, null, sourceTable, errorMessage);
+        }
+
+        public bool OpenDataTable(out DataTable dataTable, string commandText, CommandType commandType, List<SqlParameter> parameters, string sourceTable, string errorMessage)
+        {
+            if (!OpenDataSet(out _, out DataSet dataSet, commandText, commandType, parameters, sourceTable, errorMessage))
+            {
+                dataTable = null;
+                return false;
+            }
             try
             {
-                SqlDataAdapter dataAdapter = null;
-                DataSet dataSet = null;
-
-                if (OpenDataSet(ref dataAdapter, ref dataSet, selectCommandText, sourceTable, errorMessage))
-                {
-                    dataSet.Tables[0].TableName = sourceTable;
-                    dataTable = dataSet.Tables[sourceTable];
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                dataSet.Tables[0].TableName = sourceTable;
+                dataTable = dataSet.Tables[sourceTable];
+                return true;
             }
             catch (Exception ex)
             {
+                dataTable = null;
                 Error.ProcessError(ex, errorMessage);
                 return false;
             }
         }
 
-        internal bool OpenDataTableFromDataReader(ref DataTable dataTable, string commandText, CommandType commandType, string errorMessage)
+        public bool OpenDataTableFromDataReader(out DataTable dataTable, string commandText, CommandType commandType, CommandBehavior commandBehavior, List<SqlParameter> parameters, string errorMessage)
         {
-            SqlDataReader dataReader = null;
+            if (!OpenDataReader(out SqlDataReader sqlDataReader, commandText, commandType, commandBehavior, parameters, errorMessage))
+            {
+                dataTable = null;
+                return false;
+            }
             try
             {
-                SqlCommand command = new SqlCommand
+                dataTable = new DataTable();
+                if (sqlDataReader.HasRows)
                 {
-                    Connection = Connection,
-                    CommandText = commandText,
-                    CommandType = commandType,
-                };
-                dataReader = command.ExecuteReader();
-                command.Dispose();
-                if (dataReader.HasRows)
-                {
-                    dataTable.Load(dataReader);
+                    dataTable.Load(sqlDataReader);
                 }
-                dataReader.Close();
-                dataReader = null;
+                sqlDataReader.Close();
                 return true;
             }
             catch (Exception ex)
             {
-                dataReader?.Close();
+                dataTable = null;
                 Cursor.Current = Cursors.Default;
-                CardonerSistemas.Error.ProcessError(ex, errorMessage);
+                Error.ProcessError(ex, errorMessage);
                 return false;
             }
         }
 
-        internal bool Execute(string commandText, CommandType commandType, string errorMessage)
+        public bool OpenDataTableFromDataReader(out DataTable dataTable, string commandText, CommandType commandType, CommandBehavior commandBehavior, string errorMessage)
         {
+            return OpenDataTableFromDataReader(out dataTable, commandText, commandType, commandBehavior, null, errorMessage);
+        }
+
+        public bool Execute(string commandText, CommandType commandType, List<SqlParameter> parameters, string errorMessage)
+        {
+            if (!CreateCommand(out SqlCommand sqlCommand, commandText, commandType, parameters, errorMessage))
+            {
+                return false;
+            }
             try
             {
-                SqlCommand command = new SqlCommand
-                {
-                    Connection = Connection,
-                    CommandText = commandText,
-                    CommandType = commandType
-                };
-                command.ExecuteNonQuery();
-                command.Dispose();
+                sqlCommand.ExecuteNonQuery();
                 return true;
             }
             catch (Exception ex)
@@ -373,29 +450,9 @@ namespace CardonerSistemas.Database.Ado
             }
         }
 
-        internal bool Execute(string commandText, CommandType commandType, SqlParameterCollection sqlParameterCollection, string errorMessage)
+        public bool Execute(string commandText, CommandType commandType, string errorMessage)
         {
-            try
-            {
-                SqlCommand command = new SqlCommand
-                {
-                    Connection = Connection,
-                    CommandText = commandText,
-                    CommandType = commandType
-                };
-                foreach (SqlParameter parameter in sqlParameterCollection)
-                {
-                    command.Parameters.Add(parameter);
-                }
-                command.ExecuteNonQuery();
-                command.Dispose();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Error.ProcessError(ex, errorMessage);
-                return false;
-            }
+            return Execute(commandText, commandType, null, errorMessage);
         }
 
         #endregion

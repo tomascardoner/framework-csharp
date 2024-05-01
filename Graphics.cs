@@ -8,10 +8,7 @@ namespace CardonerSistemas
         internal static Icon GetIconFromBitmap(Bitmap bitmap)
         {
             IntPtr pointerIcon = bitmap.GetHicon();
-            using (Icon icon = Icon.FromHandle(pointerIcon))
-            {
-                return icon;
-            }
+            return Icon.FromHandle(pointerIcon);
         }
 
         /// <summary>

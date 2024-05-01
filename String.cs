@@ -55,12 +55,6 @@ namespace CardonerSistemas
             }
         }
 
-        internal static int GetExtends(System.Drawing.Graphics graphicObject, string text, Font font)
-        {
-            SizeF size = graphicObject.MeasureString(text, font);
-            return (int)Math.Ceiling(size.Width);
-        }
-        
         internal static string RemoveDiacritics(this string s)
         {
             string normalizedString = s.Normalize(NormalizationForm.FormD);
@@ -74,6 +68,84 @@ namespace CardonerSistemas
             }
 
             return stringBuilder.ToString();
+        }
+
+        /// <summary>
+        /// Measures the width of the specified string when drawn with the specified System.Drawing.Font.
+        /// </summary>
+        /// <param name="text">String to measure.</param>
+        /// <param name="graphicObject"></param>
+        /// <param name="font">System.Drawing.Font that defines the text format of the string.</param>
+        /// <returns>This method returns the width,
+        /// in the units specified by the System.Drawing.Graphics.PageUnit property, of the
+        /// string specified by the text parameter as drawn with the font parameter.</returns>
+        public static float GetExtendsF(this string text, System.Drawing.Graphics graphicObject, Font font)
+        {
+            return graphicObject.MeasureString(text, font).Width;
+        }
+
+        /// <summary>
+        /// Measures the width of the specified string when drawn with the specified System.Drawing.Font.
+        /// </summary>
+        /// <param name="text">String to measure.</param>
+        /// <param name="graphicObject"></param>
+        /// <param name="font">System.Drawing.Font that defines the text format of the string.</param>
+        /// <returns>This method returns the width rounded to int,
+        /// in the units specified by the System.Drawing.Graphics.PageUnit property, of the
+        /// string specified by the text parameter as drawn with the font parameter.</returns>
+        public static int GetExtends(this string text, System.Drawing.Graphics graphicObject, Font font)
+        {
+            return (int)Math.Ceiling(GetExtendsF(text, graphicObject, font));
+        }
+
+        /// <summary>
+        /// Measures the width of the specified strings when drawn with the specified System.Drawing.Font.
+        /// </summary>
+        /// <param name="texts">Strings to measure.</param>
+        /// <param name="graphicObject"></param>
+        /// <param name="font">System.Drawing.Font that defines the text format of the string.</param>
+        /// <returns>This method returns the maximum width,
+        /// in the units specified by the System.Drawing.Graphics.PageUnit property, of the
+        /// strings specified by the texts parameter as drawn with the font parameter.</returns>
+        public static float GetMaxExtendsF(string[] texts, System.Drawing.Graphics graphicObject, Font font)
+        {
+            float textExtend;
+            float maxTextExtend = 0;
+
+            foreach (string text in texts)
+            {
+                textExtend = GetExtendsF(text, graphicObject, font);
+                if (textExtend > maxTextExtend)
+                {
+                    maxTextExtend = textExtend;
+                }
+            }
+            return maxTextExtend;
+        }
+
+        /// <summary>
+        /// Measures the width of the specified strings when drawn with the specified System.Drawing.Font.
+        /// </summary>
+        /// <param name="texts">Strings to measure.</param>
+        /// <param name="graphicObject"></param>
+        /// <param name="font">System.Drawing.Font that defines the text format of the string.</param>
+        /// <returns>This method returns the maximum width rounded to int,
+        /// in the units specified by the System.Drawing.Graphics.PageUnit property, of the
+        /// strings specified by the texts parameter as drawn with the font parameter.</returns>
+        public static int GetMaxExtends(string[] texts, System.Drawing.Graphics graphicObject, Font font)
+        {
+            int textExtend;
+            int maxTextExtend = 0;
+
+            foreach (string text in texts)
+            {
+                textExtend = GetExtends(text, graphicObject, font);
+                if (textExtend > maxTextExtend)
+                {
+                    maxTextExtend = textExtend;
+                }
+            }
+            return maxTextExtend;
         }
 
         /// <summary>
