@@ -3,25 +3,26 @@ using System.Drawing;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 
 namespace CardonerSistemas
 {
     internal static class String
     {
 
+        #region Gets or extract substrings
+
         /// <summary>
         /// Gets a sub-string given it's zero-based order position and separator
         /// </summary>
-        /// <param name="mainString">String in where to search</param>
+        /// <param name="value">String in where to search</param>
         /// <param name="orderPosition">Zero-based order index</param>
-        /// <param name="separator">String separator</param>
-        /// <returns></returns>
-        internal static string GetSubString(string mainString, int orderPosition, string separator)
+        /// <param name="separator">Separator</param>
+        /// <returns>A string value representing the element at the specified position. If not element corresponds to the position, return an empty string.</returns>
+        public static string GetSubString(this string value, int orderPosition, string separator)
         {
             // Splits the string into an array of substrings delimited by separator
             string[] stringSeparators = new string[] { separator };
-            string[] subStrings = mainString.Split(stringSeparators, StringSplitOptions.None);
+            string[] subStrings = value.Split(stringSeparators, StringSplitOptions.None);
 
             if (orderPosition <= subStrings.GetUpperBound(0))
             {
@@ -36,14 +37,14 @@ namespace CardonerSistemas
         /// <summary>
         /// Gets the last sub-string given it's separator
         /// </summary>
-        /// <param name="mainString">String in where to search</param>
-        /// <param name="separator">String separator</param>
+        /// <param name="value">String in where to search</param>
+        /// <param name="separator">Separator</param>
         /// <returns></returns>
-        internal static string GetLastSubString(string mainString, string separator)
+        public static string GetLastSubString(this string value, string separator)
         {
             // Splits the string into an array of substrings delimited by separator
             string[] stringSeparators = new string[] { separator };
-            string[] subStrings = mainString.Split(stringSeparators, StringSplitOptions.None);
+            string[] subStrings = value.Split(stringSeparators, StringSplitOptions.None);
 
             if (subStrings.GetUpperBound(0) > -1)
             {
@@ -55,20 +56,9 @@ namespace CardonerSistemas
             }
         }
 
-        internal static string RemoveDiacritics(this string s)
-        {
-            string normalizedString = s.Normalize(NormalizationForm.FormD);
-            StringBuilder stringBuilder = new StringBuilder();
+        #endregion Gets or extract substrings
 
-            for (int i = 0; i < normalizedString.Length; i++)
-            {
-                Char c = normalizedString[i];
-                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
-                    stringBuilder.Append(c);
-            }
-
-            return stringBuilder.ToString();
-        }
+        #region Sizes
 
         /// <summary>
         /// Measures the width of the specified string when drawn with the specified System.Drawing.Font.
@@ -148,25 +138,27 @@ namespace CardonerSistemas
             return maxTextExtend;
         }
 
-        /// <summary>
-        /// Trims the string and then remove double spaces.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        internal static string TrimAndReduce(this string value)
-        {
-            value = value.Trim(); 
-            return RemoveDoubleSpaces(value);
-        }
+        #endregion Sizes
+
+        #region Clean and format
 
         /// <summary>
-        /// Removes double spaces.
+        /// Replace diacritics characters with standard ones.
         /// </summary>
         /// <param name="value"></param>
-        /// <returns></returns>
-        internal static string RemoveDoubleSpaces(this string value)
+        /// <returns>This method returns a string with the diacritics characters replaced by standard ones.</returns>
+        public static string ReplaceDiacritics(this string value)
         {
-            return Regex.Replace(value, @"\s+", " ");
+            string normalizedString = value.Normalize(NormalizationForm.FormD);
+            StringBuilder stringBuilder = new StringBuilder();
+
+            for (int i = 0; i < normalizedString.Length; i++)
+            {
+                Char c = normalizedString[i];
+                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                    stringBuilder.Append(c);
+            }
+            return stringBuilder.ToString();
         }
 
         /// <summary>
@@ -174,9 +166,30 @@ namespace CardonerSistemas
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        internal static string RemoveSpaces(this string value)
+        public static string RemoveSpaces(this string value)
         {
             return Regex.Replace(value, @"\s+", string.Empty);
+        }
+
+        /// <summary>
+        /// Removes double spaces.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>This method returns a cleaned string for double spaces.</returns>
+        public static string RemoveDoubleSpaces(this string value)
+        {
+            return Regex.Replace(value, @"\s+", " ");
+        }
+
+        /// <summary>
+        /// Trims the string and then remove double spaces.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>This method returns a cleaned string for spaces at start and end and also double spaces inside.</returns>
+        public static string TrimAndReduce(this string value)
+        {
+            value = value.Trim();
+            return RemoveDoubleSpaces(value);
         }
 
         /// <summary>
@@ -185,7 +198,7 @@ namespace CardonerSistemas
         /// <param name="oldValue"></param>
         /// <param name="newValue"></param>
         /// <returns></returns>
-        internal static string ReplaceEnd(this string value, string oldValue, string newValue)
+        public static string ReplaceEnd(this string value, string oldValue, string newValue)
         {
             if (value.EndsWith(oldValue))
             {
@@ -198,14 +211,24 @@ namespace CardonerSistemas
         }
 
         /// <summary>
-        /// Converts the first char of the specified string to upper case.
+        /// Removes non digits characters.
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        internal static string FirstCharToUpperCase(this string value)
+        public static string RemoveNonDigits(this string value)
+        {
+            return Regex.Replace(value, @"[^\d]", string.Empty);
+        }
+
+        /// <summary>
+        /// Converts the first char of the specified string to upper case.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>This method returns the source string with the first character in uppercase.</returns>
+        public static string FirstCharToUpperCase(this string value)
         {
             switch (value.Length)
-            {
+            { 
                 case 0:
                     return value;
                 case 1:
@@ -219,10 +242,10 @@ namespace CardonerSistemas
         /// Converts the specified string to title case (except for words that are entirely in uppercase, which are considered to be acronyms).
         /// </summary>
         /// <param name="value"></param>
-        /// <returns></returns>
-        internal static string ToTitleCase(this string value)
+        /// <returns>This method returns the source string with the first character of each word in uppercase.</returns>
+        public static string ToTitleCase(this string value)
         {
-            return Application.CurrentCulture.TextInfo.ToTitleCase(value);
+            return System.Windows.Forms.Application.CurrentCulture.TextInfo.ToTitleCase(value);
         }
 
         /// <summary>
@@ -230,25 +253,31 @@ namespace CardonerSistemas
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        internal static string ToTitleCaseAll(this string value)
+        public static string ToTitleCaseAll(this string value)
         {
-            return Application.CurrentCulture.TextInfo.ToTitleCase(value.ToLower());
+            return value.ToLower().ToTitleCase();
         }
+
+        #endregion Clean and format
+
+        #region Evaluation
 
         /// <summary>
         /// Checks if all characters are numeric digits.
         /// </summary>
         /// <param name="value"></param>
-        /// <returns></returns>
-        internal static bool IsDigitsOnly(this string value)
+        /// <returns>This method returns true if all characters in string are digits, false if not.</returns>
+        public static bool IsDigitsOnly(this string value)
         {
             foreach (char c in value)
             {
                 if (c < '0' || c > '9')
                     return false;
             }
-
             return true;
         }
+
+        #endregion Evaluation
+
     }
 }

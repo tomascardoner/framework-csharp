@@ -81,7 +81,7 @@ namespace CardonerSistemas
             }
         }
 
-        static internal bool Send(EmailConfig config, InternetAddressList recipientsTo, InternetAddressList recipientsCc, InternetAddressList recipientsBcc, string subject, bool isHtml, string body, MimeKit.AttachmentCollection attachments)
+        static internal bool Send(EmailConfig config, InternetAddressList recipientsTo, InternetAddressList recipientsCc, InternetAddressList recipientsBcc, string subject, bool isHtml, string body, AttachmentCollection attachments)
         {
             if ((recipientsTo == null || recipientsTo.Count == 0 ) && (recipientsCc == null || recipientsCc.Count == 0) && (recipientsBcc == null || recipientsBcc.Count == 0))
             {

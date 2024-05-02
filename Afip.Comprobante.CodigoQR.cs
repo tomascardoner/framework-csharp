@@ -255,7 +255,6 @@ namespace CardonerSistemas.Afip.Comprobantes.CodigoQR
             // Preparo el link de Afip
             string afipUrl = CodigoQRUrl;
             afipUrl = afipUrl.Replace(CodigoQRCampoDatos, codigoQRDatos);
-            afipUrl = System.Net.WebUtility.UrlEncode(afipUrl);
 
             // Genero el QR
             return GraphicCodes.QR.Generate(afipUrl, pixelsPorModulo);
