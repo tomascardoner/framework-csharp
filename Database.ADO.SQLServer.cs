@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace CardonerSistemas.Database.Ado
 {
-    internal class SqlServer
+    public class SqlServer
     {
 
         private const string ErrorLoginFailed = "Login failed for user ";
