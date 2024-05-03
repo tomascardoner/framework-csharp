@@ -71,7 +71,6 @@ namespace CardonerSistemas
         private const string FolderTagDropbox = "{Dropbox}";
         private const string FolderTagGoogleDrive = "{GoogleDrive}";
         private const string FolderTagOneDrive = "{OneDrive}";
-        private const string FolderTagICloudDrive = "{iCloudDrive}";
 
         static internal string ProcessFolderName(string folderName, bool ignoreCase = true)
         {
@@ -87,14 +86,12 @@ namespace CardonerSistemas
             string folderTagDropboxForContains;
             string folderTagGoogleDriveForContains;
             string folderTagOneDriveForContains;
-            //string folderTagICloudDriveForContains;
             if (ignoreCase)
             {
                 folderNameForContains = folderName.ToLower();
                 folderTagDropboxForContains = FolderTagDropbox.ToLower();
                 folderTagGoogleDriveForContains = FolderTagGoogleDrive.ToLower();
                 folderTagOneDriveForContains = FolderTagOneDrive.ToLower();
-                //folderTagICloudDriveForContains = FolderTagICloudDrive.ToLower();
             }
             else
             {
@@ -102,13 +99,12 @@ namespace CardonerSistemas
                 folderTagDropboxForContains = FolderTagDropbox;
                 folderTagGoogleDriveForContains = FolderTagGoogleDrive;
                 folderTagOneDriveForContains = FolderTagOneDrive;
-                //folderTagICloudDriveForContains = FolderTagICloudDrive;
             }
 
             // Replace DropBox path
             if (folderNameForContains.Contains(folderTagDropboxForContains.ToLower()))
             {
-                string dropboxFolder = "";
+                string dropboxFolder = string.Empty;
                 if (GetDropboxPath(ref dropboxFolder))
                 {
                     folderNameProcessed = Regex.Replace(folderNameProcessed, FolderTagDropbox, dropboxFolder, RegexOptions.IgnoreCase).Trim();
@@ -118,7 +114,7 @@ namespace CardonerSistemas
             // Replace Google Drive path
             if (folderNameForContains.Contains(folderTagGoogleDriveForContains))
             {
-                string googleDriveFolder = "";
+                string googleDriveFolder = string.Empty;
                 if (GetGoogleDrivePath(ref googleDriveFolder))
                 {
                     folderNameProcessed = Regex.Replace(folderNameProcessed, FolderTagGoogleDrive, googleDriveFolder, RegexOptions.IgnoreCase).Trim();
@@ -128,7 +124,7 @@ namespace CardonerSistemas
             // Replace OneDrive path
             if (folderNameForContains.Contains(folderTagOneDriveForContains))
             {
-                string oneDriveFolder = "";
+                string oneDriveFolder = string.Empty;
                 if (GetOneDrivePath(ref oneDriveFolder))
                 {
                     folderNameProcessed = Regex.Replace(folderNameProcessed, FolderTagOneDrive, oneDriveFolder, RegexOptions.IgnoreCase).Trim();
@@ -142,28 +138,24 @@ namespace CardonerSistemas
 
         #region Cloud storage - Dropbox
 
-        private class DropboxConfigInfoRoot
-        {
 #pragma warning disable IDE1006 // Naming Styles
+#pragma warning disable S3459 // Unassigned members should be removed
+#pragma warning disable S1144 // Unused private types or members should be removed
+        private sealed class DropboxConfigInfoRoot
+        {
             public DropboxConfigInfoPersonal personal { get; set; }
-#pragma warning restore IDE1006 // Naming Styles
         }
 
-        private class DropboxConfigInfoPersonal
+        private sealed class DropboxConfigInfoPersonal
         {
-#pragma warning disable IDE1006 // Naming Styles
             public string path { get; set; }
-#pragma warning restore IDE1006 // Naming Styles
-#pragma warning disable IDE1006 // Naming Styles
             public long host { get; set; }
-#pragma warning restore IDE1006 // Naming Styles
-#pragma warning disable IDE1006 // Naming Styles
             public bool is_team { get; set; }
-#pragma warning restore IDE1006 // Naming Styles
-#pragma warning disable IDE1006 // Naming Styles
             public string subscription_type { get; set; }
-#pragma warning restore IDE1006 // Naming Styles
         }
+#pragma warning restore IDE1006 // Naming Styles
+#pragma warning restore S3459 // Unassigned members should be removed
+#pragma warning restore S1144 // Unused private types or members should be removed
 
         internal static bool GetDropboxPath(ref string path)
         {
