@@ -111,6 +111,9 @@ namespace CardonerSistemas
             dateFrom = DateTime.MinValue;
             dateTo = DateTime.MaxValue;
 
+            dateValueFrom = dateValueFrom.Date;
+            dateValueTo = dateValueTo.Date;
+
             switch (periodType)
             {
                 // All
