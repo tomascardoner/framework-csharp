@@ -277,6 +277,23 @@ namespace CardonerSistemas
             return true;
         }
 
+        /// <summary>
+        /// If the string is not empty, appends the valueToAppend, and then the valueToAppendAlways
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="valueToAppend"></param>
+        /// <param name="valueToAppendAlways"></param>
+        /// <returns></returns>
+        public static string AppendIfNotEmpty(this string value, string valueToAppend, string valueToAppendAlways)
+        { 
+            return value + (string.IsNullOrEmpty(value) ? string.Empty : valueToAppend) + valueToAppendAlways;
+        }
+
+        public static string AppendIfNotEmpty(this string value, string valueToAppend)
+        {
+            return AppendIfNotEmpty(value, valueToAppend, string.Empty);
+        }
+
         #endregion Evaluation
 
     }
