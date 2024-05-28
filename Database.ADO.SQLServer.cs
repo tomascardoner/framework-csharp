@@ -10,6 +10,7 @@ namespace CardonerSistemas.Database.Ado
     {
 
         private const string ErrorLoginFailed = "Login failed for user ";
+        private const string ListSeparator = ";";
 
         #region Properties
 
@@ -29,10 +30,10 @@ namespace CardonerSistemas.Database.Ado
 
         internal SqlConnection Connection { get; set; }
 
-        internal bool PasswordEncrypt()
+        internal bool PasswordEncrypt(string passPhrase)
         {
             string encryptedPassword = string.Empty;
-            if (Encrypt.StringCipher.Encrypt(Password, Constants.PublicEncryptionPassword, ref encryptedPassword))
+            if (Encrypt.StringCipher.Encrypt(Password, passPhrase, ref encryptedPassword))
             {
                 PasswordEncrypted = encryptedPassword;
                 return true;
@@ -43,10 +44,10 @@ namespace CardonerSistemas.Database.Ado
             }
         }
 
-        internal bool PasswordUnencrypt()
+        internal bool PasswordUnencrypt(string passPhrase)
         {
             string unencryptedPassword = string.Empty;
-            if (Encrypt.StringCipher.Decrypt(PasswordEncrypted, Constants.PublicEncryptionPassword, ref unencryptedPassword))
+            if (Encrypt.StringCipher.Decrypt(PasswordEncrypted, passPhrase, ref unencryptedPassword))
             {
                 Password = unencryptedPassword;
                 return true;
@@ -65,11 +66,11 @@ namespace CardonerSistemas.Database.Ado
         {
             int selectedDatasourceIndex;
 
-            if (datasource.Contains(Constants.StringListSeparator))
+            if (datasource.Contains(ListSeparator))
             {
                 // Muestro la ventana de selección del Datasource
                 SelectDatasource selectDatasource = new SelectDatasource();
-                selectDatasource.comboboxDataSource.Items.AddRange(datasource.Split(Convert.ToChar(Constants.StringListSeparator)));
+                selectDatasource.comboboxDataSource.Items.AddRange(datasource.Split(Convert.ToChar(ListSeparator)));
                 if (selectDatasource.ShowDialog() != DialogResult.OK)
                 {
                     return false;
@@ -102,10 +103,10 @@ namespace CardonerSistemas.Database.Ado
 
         private string SelectProperty(string value, int selectedIndex)
         {
-            if (value.Contains(Constants.StringListSeparator))
+            if (value.Contains(ListSeparator))
             {
                 string[] values;
-                values = value.Split(Convert.ToChar(Constants.StringListSeparator));
+                values = value.Split(Convert.ToChar(ListSeparator));
                 if (values.GetUpperBound(0) >= selectedIndex)
                 {
                     return values[selectedIndex];
@@ -168,7 +169,7 @@ namespace CardonerSistemas.Database.Ado
             }
         }
 
-        internal bool Connect(DatabaseConfig databaseConfig, ref bool newLoginData)
+        internal bool Connect(DatabaseConfig databaseConfig, string passPhrase, ref bool newLoginData)
         {
             newLoginData = false;
 
@@ -200,7 +201,7 @@ namespace CardonerSistemas.Database.Ado
                         Password = loginInfo.textboxPassword.Text.Trim();
                         if (Password.Length > 0)
                         {
-                            if (PasswordEncrypt())
+                            if (PasswordEncrypt(passPhrase))
                             {
                                 databaseConfig.Password = PasswordEncrypted;
                             }
@@ -432,7 +433,7 @@ namespace CardonerSistemas.Database.Ado
             return OpenDataTableFromDataReader(out dataTable, commandText, commandType, commandBehavior, null, errorMessage);
         }
 
-        public bool Execute(string commandText, CommandType commandType, List<SqlParameter> parameters, string errorMessage)
+        public bool Execute(string commandText, CommandType commandType, List<SqlParameter> parameters, string errorMessage, bool throwError = false)
         {
             if (!CreateCommand(out SqlCommand sqlCommand, commandText, commandType, parameters, errorMessage))
             {
@@ -445,14 +446,18 @@ namespace CardonerSistemas.Database.Ado
             }
             catch (Exception ex)
             {
+                if (throwError)
+                {
+                    throw;
+                }
                 Error.ProcessError(ex, errorMessage);
                 return false;
             }
         }
 
-        public bool Execute(string commandText, CommandType commandType, string errorMessage)
+        public bool Execute(string commandText, CommandType commandType, string errorMessage, bool throwError = false)
         {
-            return Execute(commandText, commandType, null, errorMessage);
+            return Execute(commandText, commandType, null, errorMessage, throwError);
         }
 
         #endregion

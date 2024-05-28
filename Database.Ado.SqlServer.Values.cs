@@ -5,7 +5,7 @@ using System.IO;
 
 namespace CardonerSistemas.Database.Ado
 {
-    internal class SqlServerValues
+    internal static class SqlServerValues
     {
 
         #region Get values - data reader

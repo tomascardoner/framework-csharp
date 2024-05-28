@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CardonerSistemas.Framework.Afip
+namespace CardonerSistemas.Afip
 {
     public partial class Tablas
     {

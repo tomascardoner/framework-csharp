@@ -2,7 +2,6 @@
 using System;
 using System.Globalization;
 using System.Text;
-using CardonerSistemas.Framework.Afip;
 
 namespace CardonerSistemas.Afip.Comprobantes.CodigoQR
 {

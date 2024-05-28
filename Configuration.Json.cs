@@ -145,7 +145,7 @@ namespace CardonerSistemas.Configuration
             }
             catch (System.Exception)
             {
-                convertedString = "";
+                convertedString = string.Empty;
             }
 
             return convertedString;
