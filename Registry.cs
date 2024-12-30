@@ -10,8 +10,7 @@ namespace CardonerSistemas
 
         #region Declarations
 
-        private static readonly FileVersionInfo fvi;
-        private static readonly string applicationConfigurationSubKeyName;
+        private static readonly string _ApplicationConfigurationSubKeyName = GetApplicationConfigurationSubKeyName();
 
         internal enum Keys
         {
@@ -23,15 +22,16 @@ namespace CardonerSistemas
             Users
         }
 
-        static Registry()
-        {
-            fvi = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
-            applicationConfigurationSubKeyName = "Software\\" + fvi.CompanyName + "\\" + fvi.ProductName;
-        }
-
         #endregion
 
         #region Common
+
+        private static string GetApplicationConfigurationSubKeyName()
+        {
+            FileVersionInfo fvi;
+            fvi = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+            return $"Software\\{fvi.CompanyName}\\{fvi.ProductName}";
+        }
 
         private static Microsoft.Win32.RegistryKey GetBaseKey(Keys key)
         {
@@ -57,7 +57,7 @@ namespace CardonerSistemas
         internal static Microsoft.Win32.RegistryKey OpenSubKey(Keys key, string name, bool createIfNotExist, bool writable)
         {
             Microsoft.Win32.RegistryKey subKey = OpenSubKey(key, name, writable);
-            if (subKey == null)
+            if (subKey is null && createIfNotExist)
             {
                 try
                 {
@@ -65,7 +65,7 @@ namespace CardonerSistemas
                 }
                 catch (Exception ex)
                 {
-                    CardonerSistemas.Error.ProcessError(ex, "Error al crear la clave en el Registro de Windows.");
+                    Error.ProcessError(ex, "Error al crear la clave en el Registro de Windows.");
                     return null;
                 }
             }
@@ -83,7 +83,7 @@ namespace CardonerSistemas
             }
             catch (Exception ex)
             {
-                CardonerSistemas.Error.ProcessError(ex, "Error al acceder al Registro de Windows.");
+                Error.ProcessError(ex, "Error al acceder al Registro de Windows.");
                 return null;
             }
         }
@@ -132,7 +132,7 @@ namespace CardonerSistemas
 
         internal static object LoadUserValueFromApplicationFolder(string subKeyName, string name, object defaultValue, bool closeKey)
         {
-            return LoadUserValue(applicationConfigurationSubKeyName + (subKeyName == string.Empty ? string.Empty : "\\" + subKeyName), name, defaultValue, closeKey);
+            return LoadUserValue(_ApplicationConfigurationSubKeyName + (subKeyName == string.Empty ? string.Empty : "\\" + subKeyName), name, defaultValue, closeKey);
         }
 
         internal static object LoadMachineValue(string subKeyName, string name, object defaultValue, bool closeKey)
@@ -141,7 +141,7 @@ namespace CardonerSistemas
         }
         internal static object LoadMachineValueFromApplicationFolder(string subKeyName, string name, object defaultValue, bool closeKey)
         {
-            return LoadMachineValue(applicationConfigurationSubKeyName + (subKeyName == string.Empty ? string.Empty : "\\" + subKeyName), name, defaultValue, closeKey);
+            return LoadMachineValue(_ApplicationConfigurationSubKeyName + (subKeyName == string.Empty ? string.Empty : "\\" + subKeyName), name, defaultValue, closeKey);
         }
 
         #endregion
@@ -189,7 +189,7 @@ namespace CardonerSistemas
 
         internal static bool SaveUserValueToApplicationFolder(string subKeyName, string name, object defaultValue, bool closeKey)
         {
-            return SaveUserValue(applicationConfigurationSubKeyName + (subKeyName == string.Empty ? string.Empty : "\\" + subKeyName), name, defaultValue, closeKey);
+            return SaveUserValue(_ApplicationConfigurationSubKeyName + (subKeyName == string.Empty ? string.Empty : "\\" + subKeyName), name, defaultValue, closeKey);
         }
 
         internal static bool SaveMachineValue(string subKeyName, string name, object value, bool closeKey)
@@ -199,7 +199,7 @@ namespace CardonerSistemas
 
         internal static bool SaveMachineValueToApplicationFolder(string subKeyName, string name, object defaultValue, bool closeKey)
         {
-            return SaveMachineValue(applicationConfigurationSubKeyName + (subKeyName == string.Empty ? string.Empty : "\\" + subKeyName), name, defaultValue, closeKey);
+            return SaveMachineValue(_ApplicationConfigurationSubKeyName + (subKeyName == string.Empty ? string.Empty : "\\" + subKeyName), name, defaultValue, closeKey);
         }
 
         #endregion
